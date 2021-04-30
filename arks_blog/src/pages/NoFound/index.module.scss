@@ -1,0 +1,32 @@
+.no-found{
+  width: 100%;
+  .content {
+    width: 100%;
+    margin: auto;
+    max-width: 900px;
+    margin-top: 10vh;
+    position: relative;
+    .tip {
+      position: absolute;
+      top: .1rem;
+      left: .2rem;
+      display: flex;
+      flex-direction: column;
+      span:nth-child(1) {
+        color: #348eed;
+        font-size: .6rem;
+      }
+      span:nth-child(2) {
+        font-size: .4rem;
+      }
+    }
+    .btn {
+      display: flex;
+      flex-direction: row-reverse;
+      padding-right: .3rem;
+    }
+  }
+  img {
+    width: 100%;
+  }
+}
