@@ -42,8 +42,7 @@ h6 {
 }
 
 #root {
-  background-color:#e7deea;
-  min-height: 200vh;
+  min-height: 100vh;
 }
 html, body {
   &::-webkit-scrollbar {
@@ -109,4 +108,8 @@ table {
 }
 *{
   box-sizing: border-box;
+}
+
+.color {
+  color: red;
 }

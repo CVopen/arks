@@ -13,6 +13,7 @@ import moment from 'moment'
 import 'moment/locale/zh-cn'
 import { ConfigProvider } from 'antd';
 import Back from './components/back'
+import Footer from './components/footer'
 moment.locale('zh-cn')
 
 class App extends Component {
@@ -26,6 +27,7 @@ class App extends Component {
           </HashRouter>
         </Provider>
         <Back />
+        <Footer />
       </ConfigProvider>
     )
   }
