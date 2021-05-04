@@ -1,34 +1,25 @@
-// 存储UI的设计规范定义的边浪
+:root {
+  --theme-color: rgb(0, 0, 88);  // 变量名: --theme-color
+  --theme-colorbg: #fff;
+  --theme-fontColor: #fff;
+}
+$varTheme: var(--theme-color);
+$varThemeBg: var(--theme-colorbg);
+$varFontColor: var(--theme-fontColor);
 
-/******************  颜色 ****************/
-$primaryColor: #577ffe;
-$textColor: #455574;
-$priceColor: #FE624C;
+@mixin wh($width, $height) {
+  width: $width;
+  height: $height;
+}
 
-/******************  公共间距 ****************/
-$commonPadding: 24px;
+@mixin flexCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-/******************  公共字体 ****************/
-
-$titleFont: 24px;
-$textFont: 12px;
-
-
-// 颜色相关
-$theme-color: #5340a7;
-$background-color: #fff;
-$color-header: #cccccc;
-$color-default: #000000;
-$background-color-hover:  #2e86de;
-// 圆角
-$border-radius: 30px;
-
-// 图标宽高
-$width-default: 20px;
-$height-default: 20px;
-
-// 字体相关
-$max-font: 24px;
-$med-font: 18px;
-$min-font: 14px;
-$color-hover: #fff;
+@mixin flexSpaceBetween {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

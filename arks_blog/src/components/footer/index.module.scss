@@ -16,12 +16,10 @@
     border-radius: 50%;
     border: 1px solid #ccc;
     cursor: pointer;
-    a {
+    span {
       color: #000;
       transition: all .2s;
-    }
-    &:hover {
-      a {
+      &:hover {
         color: #5399fc;
       }
     }

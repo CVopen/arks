@@ -13,9 +13,7 @@ export default function Footer() {
         </a>
       </div>
       <div className={style.circular}>
-        <a href="#">
-          <WechatOutlined style={{ fontSize: '18px' }} />
-        </a>
+        <WechatOutlined style={{ fontSize: '18px' }} />
       </div>
       <div className={style.circular}>
         <a href="https://github.com/CVopen" target="view_window">

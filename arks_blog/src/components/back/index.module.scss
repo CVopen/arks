@@ -1,3 +1,14 @@
+@mixin circular() {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #fff;
+  transition: all .3s cubic-bezier(1, 1.95, 1, 1);
+  box-shadow: 1px 8px 12px -8px #000;
+  @include flexCenter()
+}
+
 .back {
   z-index: 999;
   position: fixed;
@@ -8,42 +19,37 @@
   }
   .num {
     border-radius: 50%;
-    background-color: #000058;
-    width: 50px;
-    height: 50px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  img {
-    width: 40px;
-    transition: all .3s cubic-bezier(1, 1.95, 1, 1);
+    background-color: $varFontColor;
+    user-select:none;
+    @include wh(50px, 50px);
+    @include flexCenter();
+    box-shadow: 1px 8px 12px -8px #000;
+    span {
+      transition: all .3s cubic-bezier(1, 1.95, 1, 1);
+      font-size: 40px;
+    }
   }
   .top {
-    position: absolute;
-    top: -40px;
+    top: -50px;
     left: 200%;
     transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-color: transparent transparent #000058 transparent;
-    border-style: solid;
-    border-width: 0 20px 20px 20px;
-    transition: all .3s cubic-bezier(1, 1.95, 1, 1);
+    @include circular()
   }
-
+  .left {
+    top: 80px;
+    left: 80px;
+    transform: translateX(-50%);
+    @include circular()
+  }
+  .left-open {
+    left: -36px;
+    top: -40px;
+  }
   .bottom {
-    position: absolute;
+    @include circular();
     top: 200%;
-    left: -60px;
+    left: -70px;
     transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-color: #000058 transparent transparent transparent;
-    border-style: solid;
-    border-width: 20px 20px 0 20px;
-    transition: all .3s cubic-bezier(1, 1.95, 1, 1);
   }
   .top-open {
     left: 50%;
@@ -52,8 +58,6 @@
     top: 50%;
   }
 }
-
-
 .img-rotate {
   transform: rotate(-90deg);
 }

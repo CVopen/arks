@@ -1,6 +1,7 @@
 .home {
   // height: 500vh;
-  // background-color:#e7deea;
+  background-color: $varThemeBg;
+  transition: all .4s;
   img {
     width: 100%;
   }

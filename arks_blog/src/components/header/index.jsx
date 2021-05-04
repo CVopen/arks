@@ -22,7 +22,7 @@ function Header(props) {
   }
 
   return (
-    <div className={style.header} style={{backgroundColor: color ? '#000058' : ''}}>
+    <div className={[style.header, color ? style['header-open'] : ''].join(' ')}>
       <div className={[style.btn, isRotate ? style['btn-rotate'] : ''].join(' ')} onClick={() => setRotate(!isRotate)}>
         <span className={style.line}></span>
       </div>

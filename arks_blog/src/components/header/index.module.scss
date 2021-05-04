@@ -1,18 +1,17 @@
+ .header-open {
+  background-color: $varTheme;
+}
 .header {
   position: fixed;
-  width: 100%;
   top: 0;
   overflow: hidden;
   z-index: 999;
-  justify-content: center;
   transition: all .4s;
-  align-items: center;
-  display: flex;
-  height: 60px;
+  @include wh(100%, 60px);
+  @include flexCenter();
   .logo {
-    width: 45px;
+    @include wh(45px, 45px);
     border-radius: 50%;
-    height: 45px;
     opacity: 1;
     cursor: pointer;
     transition: all .4s;
@@ -25,9 +24,7 @@
     top: 0;
     left: 50%;
     width: 1200px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    @include flexSpaceBetween();
     transition: all .4s;
     transform: translateX(200%);
     opacity: 0;
@@ -39,9 +36,7 @@
   .btn {
     height: 70px;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flexCenter();
     padding-left: 60px;
     cursor: pointer;
     position: absolute;
@@ -49,7 +44,7 @@
     left: 30px;
     &::after {
       content: '';
-      border-top: 3px solid #fff;
+      border-top: 3px solid $varFontColor;
       width: 30px;
       position: absolute;
       top: 20px;
@@ -58,7 +53,7 @@
     }
     &::before {
       content: '';
-      border-top: 3px solid #fff;
+      border-top: 3px solid $varFontColor;
       width: 30px;
       position: absolute;
       top: 38px;
@@ -81,27 +76,23 @@
     margin: 5px 0;
     transition: transform .4s cubic-bezier(1, 1.95, 1, 1);
     li {
-      width: 100px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include wh(100px, 50px);
+      @include flexCenter()
     }
   }
   span {
     transition: all .2s;
     cursor: pointer;
-    color: #fff;
+    color: $varFontColor;
     &:hover {
       color: #e05d44;
     }
   }
 
   .modal {
-    width: 100%;
-    height: 0;
+    @include wh(100%, 0);
     overflow: hidden;
-    background-color: rgba(0, 0, 88, .4);
+    background-color:rgba(0, 0, 88, .4);
     position: fixed;
     top: 0;
     left: 0;
@@ -121,12 +112,11 @@
         padding: 0 20px;
         border-radius: 25px 0 0 25px;
         display: inline-block;
-        color: #000058;
+        color: $varTheme;
         width: 100%;
       }
       button {
-        height: 50px;
-        width: 100px;
+        @include wh(100px, 50px);
         border-radius: 0 25px 25px 0 ;
         border: none;
         display: inline-block;
@@ -137,7 +127,7 @@
         }
         span {
           font-size: 24px;
-          color: #000058;
+          color: $varTheme;
         }
       }
     }
