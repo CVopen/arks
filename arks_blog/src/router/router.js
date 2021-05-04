@@ -5,13 +5,13 @@ const routes = [
     path: '/',
     component: Home
   },
-  // {
-  //   path: '/index',
-  //   redirect: '/index/discover'
-  // },
+  {
+    path: '/404',
+    component: Nofound,
+  },
   {
     path: '*',
-    component: Nofound
+    redirect: '/404'
   }
 ]
 export default routes

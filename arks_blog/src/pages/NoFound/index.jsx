@@ -11,7 +11,7 @@ export default function NoFound(props) {
           <span>您的页面好像飞走了噢。。。</span>
         </div>
         <div className={style.btn}>
-          <Button shape="round" onClick={() => history.push('/login')} >返回首页</Button>
+          <Button shape="round" onClick={() => history.replace('/')} >返回首页</Button>
         </div>
       </div>
     </div>

@@ -1,33 +1,38 @@
 import style from './index.module.scss'
 import { SearchOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useLocation, withRouter } from 'react-router-dom'
 import Search from './components/Search'
-export default function Header() {
-  const [ isAnimate, setAnimate ] = useState(false)
+import bus from '../../utils/bus'
+function Header(props) {
   const [ isRotate, setRotate ] = useState(false)
   const [ isSearch, setSearch ] = useState(false)
-  const animationImg = () => {
-    if (isAnimate) return
-    setAnimate(true)
-    setRotate(!isRotate)
-    setTimeout(() => {
-      setAnimate(false)
-    }, 300)
+  const [ color, setColor ] = useState(false)
+  const { pathname } = useLocation()
+  useEffect(() => {
+    bus.on('scrollTop', (top) => setColor(top > 0))
+  }, [])
+
+  // 路由跳转
+  const toPath = (path) => {
+    return () => {
+      if (pathname === path) return
+      props.history.push(path)
+    }
   }
 
-
   return (
-    <div className={style.header}>
-      <div className={[style.btn, isRotate ? style['btn-rotate'] : ''].join(' ')} onClick={animationImg}>
+    <div className={style.header} style={{backgroundColor: color ? '#000058' : ''}}>
+      <div className={[style.btn, isRotate ? style['btn-rotate'] : ''].join(' ')} onClick={() => setRotate(!isRotate)}>
         <span className={style.line}></span>
       </div>
       <div className={[style.nav, isRotate ? style['nav-open'] : ''].join(' ')}>
         <ul>
           <li>
-            <span>首页</span>
+            <span onClick={toPath('/')}>首页</span>
           </li>
           <li>
-            <span>分类</span>
+            <span onClick={toPath('/login')}>分类</span>
           </li>
           <li>
             <span>标签</span>
@@ -44,7 +49,14 @@ export default function Header() {
         </ul>
         <SearchOutlined onClick={() => setSearch(!isSearch)} style={{fontSize: '40px'}}/>
       </div>
+      <img 
+        className={[style.logo, isRotate ? style['logo-open'] : ''].join(' ')} 
+        src={require('../../assets/images/logo.jpg').default} alt="logo"
+        onClick={toPath('/center')}
+      />
       <Search show={isSearch} changeStata={() => setSearch(false)} />
     </div>
   )
 }
+
+export default withRouter(Header)

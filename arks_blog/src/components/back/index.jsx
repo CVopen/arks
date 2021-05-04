@@ -1,67 +1,56 @@
 import style from './index.module.scss'
 import { useState, useEffect } from 'react'
+import bus from '../../utils/bus'
 export default function Back() {
-  
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll, true);
-  })
+    bus.on('scrollTop', comNum)
+  }, [])
   const [ num, setNum ] = useState(0)
-  const [ isAnimate, setAnimate ] = useState(false)
   const [ isRotate, setRotate ] = useState(false)
 
-  const handleScroll = () => {
-    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
-    const scrollheight = document.body.scrollHeight || document.body.scrollHeight // 页面总高
-    const innerHeight = window.innerHeight // 视口高度
-    setNum(parseInt(scrollTop / (scrollheight - innerHeight) * 100) + '%')
-  }
-
   const handleClickToTop = () => {
-    if (isAnimate) return
-    setAnimate(true)
+    let timer = null
+    if (timer) return
     const speed = 50
-    const timer = setInterval(() => {
+    timer = setInterval(() => {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
       if (scrollTop - speed > 0) {
         window.scrollTo(0, scrollTop - speed)
       } else {
         window.scrollTo(0, 0)
         clearInterval(timer)
-        setAnimate(false)
       }
     }, 20);
   }
 
   const handleClickToBottom = () => {
-    if (isAnimate) return
-    setAnimate(true)
-    const scrollheight = document.body.scrollHeight || document.body.scrollHeight // 页面总高
-    const innerHeight = window.innerHeight // 视口高度
+    let timer = null
+    if (timer) return
+    const scrollheight = document.body.scrollHeight // 页面总高
+    const innerHeight = document.body.offsetHeight  // 视口高度
     const speed = 50
-    const timer = setInterval(() => {
+    timer = setInterval(() => {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
       if (scrollTop + speed < scrollheight - innerHeight) {
         window.scrollTo(0, scrollTop + speed)
       } else {
-        window.scrollTo(0, scrollheight - innerHeight)
+        window.scrollTo(0, scrollheight)
         clearInterval(timer)
-        setAnimate(false)
       }
     }, 20);
   }
-  
-  const animationImg = () => {
-    if (isAnimate) return
-    setAnimate(true)
-    setRotate(!isRotate)
-    setTimeout(() => {
-      setAnimate(false)
-    }, 300)
+
+  // 计算
+  const comNum = (top) => {
+    const scrollheight = document.body.scrollHeight // 页面总高
+    const innerHeight = document.body.offsetHeight  // 视口高度
+    const result = top / (scrollheight - innerHeight)
+    setNum(!result ? 0 : parseInt(result * 100) + '%')
   }
 
   return (
     <div className={style.back}>
-      <div className={style.num} onClick={animationImg}>
+      <div className={style.num} onClick={() => setRotate(!isRotate)}>
         {
           (!num || num === '0%') ? 
             <img

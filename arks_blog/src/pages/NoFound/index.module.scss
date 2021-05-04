@@ -1,5 +1,10 @@
 .no-found{
   width: 100%;
+  height: calc(100% - 100px);
+  background-color: rgba(0, 0, 88, .4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   .content {
     width: 100%;
     margin: auto;
@@ -8,8 +13,8 @@
     position: relative;
     .tip {
       position: absolute;
-      top: .1rem;
-      left: .2rem;
+      top: 10%;
+      left: 5%;
       display: flex;
       flex-direction: column;
       span:nth-child(1) {
@@ -24,6 +29,7 @@
       display: flex;
       flex-direction: row-reverse;
       padding-bottom: .3rem;
+      padding-right: .3rem;
     }
   }
   img {
