@@ -1,38 +1,123 @@
 .mask {
   margin-bottom: 50px;
-  height: 100vh;
+  @include wh(100%, 100vh);
   position: relative;
   img {
-    height: 100vh;
+    @include wh(100%, 100vh);
     object-fit: cover;
   }
   .maskCom {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 500px;
-    background-color: rgba(0, 0, 0, .6);
+    @include wh(100%, 100%);
+    background-color: rgba(0, 0, 0, .4);
     overflow: hidden;
+    @include flexCenter();
+    animation: animation_mask .8s linear;
+    span {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      color: #fff;
+      transform: rotate(-90deg) translateY(-50%);
+      font-size: 50px;
+      cursor: pointer;
+      animation: animation_span 3s linear infinite;
+    }
+    h2 {
+      color: #fff;
+      user-select:none;
+      position: relative;
+      font-size: 50px;
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 10%;
+        @include wh(80%, 2px);
+        background-color: #1d5560;
+      }
+    }
     .auraOwn {
       position: absolute;
       bottom: -70%;
-      right: -50%;
-      width: 100%;
-      height: 100%;
+      right: -55%;
+      @include wh(100%, 100%);
       background-color: rgba(67, 82, 177, .6);
       transform: rotate(120deg);
       box-shadow: 0px 0px 60px 3px #4352b1;
+      animation: animation_own 3s linear infinite alternate;
     }
     .auraTwo {
       position: absolute;
-      bottom: -95%;
-      right: -10%;
-      width: 100%;
-      height: 100%;
+      bottom: -90%;
+      right: -20%;
+      @include wh(100%, 100%);
       background-color: rgba(67, 82, 177, .7);
       transform: rotate(170deg);
       box-shadow: 0px 0px 60px 3px #4352b1;
+      animation: animation_two 3s linear infinite alternate;
+    }
+    .auraThree {
+      position: absolute;
+      top: 60px;
+      left: -400px;
+      @include wh(800px, 800px);
+      background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+      border-radius: 50%;
+      opacity: 0.4;
+      box-shadow: 0px 0px 60px 8px #4352b1;
+      animation: animation_three 7s linear infinite alternate;
+    }
+
+    @keyframes animation_own {
+      from {
+        transform: rotate(120deg);
+      }
+      to {
+        transform: rotate(135deg);
+      }
+    }
+
+    @keyframes animation_two {
+      from {
+        transform: rotate(160deg);
+      }
+      to {
+        transform: rotate(170deg);
+      }
+    }
+
+    @keyframes animation_three {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes animation_span {
+      from {
+        bottom: 50px;
+        opacity: 1;
+      }
+      to {
+        bottom: 30px;
+        opacity: 0;
+      }
+    }
+
+    @keyframes animation_mask {
+      from {
+        transform: translateY(-30px);
+        background-color: rgba(0, 0, 0, 1);
+      }
+      to {
+        transform: translateY(0);
+        background-color: rgba(0, 0, 0, .4);
+      }
     }
   }
 }
