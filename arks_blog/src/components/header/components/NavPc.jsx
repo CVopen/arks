@@ -6,11 +6,12 @@ export default function NavPc(props) {
     path,
     setSearch,
     isSearch,
-    push
+    push,
+    pathname
   } = props
   const toPath = (e) => {
     const ev = e || window.event
-    push(ev.target.dataset.path)
+    if (pathname !== ev.target.dataset.path) push(ev.target.dataset.path)
   }
   return (
     <div 

@@ -14,11 +14,9 @@ function Header(props) {
   }, [])
 
   // 路由跳转
-  const toPath = (path) => {
-    return () => {
-      if (pathname === path || isRotate) return
-      props.history.push(path)
-    }
+  const toPath = () => {
+    if (pathname === '/center' || isRotate) return
+    props.history.push('/center')
   }
   
   const path = [
@@ -59,11 +57,12 @@ function Header(props) {
         path={path}
         setSearch={setSearch}
         push={props.history.push}
+        pathname={pathname}
       />
       <img 
         className={[style.logo, isRotate ? style['logo-open'] : ''].join(' ')} 
         src={require('../../assets/images/logo.jpg').default} alt="logo"
-        onClick={toPath('/center')}
+        onClick={toPath}
       />
       <Search show={isSearch} changeStata={() => setSearch(false)} />
     </div>
