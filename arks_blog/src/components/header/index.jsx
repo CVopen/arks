@@ -1,9 +1,9 @@
 import style from './index.module.scss'
-import { SearchOutlined } from '@ant-design/icons'
 import { useState, useEffect } from 'react'
 import { useLocation, withRouter } from 'react-router-dom'
 import Search from './components/Search'
 import bus from '../../utils/bus'
+import NavPc from './components/NavPc'
 function Header(props) {
   const [ isRotate, setRotate ] = useState(false)
   const [ isSearch, setSearch ] = useState(false)
@@ -16,39 +16,50 @@ function Header(props) {
   // 路由跳转
   const toPath = (path) => {
     return () => {
-      if (pathname === path) return
+      if (pathname === path || isRotate) return
       props.history.push(path)
     }
   }
+  
+  const path = [
+    {
+      path: '/',
+      name: '首页'
+    },
+    {
+      path: '/login',
+      name: '分类'
+    },
+    {
+      path: '/',
+      name: '标签'
+    },
+    {
+      path: '/',
+      name: '归档'
+    },
+    {
+      path: '/',
+      name: '友链'
+    },
+    {
+      path: '/',
+      name: '客户端'
+    }
+  ]
 
   return (
     <div className={[style.header, color ? style['header-open'] : ''].join(' ')}>
       <div className={[style.btn, isRotate ? style['btn-rotate'] : ''].join(' ')} onClick={() => setRotate(!isRotate)}>
         <span className={style.line}></span>
       </div>
-      <div className={[style.nav, isRotate ? style['nav-open'] : ''].join(' ')}>
-        <ul>
-          <li>
-            <span onClick={toPath('/')}>首页</span>
-          </li>
-          <li>
-            <span onClick={toPath('/login')}>分类</span>
-          </li>
-          <li>
-            <span>标签</span>
-          </li>
-          <li>
-            <span>归档</span>
-          </li>
-          <li>
-            <span>友链</span>
-          </li>
-          <li>
-            <span>客户端</span>
-          </li>
-        </ul>
-        <SearchOutlined onClick={() => setSearch(!isSearch)} style={{fontSize: '40px'}}/>
-      </div>
+      <NavPc 
+        isRotate={isRotate}
+        isSearch={isSearch}
+        path={path}
+        setSearch={setSearch}
+        push={props.history.push}
+      />
       <img 
         className={[style.logo, isRotate ? style['logo-open'] : ''].join(' ')} 
         src={require('../../assets/images/logo.jpg').default} alt="logo"

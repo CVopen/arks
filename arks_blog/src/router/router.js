@@ -10,6 +10,10 @@ const routes = [
     component: Nofound,
   },
   {
+    path: '/test',
+    component: Nofound,
+  },
+  {
     path: '*',
     redirect: '/404'
   }

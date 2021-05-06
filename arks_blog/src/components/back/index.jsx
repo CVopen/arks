@@ -49,7 +49,6 @@ export default function Back() {
   const handleClickOpen = () => {
     const style = document.getElementsByTagName('body')[0].style
     let color = '#fff'
-    console.log(style.getPropertyValue('--theme-colorbg'));
     if (!style.getPropertyValue('--theme-colorbg') || style.getPropertyValue('--theme-colorbg') === '#fff') {
       color = '#000'
     }
@@ -60,7 +59,8 @@ export default function Back() {
     const scrollheight = document.body.scrollHeight // 页面总高
     const innerHeight = document.body.offsetHeight  // 视口高度
     const result = top / (scrollheight - innerHeight)
-    setNum(!result ? 0 : parseInt(result * 100) + '%')
+    // eslint-disable-next-line use-isnan
+    setNum((result === NaN || result === Infinity) ? 0 : parseInt(result * 100) + '%')
   }
 
   return (
