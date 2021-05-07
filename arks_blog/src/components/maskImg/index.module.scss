@@ -34,9 +34,13 @@
         content: '';
         position: absolute;
         bottom: 0;
-        left: 10%;
-        @include wh(80%, 3px);
+        left: 0;
+        right: 0;
+        width: 0;
+        height: 3px;
         background-color: #1d5560;
+        margin: auto;
+        animation: animation_line 5s linear infinite;
       }
     }
     .auraOwn {
@@ -119,6 +123,14 @@
       to {
         transform: translateY(0);
         background-color: rgba(0, 0, 0, .4);
+      }
+    }
+    @keyframes animation_line {
+      from {
+        width: 0;
+      }
+      to {
+        width: 80%;
       }
     }
   }
