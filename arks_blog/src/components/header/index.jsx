@@ -4,6 +4,7 @@ import { useLocation, withRouter } from 'react-router-dom'
 import Search from './components/Search'
 import bus from '../../utils/bus'
 import NavPc from './components/NavPc'
+import NavMoblie from './components/NavMoblie'
 function Header(props) {
   const [ isRotate, setRotate ] = useState(false)
   const [ isSearch, setSearch ] = useState(false)
@@ -51,14 +52,27 @@ function Header(props) {
       <div className={[style.btn, isRotate ? style['btn-rotate'] : ''].join(' ')} onClick={() => setRotate(!isRotate)}>
         <span className={style.line}></span>
       </div>
-      <NavPc 
-        isRotate={isRotate}
-        isSearch={isSearch}
-        path={path}
-        setSearch={setSearch}
-        push={props.history.push}
-        pathname={pathname}
-      />
+      {
+        // 视口高度
+        document.body.offsetWidth > 1000 ?
+        <NavPc 
+          isRotate={isRotate}
+          isSearch={isSearch}
+          path={path}
+          setSearch={setSearch}
+          push={props.history.push}
+          pathname={pathname}
+        /> : 
+        <NavMoblie 
+          isRotate={isRotate}
+          isSearch={isSearch}
+          path={path}
+          setSearch={setSearch}
+          push={props.history.push}
+          pathname={pathname}
+          setRotate={setRotate}
+        />
+      }
       <img 
         className={[style.logo, isRotate ? style['logo-open'] : ''].join(' ')} 
         src={require('../../assets/images/logo.jpg').default} alt="logo"

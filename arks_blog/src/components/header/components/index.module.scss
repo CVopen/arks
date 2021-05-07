@@ -1,0 +1,37 @@
+.nav {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0 , 0, 0, .6);
+  position: fixed;
+  top: 0;
+  left: -100%;
+  z-index: 999;
+  transition: all .4s;
+  ul {
+    width: 65%;
+    height: calc(100% - 1.4rem);
+    background-color: #fff;
+    margin: 0;
+    flex-direction: column;
+    li {
+      justify-content: left;
+      margin-left: .4rem;
+      span {
+        color: #000;
+      }
+    }
+  }
+  .img {
+    width: 65%;
+    background-color: #fff;
+    text-align: center;
+    padding-top: .4rem;
+    .logo {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+}
+.nav-open {
+  left: 0;
+}

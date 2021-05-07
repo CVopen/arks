@@ -1,10 +1,13 @@
 import style from './index.module.scss'
 import { DoubleLeftOutlined } from '@ant-design/icons'
-import { useRef } from 'react'
-
+import { useRef, Fragment, useEffect, useState } from 'react'
+import bus from '../../utils/bus'
 export default function MaskImg() {
   let timer = useRef()
-
+  const [ width, setWidth ] = useState(true)
+  useEffect(() => {
+    bus.on('offsetWidth', (flag) => setWidth(flag))
+  }, [])
   const handleClickToBottom = () => {
     clearInterval(timer.current)
     const innerHeight = document.body.offsetHeight  // 视口高度
@@ -26,9 +29,14 @@ export default function MaskImg() {
       <div className={style.maskCom}>
         <h2>ark</h2>
         <DoubleLeftOutlined onClick={handleClickToBottom} />
-        <div className={style.auraOwn}></div>
-        <div className={style.auraTwo}></div>
-        <div className={style.auraThree}></div>
+        {
+          width && 
+          <Fragment >
+            <div className={style.auraOwn}></div>
+            <div className={style.auraTwo}></div>
+            <div className={style.auraThree}></div>
+          </Fragment>
+        }
       </div>
     </div>
   )

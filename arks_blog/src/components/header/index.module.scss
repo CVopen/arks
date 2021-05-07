@@ -15,6 +15,7 @@
     opacity: 1;
     cursor: pointer;
     transition: all .4s;
+    user-select: none;
   }
   .logo-open {
     opacity: 0;

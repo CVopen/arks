@@ -17,7 +17,7 @@
     animation: animation_mask .8s linear;
     span {
       position: absolute;
-      bottom: 50px;
+      bottom: 60px;
       left: 50%;
       color: #fff;
       transform: rotate(-90deg) translateY(-50%);
@@ -35,7 +35,7 @@
         position: absolute;
         bottom: 0;
         left: 10%;
-        @include wh(80%, 2px);
+        @include wh(80%, 3px);
         background-color: #1d5560;
       }
     }
@@ -100,12 +100,14 @@
 
     @keyframes animation_span {
       from {
-        bottom: 50px;
+        bottom: 60px;
         opacity: 1;
+        transform: rotate(-90deg) translateY(-50%);
       }
       to {
-        bottom: 30px;
+        bottom: 40px;
         opacity: 0;
+        transform: rotate(-90deg) translateY(-50%) scale(.85);
       }
     }
 
