@@ -9,8 +9,10 @@ function Header(props) {
   const [ isRotate, setRotate ] = useState(false)
   const [ isSearch, setSearch ] = useState(false)
   const [ color, setColor ] = useState(false)
+  const [ width, setWidth ] = useState(document.body.offsetWidth > 1000)
   const { pathname } = useLocation()
   useEffect(() => {
+    bus.on('offsetWidth', (flag) => setWidth(flag))
     bus.on('scrollTop', (top) => setColor(top > 0))
   }, [])
 
@@ -54,7 +56,7 @@ function Header(props) {
       </div>
       {
         // 视口高度
-        document.body.offsetWidth > 1000 ?
+        width ?
         <NavPc 
           isRotate={isRotate}
           isSearch={isSearch}

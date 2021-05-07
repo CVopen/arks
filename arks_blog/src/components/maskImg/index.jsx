@@ -4,7 +4,7 @@ import { useRef, Fragment, useEffect, useState } from 'react'
 import bus from '../../utils/bus'
 export default function MaskImg() {
   let timer = useRef()
-  const [ width, setWidth ] = useState(true)
+  const [ width, setWidth ] = useState(document.body.offsetWidth > 1000)
   useEffect(() => {
     bus.on('offsetWidth', (flag) => setWidth(flag))
   }, [])
