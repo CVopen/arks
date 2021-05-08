@@ -2,7 +2,7 @@ import bus from './bus'
 function setRem() {
   const scale = document.documentElement.clientWidth / 10
   document.documentElement.style.fontSize = scale + 'px'
-  bus.emit('offsetWidth', document.body.offsetWidth > 1000)
+  bus.emit('offsetWidth', document.body.offsetWidth)
 }
 
 // 初始化

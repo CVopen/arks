@@ -9,11 +9,12 @@ function Header(props) {
   const [ isRotate, setRotate ] = useState(false)
   const [ isSearch, setSearch ] = useState(false)
   const [ color, setColor ] = useState(false)
-  const [ width, setWidth ] = useState(document.body.offsetWidth > 1000)
+  const [ width, setWidth ] = useState(document.body.offsetWidth > 1400)
   const { pathname } = useLocation()
   useEffect(() => {
-    bus.on('offsetWidth', (flag) => setWidth(flag))
+    bus.on('offsetWidth', (flag) => setWidth(flag > 1400))
     bus.on('scrollTop', (top) => setColor(top > 0))
+    console.log(123);
   }, [])
 
   // 路由跳转
@@ -32,7 +33,7 @@ function Header(props) {
       name: '分类'
     },
     {
-      path: '/',
+      path: '/test',
       name: '标签'
     },
     {

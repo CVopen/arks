@@ -1,8 +1,9 @@
 // import React from 'react'
 import { Switch, Redirect, Route, useLocation } from 'react-router-dom'
-import { Fragment, useEffect } from 'react'
+import { useEffect } from 'react'
 import routes from './router'
 import bus from '../utils/bus'
+import Stroage from '../utils/localStorage'
 export default function Router() {
   const { pathname } = useLocation()
   useEffect(() => {
@@ -13,29 +14,35 @@ export default function Router() {
   const changePath = () => {
     bus.emit('scrollTop', pathname === '/404')
   }
+  const targetRouterConfig = routes.find((item) => {
+    return item.path === pathname
+  })
 
   return (
     <Switch>
       {
-        routes.map((item, index) => {
-          if(!item.redirect && item.path !== '*') {
-            return <Route 
-                      key={index} 
-                      exact 
-                      path={item.path} 
-                      component={item.component} 
-                    />
-          } else if (item.redirect) {
-            return (
-                <Redirect key={index} from="/" to={item.redirect}/>
-            )
-          } else if (item.path === '*') {
-            return <Route key={index} component={item.component}></Route>
-          }
-          return <Fragment key={index}></Fragment>
-        })
+        targetRouterConfig ? 
+        <Auth target={targetRouterConfig} /> :
+        <Redirect to={'/404'}/>
       }
     </Switch>
   )
 }
 
+function Auth(props) {
+  const { target } = props
+  const token = Stroage('token')
+  if (target.path === '/login' && token) {
+    return <Redirect to={'/'} />
+  }
+  if (!token && target.path === '/center') {
+    return <Redirect to={'/login'} />
+  }
+  return (
+    <Route 
+      exact 
+      path={target.path} 
+      component={target.component} 
+    />
+  )
+}

@@ -12,10 +12,13 @@ export default function NavPc(props) {
   } = props
   const toPath = (e) => {
     const ev = e || window.event
+    if (ev.target.dataset.path && pathname !== ev.target.dataset.path) {
+      push(ev.target.dataset.path)
+      setRotate(!isRotate)
+      return
+    }
     if (document.body.offsetWidth * .7 > ev.clientX) return
     setRotate(!isRotate)
-    if (ev.target.className.match(RegExp(/nav/))) return
-    if (pathname !== ev.target.dataset.path) push(ev.target.dataset.path)
   }
   return (
     <div 
