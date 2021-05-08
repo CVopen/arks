@@ -11,18 +11,19 @@ export default function MaskImg(props) {
   const handleClickToBottom = () => {
     clearInterval(timer.current)
     const innerHeight = document.body.offsetHeight  // 视口高度
-    const speed = (innerHeight - (document.documentElement.scrollTop || document.body.scrollTop)) / 12.5
+    const bodyHeight = document.body.scrollHeight // 页面总高
+    const result = bodyHeight - innerHeight > innerHeight ? innerHeight : bodyHeight - innerHeight
+    const speed = (result - (document.documentElement.scrollTop || document.body.scrollTop)) / 12.5
     timer.current = setInterval(() => {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
-      if (scrollTop + speed < innerHeight) {
+      if (scrollTop + speed < result) {
         window.scrollTo(0, scrollTop + speed)
       } else {
-        window.scrollTo(0, innerHeight)
+        window.scrollTo(0, result)
         clearInterval(timer.current)
       }
     }, 20)
   }
-  console.log(props);
   return (
     <div 
       className={style.mask}
