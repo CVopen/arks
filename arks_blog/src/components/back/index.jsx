@@ -60,7 +60,7 @@ export default function Back() {
     const innerHeight = document.body.offsetHeight  // 视口高度
     const result = top / (scrollheight - innerHeight)
     // eslint-disable-next-line use-isnan
-    setNum((result === NaN || result === Infinity) ? 0 : parseInt(result * 100) + '%')
+    setNum((result === NaN || result === Infinity || !result) ? 0 : parseInt(result * 100) + '%')
   }
 
   return (

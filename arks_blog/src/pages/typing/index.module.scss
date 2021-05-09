@@ -1,0 +1,53 @@
+.typing {
+  @include wh(100vw, 100vh);
+  background-image: url(http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210509/1883cf2d4a2fac1ea04c9fb19521dab2.jpg);
+  background-repeat: no-repeat ;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  .mask {
+    @include wh(100%, 100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .6);
+    color: #fff;
+    @include flexCenter();
+    .path {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      color: #fff;
+      transform: rotate(-90deg) translateY(-50%);
+      font-size: 40px;
+      cursor: pointer;
+      animation: animation_span 3s linear infinite;
+      user-select: none;
+    }
+    .text {
+      display: inline-block;
+      font: bold 200% Consolas, Monaco, monospace;
+      overflow: hidden;
+      white-space: nowrap;
+      font-weight: 500;
+      border-right: 1px solid transparent;
+      animation: caret .5s steps(1) infinite;
+      user-select: none;
+    }
+    @keyframes caret{
+      50% { border-right-color: currentColor}
+    }
+    @keyframes animation_span {
+      from {
+        bottom: 60px;
+        opacity: 1;
+        transform: rotate(-90deg) translateY(-50%);
+      }
+      to {
+        bottom: 40px;
+        opacity: 0;
+        transform: rotate(-90deg) translateY(-50%) scale(.85);
+      }
+    }
+  }
+}

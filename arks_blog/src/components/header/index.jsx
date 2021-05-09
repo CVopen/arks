@@ -14,7 +14,6 @@ function Header(props) {
   useEffect(() => {
     bus.on('offsetWidth', (flag) => setWidth(flag > 1400))
     bus.on('scrollTop', (top) => setColor(top > 0))
-    console.log(123);
   }, [])
 
   // 路由跳转
