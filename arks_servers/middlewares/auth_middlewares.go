@@ -10,8 +10,8 @@ import (
 // jwt 权限校验中间件
 func JwtAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		tokenHeader := ctx.Request.Header.Get("Authorzation")
-
+		tokenH, _ := ctx.Get("token")
+		tokenHeader := tokenH.(string)
 		result := utils.Result{
 			Code: utils.Forbidden,
 			Msg:  "",
@@ -32,5 +32,6 @@ func JwtAuth() gin.HandlerFunc {
 			return
 		}
 		ctx.Set("id", token.Id)
+		ctx.Next()
 	}
 }

@@ -1,5 +1,7 @@
 import axios from 'axios'
-
+import Stroage from './localStorage'
+import md5 from 'js-md5'
+import { message } from 'antd';
 const instance = axios.create({
   baseURL: '/blog',
   timeout: 10000,
@@ -8,9 +10,23 @@ const instance = axios.create({
   }
 })
 
+const signString = (strObj) => {
+  let str = ''
+  for (const key in strObj) {
+    str += (key + strObj[key])
+  }
+  str += 'xyhOpen@666'
+  return md5(str)
+}
+
 // Add a request interceptor
 instance.interceptors.request.use(
   function(config) {
+    const timestamp = Date.parse(new Date())
+    const token = Stroage('token')
+    config.headers.timestamp = timestamp
+    config.headers.Authorization = token ? 'Bearer ' + token : ''
+    config.headers.sign = signString({ timestamp, Authorization: token ? 'Bearer ' + token : '' })
     return config
   },
   function(error) {
@@ -22,6 +38,10 @@ instance.interceptors.request.use(
 // Add a response interceptor
 instance.interceptors.response.use(
   function(response) {
+    if (response.data.code !== 10000) {
+      message.error(response.data.msg)
+      return Promise.reject("请求失败")
+    }
     return response.data
   },
   function(error) {

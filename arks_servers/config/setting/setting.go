@@ -20,8 +20,9 @@ type Setting struct {
 
 // 服务配置
 type server struct {
-	Mode string `yaml:"mode"`
-	Port string `yaml:"port"`
+	Mode    string `yaml:"mode"`
+	Port    string `yaml:"port"`
+	Keysign string `yaml:"keysign"`
 }
 
 // 数据库配置

@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-// 加密密码
+// md5加密
 func CryptoPwd(pwd string) string {
 
 	data := []byte(pwd)
