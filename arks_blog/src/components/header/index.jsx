@@ -77,7 +77,8 @@ function Header(props) {
       }
       <img 
         className={[style.logo, isRotate ? style['logo-open'] : ''].join(' ')} 
-        src={require('../../assets/images/logo.jpg').default} alt="logo"
+        src="http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210511/f472a827fcfb5bf808ec12d08026ce24.png" 
+        alt="logo"
         onClick={toPath}
       />
       <Search show={isSearch} changeStata={() => setSearch(false)} />

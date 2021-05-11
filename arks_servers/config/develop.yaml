@@ -8,7 +8,7 @@ db:
   host: "127.0.0.1" #主机地址
   user_name: "root" # 用户名
   password: "root" # 密码
-  database: "ack" # 数据库名
+  database: "ark" # 数据库名
   port: "3306" # 端口
   time_zone: "Local" # 时区
   max_idle_conn: 10 # 最大空闲连接数

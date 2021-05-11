@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Provider } from 'react-redux'
 import store from './store'
 import Router from './router'
@@ -11,6 +11,8 @@ import './utils'
 import './assets/style/index.scss'
 import 'antd/dist/antd.css'
 import 'moment/locale/zh-cn'
+import './lib/hearts'
+
 import zhCN from 'antd/lib/locale/zh_CN'
 import moment from 'moment'
 import { ConfigProvider } from 'antd'
@@ -19,12 +21,6 @@ moment.locale('zh-cn')
 
 export default function App() {
   const [show, setShow] = useState(false)
-  useEffect(() => {
-    // setTimeout(() => {
-    //   setShow(true)
-    //   window.location.href = window.location.hash
-    // }, 1000)
-  }, [])
   return (
     <ConfigProvider locale={zhCN}>
       <Provider store={store}>

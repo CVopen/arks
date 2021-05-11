@@ -24,6 +24,6 @@ func InitApp() *gin.Engine {
 	apiSwg := routers.ApiSwg{}
 	apiSwg.InitSwgApi(router)
 	apiblog := routers.ApiBlog{}
-	apiblog.InitBlogApi("/bolg", router)
+	apiblog.InitBlogApi("/blog", router)
 	return router
 }

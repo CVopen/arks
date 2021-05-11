@@ -47,3 +47,27 @@ func (u *UserHandler) LoginUser2(ctx *gin.Context) {
 	token, _ := utils.ParseToken(tokens[1])
 	ctx.JSON(http.StatusOK, token.Id)
 }
+
+func (u *UserHandler) Captcha(ctx *gin.Context) {
+	captcha := utils.CaptchaConfig{} // 创建验证码配置结构
+	result := utils.Result{          // 返回数据结构
+		Code: utils.Success,
+		Msg:  "验证码创建成功",
+		Data: nil,
+	}
+
+	base64, err := utils.GenerateCaptcha(&captcha) // 创建验证码
+	if err != nil {                                // 异常处理
+		result.Code = http.StatusBadRequest
+		result.Msg = "服务器端错误"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	result.Data = gin.H{ // 封装 data
+		"captcha_id":  captcha.Id,
+		"captcha_url": base64,
+	}
+
+	ctx.JSON(http.StatusOK, result) // 返回 json 数据
+}

@@ -39,7 +39,7 @@
         height: 3px;
         background-color: #1d5560;
         margin: auto;
-        animation: animation_line 5s linear infinite;
+        animation: animation_line 3s linear infinite;
       }
     }
     .auraOwn {
@@ -125,10 +125,10 @@
       }
     }
     @keyframes animation_line {
-      from {
+      0% {
         width: 0;
       }
-      to {
+      90% {
         width: 80%;
       }
     }

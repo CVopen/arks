@@ -1,0 +1,27 @@
+.input {
+  height: 50px;
+  margin-top: 15px;
+  @include flexCenter();
+  padding: 0 20px;
+  position: relative;
+  .line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 0px;
+    height: 2px;
+    background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
+    margin: auto;
+    transition: all .6s;
+  }
+  input {
+    color: rgba(255, 255, 255, .8);
+    &:focus ~ .line {
+      width: calc(100% - 40px);
+    }
+  }
+  span {
+    margin: 10px;
+  }
+}
