@@ -1,3 +1,16 @@
+definitions:
+  utils.Result:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 数据
+        type: object
+      msg:
+        description: 提示
+        type: string
+    type: object
 host: localhost:8888
 info:
   contact: {}
@@ -7,5 +20,53 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: web接口bolg
   version: "1.0"
-paths: {}
+paths:
+  /blog/captcha:
+    get:
+      consumes:
+      - application/json
+      responses:
+        "100":
+          description: code":10000,"data":base64,"msg":"验证码创建成功"}
+          schema:
+            $ref: '#/definitions/utils.Result'
+        "104":
+          description: code":10001,"data":base64,"msg":"服务器端错误"}
+          schema:
+            $ref: '#/definitions/utils.Result'
+      summary: 创建验证码
+      tags:
+      - 授权
+  /blog/login:
+    post:
+      consumes:
+      - application/json
+      responses:
+        "100":
+          description: Continue
+          schema:
+            $ref: '#/definitions/utils.Result'
+        "104":
+          description: ""
+          schema:
+            $ref: '#/definitions/utils.Result'
+      summary: 登录
+      tags:
+      - 授权
+  /blog/register:
+    post:
+      consumes:
+      - application/json
+      responses:
+        "100":
+          description: Continue
+          schema:
+            $ref: '#/definitions/utils.Result'
+        "104":
+          description: ""
+          schema:
+            $ref: '#/definitions/utils.Result'
+      summary: 注册
+      tags:
+      - 授权
 swagger: "2.0"

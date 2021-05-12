@@ -4,7 +4,7 @@ import { DoubleLeftOutlined } from '@ant-design/icons'
 export default function Typing(props) {
   let timer = useRef()
   const [ text, setText ] = useState([])
-  const defaultTextTwo = 'hello world!'.split('')
+  const defaultTextTwo = 'hello world'.split('')
   const defaultTextOwn = '您的指尖能够改变世界!'.split('')
 
   useEffect(() => {

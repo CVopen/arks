@@ -13,10 +13,11 @@ export default class ColoredRect extends Component {
     });
   };
   render() {
-    const { FromCom } = this.props
+    const { FromCom, title } = this.props
     return (
       <div className={style.login}>
         <div className={style.from}>
+          <span className={style.title}>{ title }</span>
           <FromCom />
         </div>
         <Stage 

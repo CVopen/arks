@@ -55,7 +55,6 @@ function LoginCom() {
 
   return (
     <>
-      <span className={style.title}>登录</span>
       <InputCom 
         onChange={inputChange('username')}
         type="text"
@@ -85,6 +84,6 @@ function LoginCom() {
 
 export default function LoginPage () {
   return (
-    <From FromCom={LoginCom} />
+    <From FromCom={LoginCom} title="登录" />
   )
 }

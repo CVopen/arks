@@ -2,7 +2,6 @@ package controller
 
 import (
 	"acks_servers/forms"
-	"acks_servers/models"
 	"acks_servers/utils"
 	"net/http"
 	"strings"
@@ -12,29 +11,46 @@ import (
 
 type UserHandler struct{}
 
-// @Title 新增模版
-// @Author mengyilingjian@outlook.com
-// @Description 新增模版
-// @Tags release template
-// @Param Authorization	header	string true "Bearer 31a165baebe6dec616b1f8f3207b4273"
-// @Param body body	ReleaseTemplateAdd true "JSON数据"
-// @Success 200 {object} handler.ReportJSONResult
-// @Router	/api/v1/release/template/add [post]
+// @Summary 注册
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /blog/register [post]
 func (u *UserHandler) CreateUser(ctx *gin.Context) {
 	// 从请求中把数据拿出来
-	var user models.User
+	form := forms.RegisterForm{}
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "注册成功",
+		Data: nil,
+	}
 	var err error
-	if err = ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err = ctx.ShouldBindJSON(&form); err != nil {
+		result.Msg = "参数错误"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusBadRequest, result)
 		return
 	}
+	user := form.BindToModel()
 	if err = user.Create(); err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"error": err.Error()})
+		result.Msg = "创建用户失败"
+		result.Code = utils.RequestError
+		result.Data = err
+		ctx.JSON(http.StatusOK, result)
 		return
 	}
-	ctx.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, result)
 }
 
+// @Summary 登录
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /blog/login [post]
 func (uh *UserHandler) LoginUser(ctx *gin.Context) {
 	loginForm := forms.LoginForm{}
 	result := utils.Result{
@@ -102,6 +118,13 @@ func (u *UserHandler) LoginUser2(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, token.Id)
 }
 
+// @Summary 创建验证码
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @Success 100 {object} utils.Result{"code":10000,"data":base64,"msg":"验证码创建成功"}
+// @Failure 103/104 object utils.Result {"code":10001,"data":base64,"msg":"服务器端错误"}
+// @Router /blog/captcha [get]
 func (u *UserHandler) Captcha(ctx *gin.Context) {
 	captcha := utils.CaptchaConfig{} // 创建验证码配置结构
 	result := utils.Result{          // 返回数据结构
