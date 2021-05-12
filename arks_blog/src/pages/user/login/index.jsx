@@ -1,99 +1,90 @@
 import style from './index.module.scss'
-import { Component, useEffect, useState } from 'react';
-import { Stage, Layer, Rect, Circle } from 'react-konva';
-import InputCom from './components/input'
-import Konva from 'konva';
-import { getCaptcha } from '../../../api/auth'
- function LoginCom() {
-  const inputChange = (e) => {
-    console.log(e);
-  }
-  const [ imgSrc, setImgSrc ] = useState('')
+import { useEffect, useState } from 'react';
+
+import InputCom from '../components/input'
+import From from '../components/from'
+import { getCaptcha, login } from '../../../api/auth'
+function LoginCom() {
+  const [ userInfo, setUserInfo ] = useState({})
+  const [ tip, tipText ] = useState('')
   useEffect(() => {
     captcha()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const captcha = () => {
     getCaptcha().then(res => {
-      setImgSrc(res.data.captcha_url)
+      setUserInfo({...userInfo , ...res.data})
     })
   }
+
+  const userLogin = () => {
+    if (!validate()) return
+    login(userInfo).then(res => {
+      console.log(res);
+    }).catch(err => {
+      captcha()
+      throw err
+    })
+  }
+  
+  const inputChange = (type) => {
+    return (e) => {
+      tipText('')
+      userInfo[type] = e
+      setUserInfo({...userInfo})
+    }
+  }
+
+  const validate = () => {
+    const { username, password, captcha_val } = userInfo 
+    if (!username || username.length < 3 || username.length > 30) {
+      tipText('用户名输入有误')
+      return false
+    }
+    if (!password || password.length < 3 || password.length > 20) {
+      tipText('密码长度3-20位')
+      return false
+    }
+    if (!captcha_val || captcha_val.length !== 4) {
+      tipText('验证码长度为4位')
+      return false
+    }
+    return true
+  }
+
   return (
-    <div className={style.from}>
+    <>
       <span className={style.title}>登录</span>
       <InputCom 
-        onChange={inputChange}
+        onChange={inputChange('username')}
         type="text"
         placeholder="账号"
         clear
       />
       <InputCom 
-        onChange={inputChange}
+        onChange={inputChange('password')}
         type="password"
         placeholder="密码"
       />
       <div className={style.code}>
         <div className={style.inputCode}>
           <InputCom 
-            onChange={inputChange}
+            onChange={inputChange('captcha_val')}
             type="text"
             placeholder="验证码"
           />
         </div>
-        <img src={imgSrc}  onClick={captcha} alt="" />
+        <img src={userInfo.captcha_url}  onClick={captcha} alt="" />
       </div>
-    </div>
+      <div className={style.tip}>{ tip }</div>
+      <button onClick={userLogin}>登录</button>
+    </>
   )
 }
 
-export default class ColoredRect extends Component {
-  state = {
-    color: 'green'
-  };
-  handleClick = () => {
-    console.log(123);
-    this.setState({
-      color: Konva.Util.getRandomColor()
-    });
-  };
-  render() {
-    return (
-      <div className={style.login}>
-        <LoginCom />
-        <Stage 
-          width={window.innerWidth} 
-          height={window.innerHeight}
-        >
-          <Layer>
-            <Circle
-              x={25}
-              y={250}
-              width={50}
-              height={50}
-              fill={this.state.color}
-              shadowBlur={5}
-              onTouchEnd={this.handleClick}
-              onTap={this.handleClick}
-              onClick={this.handleClick}
-            />
-            <RectCom />
-          </Layer>
-        </Stage>
-      </div>
-    );
-  }
-}
-
-function RectCom () {
+export default function LoginPage () {
   return (
-    <Rect
-      x={200}
-      y={20}
-      width={20}
-      height={20}
-      fill={'red'}
-      shadowBlur={5}
-      onClick={() => console.log(123)}
-    />
+    <From FromCom={LoginCom} />
   )
 }

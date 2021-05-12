@@ -10,13 +10,13 @@ import (
 
 // 公共参数：
 // timestamp 必传，时间戳 ；放在header中
-// token token 登录后返回；放在header中
+// Authorization token 登录后返回；放在header中
 
 // sign 必传，签名；放在header中
 
 // 签名生成的通用步骤如下：
 
-// 第一步，设<timestamp, token>集合M，将集合M内所有参数按照参数名ASCII码从小到大排序（字典序），使用URL键值对的格式（即key1value1key2value2…）拼接成字符串stringA。
+// 第一步，设<timestamp, Authorization>集合M，将集合M内所有参数按照参数名ASCII码从小到大排序（字典序），使用URL键值对的格式（即key1value1key2value2…）拼接成字符串stringA。
 
 // 特别注意以下重要规则：
 
@@ -30,7 +30,7 @@ import (
 
 // 假设传送的参数如下：
 
-// token： 115f08f670726c7c8c247fd08dd4e7e6
+// Authorization 115f08f670726c7c8c247fd08dd4e7e6
 
 // timestamp： 1604391161983
 

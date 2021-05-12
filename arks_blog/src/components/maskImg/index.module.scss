@@ -45,7 +45,7 @@
     .auraOwn {
       position: absolute;
       bottom: -70%;
-      right: -55%;
+      right: -60%;
       @include wh(100%, 120%);
       background-color: rgba(67, 82, 177, .6);
       transform: rotate(120deg);
@@ -76,10 +76,10 @@
 
     @keyframes animation_own {
       from {
-        transform: rotate(120deg);
+        transform: rotate(130deg);
       }
       to {
-        transform: rotate(135deg);
+        transform: rotate(140deg);
       }
     }
 
