@@ -1,0 +1,13 @@
+.code {
+  display: flex;
+  align-items: center;
+  .inputCode {
+    width: calc(100% - 120px);
+  }
+  img {
+    background-color: #fff;
+    cursor: pointer;
+    width: 120px;
+    height: 50px;
+  }
+}

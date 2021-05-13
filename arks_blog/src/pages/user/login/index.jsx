@@ -1,21 +1,17 @@
 import style from './index.module.scss'
-import { useEffect, useState } from 'react';
-
+import { useState } from 'react';
+import { Row } from 'antd'
 import InputCom from '../components/input'
 import From from '../components/from'
-import { getCaptcha, login } from '../../../api/auth'
-function LoginCom() {
+import Btn from '../components/btn'
+import Captcha from '../components/captcha'
+import { login } from '../../../api/auth'
+function LoginCom(props) {
   const [ userInfo, setUserInfo ] = useState({})
   const [ tip, tipText ] = useState('')
-  useEffect(() => {
-    captcha()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
-  const captcha = () => {
-    getCaptcha().then(res => {
-      setUserInfo({...userInfo , ...res.data})
-    })
+  const captcha = (data) => {
+    setUserInfo({...userInfo , ...data})
   }
 
   const userLogin = () => {
@@ -39,11 +35,11 @@ function LoginCom() {
   const validate = () => {
     const { username, password, captcha_val } = userInfo 
     if (!username || username.length < 3 || username.length > 30) {
-      tipText('用户名输入有误')
+      tipText('用户名输入有误，长度为3~30位')
       return false
     }
-    if (!password || password.length < 3 || password.length > 20) {
-      tipText('密码长度3-20位')
+    if (!password || password.length < 6 || password.length > 20) {
+      tipText('密码长度6-20位')
       return false
     }
     if (!captcha_val || captcha_val.length !== 4) {
@@ -66,24 +62,25 @@ function LoginCom() {
         type="password"
         placeholder="密码"
       />
-      <div className={style.code}>
-        <div className={style.inputCode}>
-          <InputCom 
-            onChange={inputChange('captcha_val')}
-            type="text"
-            placeholder="验证码"
-          />
-        </div>
-        <img src={userInfo.captcha_url}  onClick={captcha} alt="" />
-      </div>
+      <Captcha 
+        onChange={inputChange('captcha_val')}
+        onRefresh={captcha}
+      />
       <div className={style.tip}>{ tip }</div>
-      <button onClick={userLogin}>登录</button>
+      <Btn onClick={userLogin} text='登录' />
+      <Row justify="end">
+        <span className={style.span} onClick={()=>props.history.push('/register')}>没有账号?</span>
+        <span className={style.span}>忘记密码</span>
+      </Row>
     </>
   )
 }
 
-export default function LoginPage () {
+export default function LoginPage (props) {
+  const { history } = props
   return (
-    <From FromCom={LoginCom} title="登录" />
+    <From title="登录">
+      <LoginCom history={history} />
+    </From>
   )
 }

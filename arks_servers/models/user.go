@@ -31,6 +31,7 @@ func (u User) Create() error {
 
 // 根据用户名和密码获取用户
 func (u User) GetByUserName() (User, error) {
-	err := db.Db.Where("`username` = ? or `email` = ?", u.Username, u.Email).First(&u).Error
-	return u, err
+	var user User
+	err := db.Db.Where("`username` = ? or `email` = ?", u.Username, u.Email).First(&user).Error
+	return user, err
 }

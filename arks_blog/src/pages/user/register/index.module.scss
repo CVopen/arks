@@ -1,0 +1,16 @@
+.tip {
+  color: #fa9905;
+  padding-left: 30px;
+  line-height: 20px;
+  height: 20px;
+}
+
+.span {
+  margin-top: 10px;
+  margin-right: 10px;
+  transition: all .2s;
+  cursor: pointer;
+  &:hover {
+    color: #fff;
+  }
+}

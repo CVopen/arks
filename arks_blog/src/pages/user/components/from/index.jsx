@@ -13,12 +13,12 @@ export default class ColoredRect extends Component {
     });
   };
   render() {
-    const { FromCom, title } = this.props
+    const { title } = this.props
     return (
       <div className={style.login}>
         <div className={style.from}>
           <span className={style.title}>{ title }</span>
-          <FromCom />
+          {this.props.children}
         </div>
         <Stage 
           width={window.innerWidth} 

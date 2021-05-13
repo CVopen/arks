@@ -3,6 +3,7 @@ package controller
 import (
 	"acks_servers/forms"
 	"acks_servers/utils"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -18,22 +19,38 @@ type UserHandler struct{}
 // @Success 100 object utils.Result 成功
 // @Failure 103/104 object utils.Result 失败
 // @Router /blog/register [post]
-func (u *UserHandler) CreateUser(ctx *gin.Context) {
+func (uh *UserHandler) CreateUser(ctx *gin.Context) {
 	// 从请求中把数据拿出来
-	form := forms.RegisterForm{}
+	registerForm := forms.RegisterForm{}
 	result := utils.Result{
 		Code: utils.Success,
-		Msg:  "注册成功",
+		Msg:  "注册用户成功",
 		Data: nil,
 	}
 	var err error
-	if err = ctx.ShouldBindJSON(&form); err != nil {
+	if err := ctx.ShouldBindJSON(&registerForm); err != nil {
+		fmt.Println(err)
 		result.Msg = "参数错误"
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusBadRequest, result)
 		return
 	}
-	user := form.BindToModel()
+	user := registerForm.BindToModel()
+	u, _ := user.GetByUserName() // 查询是否存在该用户
+	if u.Username != "" {
+		// 用户已经被注册
+		result.Code = utils.RequestError
+		result.Msg = "该用户已存在"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+	if u.Email != "" {
+		// 邮箱已经被注册
+		result.Code = utils.RequestError
+		result.Msg = "该邮箱已经被注册"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
 	if err = user.Create(); err != nil {
 		result.Msg = "创建用户失败"
 		result.Code = utils.RequestError
