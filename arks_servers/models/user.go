@@ -35,3 +35,17 @@ func (u User) GetByUserName() (User, error) {
 	err := db.Db.Where("`username` = ? or `email` = ?", u.Username, u.Email).First(&user).Error
 	return user, err
 }
+
+// 根据用户名和邮箱获取用户
+func (u User) GetByEmailToUser() (User, error) {
+	var user User
+	err := db.Db.Where("`username` = ? and `email` = ?", u.Username, u.Email).First(&user).Error
+	return user, err
+}
+
+// 修改密码
+func (u User) EditUserPwd() error {
+	pwd := utils.CryptoPwd(u.Password)
+	return db.Db.Model(&User{}).Where("`email` = ?", u.Email).
+		Update("password", pwd).Error
+}

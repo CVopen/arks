@@ -2,21 +2,22 @@
 import { Input } from 'antd'
 import style from './index.module.scss'
 import { CloseOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons'
-import { useRef, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 export default function InputCom (props) {
   const [ showPwd, setShowPwd ] = useState(false)
+  const [ textValue, setValue ] = useState('')
   const [ typeInput, typeInputChange ] = useState('text')
   useEffect(() => {
     if (props.type) typeInputChange(props.type)
   }, [])
-  const inputRef = useRef()
   const changeInput = (e) => {
-    props.onChange(e.target.value)
+    props.onChange(e.target.value.replace(/[\u4e00-\u9fa5]/ig,''))
+    setValue(e.target.value.replace(/[\u4e00-\u9fa5]/ig,''))
   }
 
   const clear = () => {
     props.onChange('')
-    inputRef.current.input.value = ''
+    setValue('')
   }
 
   const changeType = () => {
@@ -31,7 +32,7 @@ export default function InputCom (props) {
         bordered={false}
         onChange={changeInput}
         type={typeInput}
-        ref={inputRef}
+        value={props.value === '' || props.value ? props.value : textValue}
       />
       <em className={style.line}>
       </em>

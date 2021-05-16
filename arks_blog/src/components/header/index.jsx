@@ -28,7 +28,7 @@ function Header(props) {
       name: '首页'
     },
     {
-      path: '/login',
+      path: '/user/login',
       name: '分类'
     },
     {

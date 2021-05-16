@@ -2,6 +2,7 @@ import Nofound from '../pages/NoFound/index.jsx' // 404页面
 import Home from '../pages/home/index.jsx'  // 主页
 import Login from '../pages/user/login/index'
 import Register from '../pages/user/register/index'
+import Forget from '../pages/user/forget/index'
 import Test from '../pages/test'
 const routes = [
   {
@@ -21,12 +22,16 @@ const routes = [
     component: Nofound,
   },
   {
-    path: '/login',
+    path: '/user/login',
     component: Login
   },
   {
-    path: '/register',
+    path: '/user/register',
     component: Register,
+  },
+  {
+    path: '/user/forget',
+    component: Forget,
   },
   {
     path: '*',

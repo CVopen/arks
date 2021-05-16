@@ -1,17 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 import bus from '../../utils/bus'
+
+let id = null
+
 export default function Comicwidget () {
   const [ size, setSize ] = useState({width: document.body.clientWidth, height: document.body.clientHeight})
-  const [ id, setId ] = useState(null)
   useEffect(() => {
+    id = null
     init()
-    
     bus.on('offsetWidth', () => {
       if (size.width !== document.body.clientWidth || size.height !== document.body.clientHeight) {
-        setSize({width: document.body.clientWidth, height: document.body.clientHeight})
         cancelAnimationFrame(id)
-        init()
+        setTimeout(() => {
+          setSize({width: document.body.clientWidth, height: document.body.clientHeight})
+          init()
+        }, 100)
       }
     })
     return componentWillUnmount
@@ -34,21 +38,17 @@ export default function Comicwidget () {
     for (let index = 0; index < arr.length; index++) {
       arr[index].drawCircle()
     }
-    const rafId = requestAnimationFrame(()=>animation(ctx, arr))
-    setId(rafId)
+    id = requestAnimationFrame(()=>animation(ctx, arr))
   }
 
   const componentWillUnmount = () => {
+    bus._events.offsetWidth.pop()
     cancelAnimationFrame(id)
   }
 
   return  <div className="comicwidge">
-            <canvas 
-              style={{position: 'fixed', left: 0, top: 0}} 
-              // width={size.width}
-              // height={size.height}
-            />
-        </div>
+            <canvas style={{position: 'fixed', left: 0, top: 0}} />
+          </div>
 }
 
 const random = (num) => {

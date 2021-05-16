@@ -70,9 +70,8 @@ function LoginCom(props) {
       <div className={style.tip}>{ tip }</div>
       <Btn onClick={userLogin} text='登录' />
       <Row justify="end">
-        <span className={style.span} onClick={()=>props.history.push('/register')}>没有账号?</span>
-        <span className={style.span}>忘记密码</span>
-        <span className={style.span} onClick={()=>props.history.push('/')}>主页</span>
+        <span className={style.span} onClick={()=>props.history.push('/user/register')}>没有账号?</span>
+        <span className={style.span} onClick={()=>props.history.push('/user/forget')}>忘记密码</span>
       </Row>
     </>
   )
@@ -81,7 +80,7 @@ function LoginCom(props) {
 export default function LoginPage (props) {
   const { history } = props
   return (
-    <From title="登录">
+    <From title="登录" history={history}>
       <LoginCom history={history} />
     </From>
   )

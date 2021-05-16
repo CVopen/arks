@@ -35,6 +35,20 @@ func (uh *UserHandler) CreateUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, result)
 		return
 	}
+
+	captchaConfig := &utils.CaptchaConfig{
+		Id:          registerForm.CaptchaId,
+		VerifyValue: registerForm.CaptchaVal,
+	}
+
+	if !utils.CaptchaVerify(captchaConfig) {
+		// 检验失败
+		result.Code = utils.RequestError
+		result.Msg = "验证码错误"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
 	// 绑定表单到实体结构
 	user := registerForm.BindToModel()
 	u, _ := user.GetByUserName() // 查询是否存在该用户
@@ -165,4 +179,95 @@ func (u *UserHandler) Captcha(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, result) // 返回 json 数据
+}
+
+// @Summary 修改密码验证
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @Success 100 {object} utils.Result{"code":10000,"data":base64,"msg":"验证码创建成功"}
+// @Failure 103/104 object utils.Result {"code":10001,"data":base64,"msg":"服务器端错误"}
+// @Router /blog/captcha [get]
+func (uh *UserHandler) ForgetPws(ctx *gin.Context) {
+	forgetForm := forms.ForgetForm{}
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "验证成功",
+		Data: nil,
+	}
+	if err := ctx.ShouldBindJSON(&forgetForm); err != nil {
+		// 表单校验失败
+		result.Code = utils.RequestError
+		result.Msg = "参数错误"
+		ctx.JSON(http.StatusOK, result)
+	}
+
+	captchaConfig := &utils.CaptchaConfig{
+		Id:          forgetForm.CaptchaId,
+		VerifyValue: forgetForm.CaptchaVal,
+	}
+	if !utils.CaptchaVerify(captchaConfig) {
+		// 检验失败
+		result.Code = utils.RequestError
+		result.Msg = "验证码错误"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	user := forgetForm.BindToModel()
+	u, _ := user.GetByEmailToUser()
+	if u.Username == "" {
+		// 用户不存在
+		result.Code = utils.RequestError
+		result.Msg = "用户不存在"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+	ctx.JSON(http.StatusOK, result)
+}
+
+// @Summary 修改密码
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @Success 100 {object} utils.Result{"code":10000,"data":base64,"msg":"验证码创建成功"}
+// @Failure 103/104 object utils.Result {"code":10001,"data":base64,"msg":"服务器端错误"}
+// @Router /blog/captcha [get]
+func (uh *UserHandler) EditPwd(ctx *gin.Context) {
+	editPwdForm := forms.EditPwdForm{}
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "重置密码成功",
+		Data: nil,
+	}
+
+	if err := ctx.ShouldBindJSON(&editPwdForm); err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "参数错误"
+		result.Data = err
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	captchaConfig := &utils.CaptchaConfig{
+		Id:          editPwdForm.CaptchaId,
+		VerifyValue: editPwdForm.CaptchaVal,
+	}
+
+	if !utils.CaptchaVerify(captchaConfig) {
+		// 检验失败
+		result.Code = utils.RequestError
+		result.Msg = "验证码错误"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	user := editPwdForm.BindToModel()
+	err := user.EditUserPwd()
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "server error"
+		ctx.JSON(http.StatusOK, result)
+	}
+	ctx.JSON(http.StatusOK, result)
 }

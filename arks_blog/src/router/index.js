@@ -33,11 +33,11 @@ export default function Router() {
 function Auth(props) {
   const { target } = props
   const token = Stroage('token')
-  if (target.path === '/login' && token) {
+  if (target.path.indexOf('/user') >= 0 && token) {
     return <Redirect to={'/'} />
   }
   if (!token && target.path === '/center') {
-    return <Redirect to={'/login'} />
+    return <Redirect to={'/user/login'} />
   }
   return (
     <Route 

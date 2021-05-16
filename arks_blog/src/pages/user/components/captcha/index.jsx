@@ -5,9 +5,9 @@ import { useState, useEffect } from 'react'
 export default function Btn(props) {
   const [ captchaData, setData ] = useState({})
   useEffect(() => {
-    captcha()
+    if (!props.value) captcha()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [props.value])
 
   const captcha = () => {
     getCaptcha().then(res => {
@@ -15,6 +15,7 @@ export default function Btn(props) {
       props.onRefresh(res.data)
     })
   }
+
   return (
     <div className={style.code}>
       <div className={style.inputCode}>
@@ -22,6 +23,7 @@ export default function Btn(props) {
           onChange={props.onChange}
           type="text"
           placeholder="验证码"
+          value={props.value}
         />
       </div>
       {

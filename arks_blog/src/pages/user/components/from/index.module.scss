@@ -36,7 +36,7 @@
     text-align: center;
     width: 50px;
     margin: 0 auto;
-    margin-top: 5vh;
+    margin-top: calc(5vh - 28px);
     z-index: 9999;
     color: rgba(255, 255, 255, .6);
     font-size: 28px;

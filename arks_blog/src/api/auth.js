@@ -1,4 +1,4 @@
-import { get, post } from '../utils/request'
+import { get, post, put } from '../utils/request'
 
 // 获取验证码base64
 export const getCaptcha = () => get({
@@ -30,3 +30,24 @@ export const register = ({ username, password, nickname, email, second_pwd, capt
   }
 })
 
+// 修改密码验证
+export const forgetPwd = ({ username, email, captcha_id, captcha_val }) => post({
+  url: '/forget_pwd',
+  data: {
+    username, // 用户名
+    email, // 邮箱
+    captcha_id,  // 验证码 ID
+    captcha_val // 验证码
+  }
+})
+
+export const editPwd = ({ password, email, second_pwd, captcha_id, captcha_val }) => put({
+  url: '/edit_pwd',
+  data: {
+    password,  // 密码
+    email, // 邮箱
+    second_pwd, // 重复密码
+    captcha_id,  // 验证码 ID
+    captcha_val // 验证码
+  }
+})
