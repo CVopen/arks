@@ -5,6 +5,9 @@ export default function handleLocalStorage(method, key, value) {
       if (result) return result
       return false
     case 'set':
+      if (typeof value === 'object') {
+        value = JSON.stringify(value)
+      }
       window.localStorage.setItem(key, value)
       break
     case 'remove': 

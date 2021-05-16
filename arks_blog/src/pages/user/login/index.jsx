@@ -5,9 +5,14 @@ import InputCom from '../components/input'
 import From from '../components/from'
 import Btn from '../components/btn'
 import Captcha from '../components/captcha'
-import { login } from '../../../api/auth'
+import { login } from '@/api/auth'
+import Storage from '@/utils/localStorage'
+import { useDispatch } from 'react-redux'
+// import { useSelector, useDispatch } from 'react-redux'
 
-function LoginCom(props) {
+export default function LoginCom(props) {
+  const dispatch = useDispatch('user')
+  const { history } = props
   const [ userInfo, setUserInfo ] = useState({})
   const [ tip, tipText ] = useState('')
 
@@ -18,7 +23,9 @@ function LoginCom(props) {
   const userLogin = () => {
     if (!validate()) return
     login(userInfo).then(res => {
-      console.log(res);
+      Storage('set', 'userInfo', res.data)
+      Storage('set', 'token', res.data.token)
+      dispatch({type: 'SET_USERINFO', value: res.data})
     }).catch(err => {
       captcha()
       throw err
@@ -51,7 +58,7 @@ function LoginCom(props) {
   }
 
   return (
-    <>
+    <From title="登录" history={history}>
       <InputCom 
         onChange={inputChange('username')}
         type="text"
@@ -70,18 +77,9 @@ function LoginCom(props) {
       <div className={style.tip}>{ tip }</div>
       <Btn onClick={userLogin} text='登录' />
       <Row justify="end">
-        <span className={style.span} onClick={()=>props.history.push('/user/register')}>没有账号?</span>
-        <span className={style.span} onClick={()=>props.history.push('/user/forget')}>忘记密码</span>
+        <span className={style.span} onClick={()=>history.push('/user/register')}>没有账号?</span>
+        <span className={style.span} onClick={()=>history.push('/user/forget')}>忘记密码</span>
       </Row>
-    </>
-  )
-}
-
-export default function LoginPage (props) {
-  const { history } = props
-  return (
-    <From title="登录" history={history}>
-      <LoginCom history={history} />
     </From>
   )
 }

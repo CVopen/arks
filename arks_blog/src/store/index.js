@@ -1,4 +1,7 @@
-import { createStore } from 'redux'
-import reducers from './reducers'
+import { createStore, combineReducers } from 'redux'
+import { reducers, reducersUser } from './reducers'
 
-export default createStore(reducers)
+export default createStore(combineReducers({
+  user: reducersUser, 
+  store: reducers
+}))

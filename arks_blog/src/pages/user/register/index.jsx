@@ -7,15 +7,9 @@ import From from '../components/from'
 import { register } from '../../../api/auth'
 import Captcha from '../components/captcha'
 import { message } from 'antd';
+
 export default function RegisterCom(props) {
   const { history } = props
-  return (
-    <From title="注册" history={history}>
-      <Register history={history} />
-    </From>
-  )
-}
-function Register (props) {
   const [ tip, tipText ] = useState('')
   const [ userInfo, setUserInfo ] = useState({})
 
@@ -85,7 +79,7 @@ function Register (props) {
     }
     return true
   }
-  const toLogin = () => props.history.push('/user/login')
+  const toLogin = () => history.push('/user/login')
 
   const userRegister = () => {
     if (!validate()) return
@@ -95,7 +89,7 @@ function Register (props) {
     })
   }
   return (
-    <>
+    <From title="注册" history={history}>
       {
         // 表单
         fromArr.map((item, index) => (
@@ -117,6 +111,6 @@ function Register (props) {
       <Row justify="end">
         <span className={style.span} onClick={toLogin}>已有账号</span>
       </Row>
-    </>
+    </From>
   )
 }

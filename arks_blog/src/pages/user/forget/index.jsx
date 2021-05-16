@@ -10,13 +10,6 @@ import { message } from 'antd';
 
 export default function ForgetCom(props) {
   const { history } = props
-  return (
-    <From title="修改密码" history={history}>
-      <Forget history={history} />
-    </From>
-  )
-}
-function Forget (props) {
   const [ tip, tipText ] = useState('')
   const [ userInfo, setUserInfo ] = useState({})
   const [ fromArr, setArr ] = useState([])
@@ -81,7 +74,7 @@ function Forget (props) {
     }
     return true
   }
-  const toLogin = () => props.history.push('/user/login')
+  const toLogin = () => history.push('/user/login')
 
   const forgetUser = () => {
     if (!validate()) return
@@ -110,7 +103,7 @@ function Forget (props) {
     })
   }
   return (
-    <>
+    <From title="修改密码" history={history}>
       {
         // 表单
         fromArr.map(item => (
@@ -133,6 +126,6 @@ function Forget (props) {
       <Row justify="end">
         <span className={style.span} onClick={toLogin}>直接登录</span>
       </Row>
-    </>
+    </From>
   )
 }

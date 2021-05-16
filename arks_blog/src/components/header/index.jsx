@@ -5,15 +5,23 @@ import Search from './components/Search'
 import bus from '../../utils/bus'
 import NavPc from './components/NavPc'
 import NavMoblie from './components/NavMoblie'
+import Storage from '@/utils/localStorage'
+import { useDispatch, useSelector } from 'react-redux'
+
 function Header(props) {
   const [ isRotate, setRotate ] = useState(false)
   const [ isSearch, setSearch ] = useState(false)
   const [ color, setColor ] = useState(false)
   const [ width, setWidth ] = useState(document.body.offsetWidth > 1400)
   const { pathname } = useLocation()
+  const dispatch = useDispatch('user')
+  const store = useSelector((store) => store.user)
   useEffect(() => {
     bus.on('offsetWidth', (flag) => setWidth(flag > 1400))
     bus.on('scrollTop', (top) => setColor(top > 0))
+    const info = Storage('get', 'userInfo')
+    if (info) dispatch({type: 'SET_USERINFO', value: JSON.parse(info)})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 路由跳转
@@ -77,7 +85,7 @@ function Header(props) {
       }
       <img 
         className={[style.logo, isRotate ? style['logo-open'] : ''].join(' ')} 
-        src="http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210511/f472a827fcfb5bf808ec12d08026ce24.png" 
+        src={store.userInfo.userImg ? store.userInfo.userImg : 'http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210511/f472a827fcfb5bf808ec12d08026ce24.png'} 
         alt="logo"
         onClick={toPath}
       />

@@ -23,7 +23,7 @@ const signString = (strObj) => {
 instance.interceptors.request.use(
   function(config) {
     const timestamp = Date.parse(new Date())
-    const token = Stroage('token')
+    const token = Stroage('get', 'token')
     config.headers.timestamp = timestamp
     config.headers.Authorization = token ? 'Bearer ' + token : ''
     config.headers.sign = signString({ timestamp, Authorization: token ? 'Bearer ' + token : '' })
