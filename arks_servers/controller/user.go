@@ -35,6 +35,7 @@ func (uh *UserHandler) CreateUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, result)
 		return
 	}
+	// 绑定表单到实体结构
 	user := registerForm.BindToModel()
 	u, _ := user.GetByUserName() // 查询是否存在该用户
 	if u.Username != "" {

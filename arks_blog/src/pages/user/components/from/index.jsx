@@ -1,59 +1,20 @@
-import { Stage, Layer, Rect, Circle } from 'react-konva';
-import Konva from 'konva';
 import style from './index.module.scss'
-import { Component } from 'react';
-export default class ColoredRect extends Component {
-  state = {
-    color: 'green'
-  };
-  handleClick = () => {
-    console.log(123);
-    this.setState({
-      color: Konva.Util.getRandomColor()
-    });
-  };
-  render() {
-    const { title } = this.props
-    return (
-      <div className={style.login}>
-        <div className={style.from}>
+import './index.scss'
+import Comic from '../../../../components/canvas'
+
+export default function From(props) {
+  const { title } = props
+  return (
+    <div className={style.user}>
+      {/* <div style={{position: 'relative',height: window.innerHeight}}> */}
+        <h2 className={[style.title, style.name].join(' ')}>ark</h2>
+        <Comic />
+        <div className='from'>
           <span className={style.title}>{ title }</span>
-          {this.props.children}
+          {props.children}
         </div>
-        <Stage 
-          width={window.innerWidth} 
-          height={window.innerHeight}
-        >
-          <Layer>
-            <Circle
-              x={25}
-              y={250}
-              width={50}
-              height={50}
-              fill={this.state.color}
-              shadowBlur={5}
-              onTouchEnd={this.handleClick}
-              onTap={this.handleClick}
-              onClick={this.handleClick}
-            />
-            <RectCom />
-          </Layer>
-        </Stage>
-      </div>
-    );
-  }
+      {/* </div> */}
+    </div>
+  );
 }
 
-function RectCom () {
-  return (
-    <Rect
-      x={200}
-      y={20}
-      width={20}
-      height={20}
-      fill={'red'}
-      shadowBlur={5}
-      onClick={() => console.log(123)}
-    />
-  )
-}

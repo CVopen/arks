@@ -27,14 +27,14 @@ export default function MaskImg(props) {
   return (
     <div 
       className={style.mask}
-      style={{height: props.height ? '65vh' : '100vh'}}
+      style={{height: props.height ? '65vh' : window.innerHeight}}
     >
       <img 
         src="http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210505/4bed66f04b0006858803b90eb66dd0a2.jpg" 
         alt="a" 
-        style={{height: props.height ? '65vh' : '100vh'}}
+        style={{height: props.height ? '65vh' : window.innerHeight}}
       />
-      <div className={style.maskCom}>
+      <div className={style.maskCom} style={{height: window.innerHeight}}>
         {
           props.height ? 
             <h2 style={{fontSize: width ? '50px' : '.7rem'}}>{props.text}</h2> :

@@ -9,7 +9,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    @include wh(100%, 100%);
+    @include wh(100%, 100vh);
     background-color: rgba(0, 0, 0, .4);
     overflow: hidden;
     @include flexCenter();

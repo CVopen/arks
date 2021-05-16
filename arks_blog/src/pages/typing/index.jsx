@@ -39,8 +39,8 @@ export default function Typing(props) {
     props.setShow(true)
   }
   return (
-    <div className={style.typing}>
-      <div className={style.mask}>
+    <div className={style.typing} style={{height: window.innerHeight}}>
+      <div className={style.mask} style={{height: window.innerHeight}}>
         <span 
           onClick={toPath}
           className={style.text}

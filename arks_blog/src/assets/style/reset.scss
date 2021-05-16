@@ -45,6 +45,7 @@ h6 {
   height: 100vh;
 }
 html, body {
+  min-height: 100vh;
   &::-webkit-scrollbar {
     width: 2px;    
   }

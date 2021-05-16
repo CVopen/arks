@@ -6,6 +6,7 @@ import From from '../components/from'
 import Btn from '../components/btn'
 import Captcha from '../components/captcha'
 import { login } from '../../../api/auth'
+
 function LoginCom(props) {
   const [ userInfo, setUserInfo ] = useState({})
   const [ tip, tipText ] = useState('')
@@ -71,6 +72,7 @@ function LoginCom(props) {
       <Row justify="end">
         <span className={style.span} onClick={()=>props.history.push('/register')}>没有账号?</span>
         <span className={style.span}>忘记密码</span>
+        <span className={style.span} onClick={()=>props.history.push('/')}>主页</span>
       </Row>
     </>
   )

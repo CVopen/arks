@@ -6,7 +6,7 @@
   background-size: cover;
   position: relative;
   .mask {
-    @include wh(100%, 100%);
+    @include wh(100%, 100vh);
     position: absolute;
     top: 0;
     left: 0;

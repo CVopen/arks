@@ -3,7 +3,7 @@ import { getCaptcha } from '../../../../api/auth'
 import InputCom from '../input/index'
 import { useState, useEffect } from 'react'
 export default function Btn(props) {
-  const [ captchaData, setData ] = useState('')
+  const [ captchaData, setData ] = useState({})
   useEffect(() => {
     captcha()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -24,7 +24,11 @@ export default function Btn(props) {
           placeholder="验证码"
         />
       </div>
-      <img src={captchaData.captcha_url}  onClick={captcha} alt="刷新" />
+      {
+        captchaData.captcha_url ? 
+        <img src={captchaData.captcha_url}  onClick={captcha} alt="刷新" /> :
+        <span>获取验证码</span>
+      }
     </div>
   )
 }

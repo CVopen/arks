@@ -1,34 +1,12 @@
-.login {
-  height: 100vh;
+.user {
+  @include wh(100vw, 100vh);
   background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  background-color: #fff;
-  transition: all .4s;
+  // background-color: #fff;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 999;
-  .circle {
-    @include wh(10vw, 10vw);
-    background-color: skyblue;
-    border-radius: 50%;
-    position: absolute;
-    top: 40%;
-    right: 5%;
-  }
-  .from {
-    width: 600px;
-    padding: 20px;
-    border-radius: 20px;
-    background-color: rgba(255, 255, 255, .01);
-    box-shadow: 0 25px 45px 0px rgba(0, 0, 0, .1);
-    backdrop-filter: blur(5px);
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-    color: rgba(255, 255, 255, .6)
-  }
+  
   .title {
     font-size: 20px;
     cursor: pointer;
@@ -53,13 +31,25 @@
       background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
     }
   }
+  .name {
+    display: block;
+    text-align: center;
+    width: 50px;
+    margin: 0 auto;
+    margin-top: 5vh;
+    z-index: 9999;
+    color: rgba(255, 255, 255, .6);
+    font-size: 28px;
+    cursor: pointer;
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 0;
+      height: 2px;
+      margin: auto;
+    }
+  }
 }
-
-.canvas {
-  background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 999;
-}
-
