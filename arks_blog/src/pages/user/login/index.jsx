@@ -8,14 +8,12 @@ import Captcha from '../components/captcha'
 import { login } from '@/api/auth'
 import Storage from '@/utils/localStorage'
 import { useDispatch } from 'react-redux'
-// import { useSelector, useDispatch } from 'react-redux'
 
 export default function LoginCom(props) {
   const dispatch = useDispatch('user')
   const { history } = props
   const [ userInfo, setUserInfo ] = useState({})
   const [ tip, tipText ] = useState('')
-
   const captcha = (data) => {
     setUserInfo({...userInfo , ...data})
   }
@@ -26,6 +24,7 @@ export default function LoginCom(props) {
       Storage('set', 'userInfo', res.data)
       Storage('set', 'token', res.data.token)
       dispatch({type: 'SET_USERINFO', value: res.data})
+      history.replace('/')
     }).catch(err => {
       captcha()
       throw err

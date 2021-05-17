@@ -7,6 +7,7 @@ import {
 export default function Footer() {
   return (
     <div className={style.footer}>
+      <h3>©2021 - 2022 By open</h3>
       <h3>愿我们写的每一行代码都对得起背井离乡。</h3>
       <div className={style.icon}>
         <div className={style.circular}>

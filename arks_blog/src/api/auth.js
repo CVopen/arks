@@ -41,6 +41,7 @@ export const forgetPwd = ({ username, email, captcha_id, captcha_val }) => post(
   }
 })
 
+// 修改密码
 export const editPwd = ({ password, email, second_pwd, captcha_id, captcha_val }) => put({
   url: '/edit_pwd',
   data: {

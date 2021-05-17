@@ -29,7 +29,9 @@ export default function Btn(props) {
       {
         captchaData.captcha_url ? 
         <img src={captchaData.captcha_url}  onClick={captcha} alt="刷新" /> :
-        <span>获取验证码</span>
+        <div className={style.tip}>
+          <span>获取验证码</span>
+        </div>
       }
     </div>
   )

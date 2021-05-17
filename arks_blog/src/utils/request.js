@@ -69,32 +69,26 @@ export const get = ({ url, params, headers = {} }) => {
   })
 }
 
-export const post = ({ url, params, data, headers = {} }) => {
-  return factory({
-    url,
-    method: "post",
-    params,
-    data,
-    headers
-  })
-}
+export const post = ({ url, params, data, headers = {} }) => factory({
+  url,
+  method: "post",
+  params,
+  data,
+  headers
+})
 
-export const put = ({ url, params, data, headers = {} }) => {
-  return factory({
-    url,
-    method: "put",
-    params,
-    data,
-    headers
-  })
-}
+export const put = ({ url, params, data, headers = {} }) => factory({
+  url,
+  method: "put",
+  params,
+  data,
+  headers
+})
 
-export const del = ({ url, params, data, headers = {} }) => {
-  return factory({
-    url,
-    method: "delete",
-    params,
-    data,
-    headers
-  })
-}
+export const del = ({ url, params, data, headers = {} }) => factory({
+  url,
+  method: "delete",
+  params,
+  data,
+  headers
+})

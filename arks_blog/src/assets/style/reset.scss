@@ -114,3 +114,12 @@ table {
 .color {
   color: red;
 }
+.cart {
+  margin-right: 20px !important;
+  margin-top: 30px !important;
+  border: none !important;
+  box-shadow: 0 1px 5px 0px rgba(0, 0, 0, .2);
+  border-radius: 10px !important;
+  width: 100%;
+  cursor: default !important;
+}

@@ -1,16 +1,23 @@
 import style from './index.module.scss'
 import { useEffect, useRef, useState } from 'react'
 import { DoubleLeftOutlined } from '@ant-design/icons'
+import Storage from '@/utils/localStorage'
+import { useDispatch } from 'react-redux'
+
 export default function Typing(props) {
   let timer = useRef()
   const [ text, setText ] = useState([])
   const defaultTextTwo = 'hello world'.split('')
   const defaultTextOwn = '您的指尖能够改变世界!'.split('')
+  const dispatch = useDispatch('user')
 
   useEffect(() => {
     showInput(defaultTextOwn)
+    const info = Storage('get', 'userInfo')
+    if (info) dispatch({type: 'SET_USERINFO', value: JSON.parse(info)})
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   const showInput = (defaultText) => {
     timer.current = setInterval(() => {
       if (text.length === defaultText.length) {

@@ -7,16 +7,39 @@
   left: -100%;
   z-index: 999;
   transition: left .4s;
+  .inputbox {
+    background-color: #fff;
+    width: 65%;
+    padding: .2rem;
+    .input {
+      margin: .2rem 0;
+      border: 1px solid #ccc;
+      border-radius: 15px;
+    }
+  }
   ul {
     width: 65%;
     height: calc(100% - 1.4rem);
     background-color: #fff;
     margin: 0;
     flex-direction: column;
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 2px dashed $varTheme;
+      height: 0;
+      background-color: #fff;
+      width: 100%;
+    }
     li {
       justify-content: left;
+      align-items: center;
       margin-left: .4rem;
       span {
+        margin-right: .4rem;
         color: #000;
       }
     }

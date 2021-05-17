@@ -3,5 +3,5 @@ import { reducers, reducersUser } from './reducers'
 
 export default createStore(combineReducers({
   user: reducersUser, 
-  store: reducers
+  app: reducers
 }))

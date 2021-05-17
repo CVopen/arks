@@ -137,6 +137,9 @@ func (uh *UserHandler) LoginUser(ctx *gin.Context) {
 		"username": u.Username,
 		"userImg":  u.UserImg,
 		"token":    token,
+		"nickName": u.Nickname,
+		"sign":     u.Signature,
+		"github":   u.Github,
 	}
 	result.Data = data
 	ctx.JSON(http.StatusOK, result)

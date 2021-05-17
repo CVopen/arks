@@ -1,0 +1,49 @@
+.avatar {
+  width: 34% !important;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  display: block;
+  border-radius: 50%;
+  transition: all .8s;
+  cursor: pointer;
+  transform: rotate(0deg);
+  &:hover {
+    transform: rotate(360deg);
+  }
+}
+.nums {
+  @include flexCenter();
+  padding: 10px 0;
+  div {
+    flex: 1;
+    @include flexCenter();
+    flex-direction: column;
+    cursor: pointer;
+  }
+}
+.btn {
+  width: 100%;
+  background-color: $varTheme;
+  color: #fff;
+  height: 35px;
+  margin-top: 10px;
+  @include flexCenter();
+  cursor: pointer;
+  position: relative;
+  span {
+    z-index: 1;
+  }
+  &:hover::after {
+    width: 100%;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 35px;
+    width: 0;
+    background-color: rgba(67, 82, 177, 0.7);
+    transition: all .4s ease-out;
+  }
+}

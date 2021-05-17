@@ -1,5 +1,8 @@
 import style from './index.module.scss'
 import { SearchOutlined } from '@ant-design/icons'
+import { useSelector } from 'react-redux'
+import { Input } from 'antd'
+
 export default function NavPc(props) {
   const {
     isRotate,
@@ -10,6 +13,9 @@ export default function NavPc(props) {
     setRotate,
     pathname
   } = props
+
+  const avatar = useSelector((state) => state.user.userInfo.userImg)
+
   const toPath = (e) => {
     const ev = e || window.event
     if (ev.target.dataset.path && pathname !== ev.target.dataset.path) {
@@ -21,23 +27,26 @@ export default function NavPc(props) {
     setRotate(!isRotate)
   }
   return (
-    <div 
+    <div
       className={[style.nav, isRotate ? style['nav-open'] : ''].join(' ')}
       onClick={toPath}
     >
       <div className={style.img}>
         <img 
           className={style.logo} 
-          src="http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210511/f472a827fcfb5bf808ec12d08026ce24.png" 
+          src={avatar ? avatar : 'http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210511/f472a827fcfb5bf808ec12d08026ce24.png'}
           alt="logo"
         />
+      </div>
+      <div className={style.inputbox}>
+        <Input className={style.input} bordered={false} placeholder="search" />
       </div>
       <ul>
         {
           path.map((item, index) => {
             return (
               <li key={index}>
-                <span data-path={item.path}>{item.name}</span>
+                {item.icon} <span style={{marginRight: 0}} data-path={item.path}>{item.name}</span>
               </li>
             )
           })
