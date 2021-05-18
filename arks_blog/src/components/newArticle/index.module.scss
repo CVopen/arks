@@ -1,0 +1,43 @@
+.item {
+  display: flex;
+  margin-top: 10px;
+  a {
+    @include wh(65px, 65px);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-right: 10px;
+    img {
+      @include wh(65px, 65px);
+      object-fit: cover;
+      transform: scale(1);
+      transition: all .4s;
+      &:hover {
+        transform:scale(1.1);
+      }
+    }
+  }
+  .content {
+    width: calc(100% - 75px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 14px;
+    a {
+      @include wh(100%, auto);
+      margin: 0;
+      @include changeColor();
+      word-wrap:break-word; 
+      word-break:break-all; 
+      display: -webkit-box;
+      text-overflow: ellipsis;
+      overflow : hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      transition: all .4s;
+      &:hover {
+        color: #e05d44;
+      }
+    }
+  }
+}

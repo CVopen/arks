@@ -3,10 +3,11 @@ import { useState, useEffect, useRef } from 'react'
 import { 
   ArrowDownOutlined, 
   ArrowUpOutlined, 
-  PoweroffOutlined, 
+  BulbOutlined, 
   MoreOutlined 
 } from '@ant-design/icons'
 import bus from '../../utils/bus'
+
 export default function Back() {
   useEffect(() => {
     bus.on('scrollTop', comNum)
@@ -53,6 +54,7 @@ export default function Back() {
       color = '#000'
     }
     style.setProperty('--theme-colorbg', color)
+    style.setProperty('--theme-fontColor', color === '#fff' ? '#000' : '#fff')
   }
   // 计算
   const comNum = (top) => {
@@ -84,7 +86,7 @@ export default function Back() {
         className={[style.left, isRotate ? style['left-open'] : ''].join(' ')}
         onClick={handleClickOpen}
       >
-        <PoweroffOutlined />
+        <BulbOutlined />
       </div>
       <div
         className={[style.bottom, isRotate ? style['bottom-open'] : ''].join(' ')}

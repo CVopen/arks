@@ -101,7 +101,7 @@ function Header(props) {
         alt="logo"
         onClick={toPath}
       />
-      <Search show={isSearch} changeStata={() => setSearch(false)} />
+      <Search show={isSearch} style={{color: '#fff'}} changeStata={() => setSearch(false)} />
     </div>
   )
 }

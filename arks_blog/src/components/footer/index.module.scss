@@ -1,12 +1,13 @@
 .footer {
-  background-color: #fff;
-  box-shadow: 0 4px 10px 10px #ccc;
+  background-color: $varThemeBg;
+  box-shadow: 0 14px 37px 10px #ccc;
   width: 100%;
   padding: 30px 0;
   h3 {
     text-align: center;
     padding-bottom: 10px;
     font-weight: 700;
+    color: $varFontColor;
   }
   .icon {
     @include flexCenter();
@@ -21,7 +22,7 @@
       border: 1px solid #ccc;
       cursor: pointer;
       span {
-        color: #000;
+        color: $varFontColor;
         transition: all .2s;
         &:hover {
           color: #5399fc;

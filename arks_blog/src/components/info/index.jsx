@@ -17,8 +17,8 @@ export default function Info(props) {
     <Card hoverable className="cart">
       <img className={style.avatar} src={store.userImg} onClick={() => props.history.push('/center')} alt="avatar" />
   
-      <div style={{fontSize: '24px', textAlign: 'center'}}>{store.nickName}</div>
-      <div style={{textAlign: 'center',}}>{store.sign}</div>
+      <div className="text" style={{fontSize: '24px', textAlign: 'center'}}>{store.nickName}</div>
+      <div className="text" style={{textAlign: 'center',}}>{store.sign}</div>
       <div className={style.nums}>
         <div>
           <span>文章</span>

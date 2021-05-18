@@ -4,6 +4,7 @@
   min-height: calc(100% - 100px);
   align-items: center;
   justify-content: center;
+  @include changeColor();
   .content {
     width: 100%;
     margin: auto;

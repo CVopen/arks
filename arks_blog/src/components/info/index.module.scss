@@ -13,6 +13,7 @@
 }
 .nums {
   @include flexCenter();
+  @include changeColor();
   padding: 10px 0;
   div {
     flex: 1;
@@ -23,11 +24,11 @@
 }
 .btn {
   width: 100%;
-  background-color: $varTheme;
-  color: #fff;
   height: 35px;
   margin-top: 10px;
   @include flexCenter();
+  color: #fff;
+  background-color: $varTheme;
   cursor: pointer;
   position: relative;
   span {

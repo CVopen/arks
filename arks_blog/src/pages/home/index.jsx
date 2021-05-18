@@ -4,6 +4,8 @@ import './index.scss'
 import Mask from '../../components/maskImg'
 import { Card } from 'antd'
 import Info from '@/components/info'
+import Notice from '@/components/notice'
+import NewArticle from '@/components/newArticle'
 
 export default class Home extends Component{
   render() {
@@ -20,6 +22,8 @@ export default class Home extends Component{
           </div>
           <div className="right">
             <Info history={this.props.history} />
+            <Notice />
+            <NewArticle />
           </div>
         </div>
       </div>

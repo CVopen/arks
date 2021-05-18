@@ -1,7 +1,7 @@
 :root {
   --theme-color: rgb(0, 0, 88);  // 变量名: --theme-color
   --theme-colorbg: #fff;
-  --theme-fontColor: #fff;
+  --theme-fontColor: #000;
 }
 $varTheme: var(--theme-color);
 $varThemeBg: var(--theme-colorbg);
@@ -22,4 +22,10 @@ $varFontColor: var(--theme-fontColor);
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+@mixin changeColor {
+  background-color: $varThemeBg;
+  color: $varFontColor;
+  transition: all .4s;
 }
