@@ -1,14 +1,12 @@
 import style from './index.module.scss'
-import { SearchOutlined } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import { Input } from 'antd'
+import { ScissorOutlined } from '@ant-design/icons'
 
 export default function NavPc(props) {
   const {
     isRotate,
     path,
-    setSearch,
-    isSearch,
     push,
     setRotate,
     pathname
@@ -42,6 +40,7 @@ export default function NavPc(props) {
         <Input className={style.input} bordered={false} placeholder="search" />
       </div>
       <ul>
+        <ScissorOutlined className={style.scissor} />
         {
           path.map((item, index) => {
             return (
@@ -52,7 +51,6 @@ export default function NavPc(props) {
           })
         }
       </ul>
-      <SearchOutlined onClick={() => setSearch(!isSearch)} style={{fontSize: '40px'}}/>
     </div>
   )
 }

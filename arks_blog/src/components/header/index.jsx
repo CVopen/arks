@@ -24,7 +24,10 @@ function Header(props) {
   const store = useSelector((store) => store.user.userInfo)
   
   useEffect(() => {
-    bus.on('offsetWidth', (flag) => setWidth(flag > 1400))
+    bus.on('offsetWidth', (flag) => {
+      setWidth(flag > 1400)
+      setSearch(flag <= 1400 ? false : isSearch)
+    })
     bus.on('scrollTop', (top) => setColor(top > 0))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -86,9 +89,7 @@ function Header(props) {
         /> : 
         <NavMoblie 
           isRotate={isRotate}
-          isSearch={isSearch}
           path={path}
-          setSearch={setSearch}
           push={props.history.push}
           pathname={pathname}
           setRotate={setRotate}

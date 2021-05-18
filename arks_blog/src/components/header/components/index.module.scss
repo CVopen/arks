@@ -24,6 +24,23 @@
     margin: 0;
     flex-direction: column;
     position: relative;
+    .scissor {
+      color: $varTheme;
+      font-size: .6rem;
+      position: absolute;
+      top: calc(1px - .3rem);
+      left: .3rem;
+      animation: animation_move 4s infinite;
+    }
+    @keyframes animation_move {
+      from {
+        left: 0;
+      }
+      to {
+        left: 100%;
+        transform: translateX(-100%);
+      }
+    }
     &::after {
       content: "";
       position: absolute;
@@ -38,6 +55,7 @@
       justify-content: left;
       align-items: center;
       margin-left: .4rem;
+      width: 100%;
       span {
         margin-right: .4rem;
         color: #000;
