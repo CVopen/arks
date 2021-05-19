@@ -13,13 +13,13 @@ export default function MaskImg(props) {
     const innerHeight = document.body.offsetHeight  // 视口高度
     const bodyHeight = document.body.scrollHeight // 页面总高
     const result = bodyHeight - innerHeight > innerHeight ? innerHeight : bodyHeight - innerHeight
-    const speed = (result - (document.documentElement.scrollTop || document.body.scrollTop)) / 12.5
+    const speed = (result - 60 - (document.documentElement.scrollTop || document.body.scrollTop)) / 12.5
     timer.current = setInterval(() => {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
-      if (scrollTop + speed < result) {
+      if (scrollTop + speed < result - 60) {
         window.scrollTo(0, scrollTop + speed)
       } else {
-        window.scrollTo(0, result)
+        window.scrollTo(0, result - 60)
         clearInterval(timer.current)
       }
     }, 20)

@@ -50,7 +50,7 @@ export default function Typing(props) {
       <div className={style.mask} style={{height: window.innerHeight}}>
         <span 
           onClick={toPath}
-          className={style.text}
+          className={style.texts}
         >
           {text}
         </span>

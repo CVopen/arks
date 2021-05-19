@@ -1,5 +1,5 @@
 .footer {
-  background-color: $varThemeBg;
+  @include changeColor();
   box-shadow: 0 14px 37px 10px #ccc;
   width: 100%;
   padding: 30px 0;
@@ -23,7 +23,7 @@
       cursor: pointer;
       span {
         color: $varFontColor;
-        transition: all .2s;
+        transition: all .4s;
         &:hover {
           color: #5399fc;
         }

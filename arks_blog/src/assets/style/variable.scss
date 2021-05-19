@@ -27,5 +27,5 @@ $varFontColor: var(--theme-fontColor);
 @mixin changeColor {
   background-color: $varThemeBg;
   color: $varFontColor;
-  transition: all .4s;
+  transition: all .8s;
 }
