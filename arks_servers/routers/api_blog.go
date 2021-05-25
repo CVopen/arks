@@ -21,7 +21,7 @@ func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 	userHandler := controller.UserHandler{}
 
 	router.Static("../static", "static")
-	router.LoadHTMLGlob("templates/*")
+	router.LoadHTMLGlob("template/*")
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
