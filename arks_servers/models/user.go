@@ -1,8 +1,8 @@
 package models
 
 import (
-	"acks_servers/config/db"
-	"acks_servers/utils"
+	"arks_servers/config/db"
+	"arks_servers/utils"
 	"fmt"
 
 	"gorm.io/gorm"

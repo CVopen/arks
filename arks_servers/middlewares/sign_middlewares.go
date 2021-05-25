@@ -1,8 +1,8 @@
 package middlewares
 
 import (
-	"acks_servers/config/setting"
-	"acks_servers/utils"
+	"arks_servers/config/setting"
+	"arks_servers/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

@@ -1,0 +1,13 @@
+.center {
+  padding: 200px;
+  background-color: #f8f8f2;
+  .upload {
+    height: 400px;
+    width: 500px;
+    border: 1px solid #E7EAEC;
+    line-height: 25px;
+    background: #FAFAFB;
+    border-radius: 2px;
+    @include flexCenter();
+  }
+}

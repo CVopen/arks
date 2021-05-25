@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"acks_servers/forms"
-	"acks_servers/utils"
+	"arks_servers/forms"
+	"arks_servers/utils"
 	"fmt"
 	"net/http"
 	"strings"
@@ -271,6 +271,35 @@ func (uh *UserHandler) EditPwd(ctx *gin.Context) {
 		result.Code = utils.RequestError
 		result.Msg = "server error"
 		ctx.JSON(http.StatusOK, result)
+		return
+	}
+	ctx.JSON(http.StatusOK, result)
+}
+
+// @Summary 刷新token
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @Success 100 {object} utils.Result{"code":10000,"data":base64,"msg":"验证码创建成功"}
+// @Failure 103/104 object utils.Result {"code":10001,"data":base64,"msg":"服务器端错误"}
+// @Router /blog/captcha [get]
+func (uh *UserHandler) RefreshToken(ctx *gin.Context) {
+	id, _ := ctx.Get("id")
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "刷新token成功",
+		Data: nil,
+	}
+	token, err := utils.RefreshToken(id.(uint))
+	if err != nil {
+		// 检验失败
+		result.Code = utils.RequestError
+		result.Msg = err.Error()
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+	result.Data = gin.H{
+		"token": token,
 	}
 	ctx.JSON(http.StatusOK, result)
 }

@@ -1,8 +1,8 @@
 package migrate
 
 import (
-	"acks_servers/config/db"
-	"acks_servers/models"
+	"arks_servers/config/db"
+	"arks_servers/models"
 )
 
 // 自动迁移数据表

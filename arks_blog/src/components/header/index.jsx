@@ -22,6 +22,7 @@ function Header(props) {
   const [ width, setWidth ] = useState(document.body.offsetWidth > 1400)
   const { pathname } = useLocation()
   const store = useSelector((store) => store.user.userInfo)
+  const defaultInfo = useSelector((store) => store.user.defaultInfo)
   
   useEffect(() => {
     bus.on('offsetWidth', (flag) => {
@@ -97,7 +98,7 @@ function Header(props) {
       }
       <img 
         className={[style.logo, isRotate ? style['logo-open'] : ''].join(' ')} 
-        src={store.userImg} 
+        src={store.userImg ? store.userImg : defaultInfo.userImg} 
         alt="logo"
         onClick={toPath}
       />

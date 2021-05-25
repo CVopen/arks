@@ -1,7 +1,9 @@
 import axios from 'axios'
-import Stroage from './localStorage'
+import Storage from './localStorage'
 import md5 from 'js-md5'
 import { message } from 'antd';
+import store from '../store/index'
+
 const instance = axios.create({
   baseURL: '/blog',
   timeout: 10000,
@@ -23,7 +25,7 @@ const signString = (strObj) => {
 instance.interceptors.request.use(
   function(config) {
     const timestamp = Date.parse(new Date())
-    const token = Stroage('get', 'token')
+    const token = Storage('get', 'token')
     config.headers.timestamp = timestamp
     config.headers.Authorization = token ? 'Bearer ' + token : ''
     config.headers.sign = signString({ timestamp, Authorization: token ? 'Bearer ' + token : '' })
@@ -38,6 +40,11 @@ instance.interceptors.request.use(
 // Add a response interceptor
 instance.interceptors.response.use(
   function(response) {
+    if (response.data.code === 10002) {
+      store.dispatch({type: 'SET_USERINFO', value: {}})
+      Storage('remove', 'token')
+      Storage('remove', 'userInfo')
+    }
     if (response.data.code !== 10000) {
       message.error(response.data.msg)
       return Promise.reject("请求失败")

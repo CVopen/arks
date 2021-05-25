@@ -1,7 +1,7 @@
 package db
 
 import (
-	"acks_servers/config/setting"
+	"arks_servers/config/setting"
 	"fmt"
 	"log"
 

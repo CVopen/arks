@@ -1,6 +1,6 @@
 package forms
 
-import "acks_servers/models"
+import "arks_servers/models"
 
 // 登录表单
 type LoginForm struct {

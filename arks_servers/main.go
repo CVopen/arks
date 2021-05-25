@@ -1,10 +1,10 @@
 package main
 
 import (
-	"acks_servers/config/app"
-	"acks_servers/config/setting"
+	"arks_servers/config/app"
+	"arks_servers/config/setting"
 
-	_ "acks_servers/docs"
+	_ "arks_servers/docs"
 	"log"
 )
 

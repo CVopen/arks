@@ -1,8 +1,9 @@
 package routers
 
 import (
-	"acks_servers/controller"
-	"acks_servers/middlewares"
+	"arks_servers/controller"
+	"arks_servers/middlewares"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
@@ -18,14 +19,28 @@ type CaptchaConfig struct {
 
 func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 	userHandler := controller.UserHandler{}
-	blog := router.Group(path, middlewares.Sign())  // 签名验证
-	blog.GET("/captcha", userHandler.Captcha)       // 获取验证码图片
-	blog.POST("/register", userHandler.CreateUser)  //注册
-	blog.POST("/login", userHandler.LoginUser)      //登录
-	blog.POST("/forget_pwd", userHandler.ForgetPws) //修改密码验证
-	blog.PUT("/edit_pwd", userHandler.EditPwd)      //修改密码
+
+	router.Static("../static", "static")
+	router.LoadHTMLGlob("templates/*")
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", nil)
+	})
+	// 签名验证
+	blog := router.Group(path, middlewares.Sign())
+	// 获取验证码图片
+	blog.GET("/captcha", userHandler.Captcha)
+	//注册
+	blog.POST("/register", userHandler.CreateUser)
+	//登录
+	blog.POST("/login", userHandler.LoginUser)
+	//修改密码验证
+	blog.POST("/forget_pwd", userHandler.ForgetPws)
+	//修改密码
+	blog.PUT("/edit_pwd", userHandler.EditPwd)
 	userRouter := blog.Group("/user", middlewares.JwtAuth())
 	{
-		userRouter.POST("/Authorization", userHandler.LoginUser2)
+		// 刷新token
+		userRouter.POST("/Authorization", userHandler.RefreshToken)
+		// userRouter.POST("/Authorization", userHandler.LoginUser2)
 	}
 }

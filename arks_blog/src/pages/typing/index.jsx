@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { DoubleLeftOutlined } from '@ant-design/icons'
 import Storage from '@/utils/localStorage'
 import { useDispatch } from 'react-redux'
+import { refresh } from '@/api/auth'
 
 export default function Typing(props) {
   let timer = useRef()
@@ -13,10 +14,23 @@ export default function Typing(props) {
 
   useEffect(() => {
     showInput(defaultTextOwn)
-    const info = Storage('get', 'userInfo')
-    if (info) dispatch({type: 'SET_USERINFO', value: JSON.parse(info)})
+    initTheme()
+    reduxInfo()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const reduxInfo =() => {
+    const info = Storage('get', 'userInfo')
+    if (info) {
+      refresh().then(res => {
+        const value = JSON.parse(info)
+        value.token = res.data.token
+        Storage('set', 'userInfo', value)
+        Storage('set', 'token', res.data.token)
+        dispatch({type: 'SET_USERINFO', value })
+      })
+    }
+  }
 
   const showInput = (defaultText) => {
     timer.current = setInterval(() => {
@@ -29,6 +43,7 @@ export default function Typing(props) {
       setText([].concat(text))
     }, 400)
   }
+
   const showOutput = (defaultText) => {
     timer.current = setInterval(() => {
       if (!text.length) {
@@ -45,6 +60,25 @@ export default function Typing(props) {
     clearInterval(timer.current)
     props.setShow(true)
   }
+
+  const initTheme = () => {
+    const style = document.getElementsByTagName('body')[0].style
+    let theme = Storage('get', 'theme')
+    if (!theme) {
+      style.setProperty('--theme-colorbg', '#fff')
+      style.setProperty('--theme-fontColor', '#000')
+      theme = {
+        colorbg: '#fff',
+        fontColor: '#000',
+      }
+      Storage('set', 'theme', theme)
+      return
+    }
+    theme = JSON.parse(theme)
+    style.setProperty('--theme-colorbg', theme.colorbg)
+    style.setProperty('--theme-fontColor', theme.fontColor)
+  }
+
   return (
     <div className={style.typing} style={{height: window.innerHeight}}>
       <div className={style.mask} style={{height: window.innerHeight}}>

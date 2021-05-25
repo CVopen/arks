@@ -7,6 +7,7 @@ import {
   MoreOutlined 
 } from '@ant-design/icons'
 import bus from '../../utils/bus'
+import Storage from '@/utils/localStorage'
 
 export default function Back() {
   useEffect(() => {
@@ -23,6 +24,7 @@ export default function Back() {
     clearInterval(timer.current)
     const speed = (document.documentElement.scrollTop || document.body.scrollTop) / 50
     timer.current = setInterval(() => {
+      setRotate(!isRotate)
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
       if (scrollTop - speed > 0) {
         window.scrollTo(0, scrollTop - speed)
@@ -37,6 +39,7 @@ export default function Back() {
     clearInterval(timer.current)
     const speed = (scrollTopAll - (document.documentElement.scrollTop || document.body.scrollTop)) / 50
     timer.current = setInterval(() => {
+      setRotate(!isRotate)
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
       if (scrollTop + speed < scrollTopAll) {
         window.scrollTo(0, scrollTop + speed)
@@ -50,11 +53,11 @@ export default function Back() {
   const handleClickOpen = () => {
     const style = document.getElementsByTagName('body')[0].style
     let color = '#fff'
-    if (!style.getPropertyValue('--theme-colorbg') || style.getPropertyValue('--theme-colorbg') === '#fff') {
-      color = '#000'
-    }
+    if (style.getPropertyValue('--theme-colorbg') === '#fff') color = '#000'
     style.setProperty('--theme-colorbg', color)
     style.setProperty('--theme-fontColor', color === '#fff' ? '#000' : '#fff')
+    Storage('set', 'theme', { colorbg: color, fontColor: color === '#fff' ? '#000' : '#fff' })
+    setRotate(!isRotate)
   }
   // 计算
   const comNum = (top) => {

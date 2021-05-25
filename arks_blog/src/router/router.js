@@ -1,9 +1,10 @@
 import Nofound from '../pages/NoFound/index.jsx' // 404页面
 import Home from '../pages/home/index.jsx'  // 主页
-import Login from '../pages/user/login/index'
-import Register from '../pages/user/register/index'
-import Forget from '../pages/user/forget/index'
+import Login from '../pages/user/login/index' // 登录页
+import Register from '../pages/user/register/index' // 注册页
+import Forget from '../pages/user/forget/index' // 忘记密码
 import Test from '../pages/test'
+import Center from '../pages/center/index'
 const routes = [
   {
     path: '/',
@@ -19,7 +20,7 @@ const routes = [
   },
   {
     path: '/center',
-    component: Nofound,
+    component: Center,
   },
   {
     path: '/user/login',

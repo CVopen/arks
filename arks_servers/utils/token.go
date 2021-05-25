@@ -17,9 +17,16 @@ type MyClaims struct {
 	jwt.StandardClaims
 }
 
-var MySecret = []byte("夏天夏天悄悄过去")
+// 常量
+var (
+	ErrTokenExpired     = errors.New("令牌已过期")
+	ErrTokenNotValidYet = errors.New("令牌未激活")
+	ErrTokenMalformed   = errors.New("令牌格式有误")
+	ErrTokenInvalid     = errors.New("无效的令牌")
+	MySecret            = []byte("夏天夏天悄悄过去") // 签名
+)
 
-const TokenExpireDuration = time.Hour * 2
+const TokenExpireDuration = time.Hour * 15
 
 // GenToken 生成JWT
 func GenToken(id uint) (string, error) {
@@ -40,14 +47,39 @@ func GenToken(id uint) (string, error) {
 // ParseToken 解析JWT
 func ParseToken(tokenString string) (*MyClaims, error) {
 	// 解析token
-	token, err := jwt.ParseWithClaims(strings.Split(tokenString, " ")[1], &MyClaims{}, func(token *jwt.Token) (i interface{}, err error) {
-		return MySecret, nil
-	})
+	token, err := jwt.ParseWithClaims(
+		strings.Split(tokenString, " ")[1],
+		&MyClaims{},
+		func(token *jwt.Token) (i interface{}, err error) {
+			return MySecret, nil
+		})
+
 	if err != nil {
-		return nil, err
+		if ve, ok := err.(*jwt.ValidationError); ok {
+			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+				return nil, ErrTokenMalformed
+			} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
+				return nil, ErrTokenExpired
+			} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
+				return nil, ErrTokenNotValidYet
+			} else {
+				return nil, ErrTokenInvalid
+			}
+		}
 	}
 	if claims, ok := token.Claims.(*MyClaims); ok && token.Valid { // 校验token
 		return claims, nil
 	}
 	return nil, errors.New("invalid token")
+}
+
+// 更新 token
+func RefreshToken(id uint) (string, error) {
+	token, err := GenToken(id)
+
+	if err != nil {
+		return "", errors.New("GenToken error")
+	}
+
+	return token, nil
 }

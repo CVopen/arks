@@ -6,6 +6,7 @@ import Storage from '@/utils/localStorage'
 
 export default function Info(props) {
   const store = useSelector((store) => store.user.userInfo)
+  const defaultInfo = useSelector((store) => store.user.defaultInfo)
   const dispatch = useDispatch()
   const signOut = () => {
     dispatch({type: 'SET_USERINFO', value: {}})
@@ -15,7 +16,12 @@ export default function Info(props) {
 
   return (
     <Card hoverable className="cart">
-      <img className={style.avatar} src={store.userImg} onClick={() => props.history.push('/center')} alt="avatar" />
+      <img 
+        className={style.avatar} 
+        src={store.userImg ? store.userImg : defaultInfo.userImg} 
+        onClick={() => props.history.push('/center')} 
+        alt="avatar" 
+      />
   
       <div className="text" style={{fontSize: '24px', textAlign: 'center'}}>{store.nickName}</div>
       <div className="text" style={{textAlign: 'center',}}>{store.sign}</div>
@@ -33,12 +39,12 @@ export default function Info(props) {
           <span>7</span>
         </div>
       </div>
-      <div className={style.btn} onClick={() => window.open(store.github)}>
+      <div className={style.btn} onClick={() => window.open(store.github ? store.github : defaultInfo.github)}>
         <GithubOutlined style={{ fontSize: '18px' }} />
         <span>Follow Me</span>
       </div>
       {
-      store.token && <div className={style.btn} onClick={signOut}>
+        store.token && <div className={style.btn} onClick={signOut}>
           <span>sign out</span>
         </div>
       }
