@@ -1,5 +1,5 @@
 import Container from './styled'
-export default function TagItem(props) {
+export default function CategoryItem(props) {
   return (
     <Container style={{"borderBottom": props.border ? '1px solid #eee' : 'none'}}>
       <div className="category-item">

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
-import bus from '../../utils/bus'
+import bus from '@utils/bus'
+import { random } from '@utils/utils'
 
 let id = null
 
@@ -51,9 +52,6 @@ export default function Comicwidget () {
           </div>
 }
 
-const random = (num) => {
-  return Math.random()*num
-}
 class Ball{
   constructor(ctx) {
     this.ctx = ctx
@@ -72,13 +70,13 @@ class Ball{
     this.run()
   }
   run() {
-      if (this.x - this.r <= 0 || this.x + this.r >= document.body.clientWidth) {
-        this.xSpeed = -this.xSpeed
-      }
-      if (this.y - this.r <= 0 || this.y + this.r >= document.body.clientHeight) {
-        this.ySpeed = -this.ySpeed
-      }
-      this.x += this.xSpeed
-      this.y += this.ySpeed
+    if (this.x - this.r <= 0 || this.x + this.r >= document.body.clientWidth) {
+      this.xSpeed = -this.xSpeed
+    }
+    if (this.y - this.r <= 0 || this.y + this.r >= document.body.clientHeight) {
+      this.ySpeed = -this.ySpeed
+    }
+    this.x += this.xSpeed
+    this.y += this.ySpeed
   }
 }

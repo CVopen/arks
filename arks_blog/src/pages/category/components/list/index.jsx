@@ -1,6 +1,6 @@
 import Item from '../item/index'
 import { Card } from 'antd'
-export default function Tag() {
+export default function CategoryList() {
   return (
     <Card hoverable className="cart">
       {

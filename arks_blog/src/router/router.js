@@ -3,9 +3,11 @@ import Home from '../pages/home/index.jsx'  // 主页
 import Login from '../pages/user/login/index' // 登录页
 import Register from '../pages/user/register/index' // 注册页
 import Forget from '../pages/user/forget/index' // 忘记密码
-import Test from '../pages/test'
-import Center from '../pages/center/index'
-import Category from '../pages/category/index'
+import Center from '../pages/center/index' // 个人中心页面
+import Category from '../pages/category/index' // 文章分类
+import Tag from '../pages/tag/index' // 文章分类
+import Tools from '../pages/tools/index' // 文章分类
+import Friends from '../pages/friends/index' // 文章分类
 const routes = [
   {
     path: '/',
@@ -14,10 +16,6 @@ const routes = [
   {
     path: '/404',
     component: Nofound,
-  },
-  {
-    path: '/test',
-    component: Test,
   },
   {
     path: '/center',
@@ -38,6 +36,18 @@ const routes = [
   {
     path: '/category',
     component: Category
+  },
+  {
+    path: '/tag',
+    component: Tag
+  },
+  {
+    path: '/tools',
+    component: Tools
+  },
+  {
+    path: '/friends',
+    component: Friends
   },
   {
     path: '*',

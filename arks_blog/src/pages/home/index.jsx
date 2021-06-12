@@ -15,7 +15,7 @@ export default class Home extends Component{
         <Mask />
         <div className="content">
           <div className="left">
-            <PageTitle title="全部文章" />
+            <PageTitle title="全部文章" src='home' text="记录学习过程中的一些笔记" />
             <Article />
           </div>
           <div className="right">

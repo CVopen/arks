@@ -31,11 +31,11 @@ export default function Info(props) {
           <span>7</span>
         </div>
         <div>
-          <span>文章</span>
+          <span>分类</span>
           <span>7</span>
         </div>
         <div>
-          <span>文章</span>
+          <span>标签</span>
           <span>7</span>
         </div>
       </div>

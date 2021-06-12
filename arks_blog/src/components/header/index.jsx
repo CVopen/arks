@@ -10,7 +10,7 @@ import {
   HomeOutlined,
   FolderOutlined,
   TagsOutlined,
-  ContainerOutlined,
+  ToolOutlined,
   LinkOutlined,
   SendOutlined
  } from '@ant-design/icons'
@@ -51,17 +51,17 @@ function Header(props) {
       icon: <FolderOutlined />
     },
     {
-      path: '/test',
+      path: '/tag',
       name: '标签',
       icon: <TagsOutlined />
     },
     {
-      path: '/',
-      name: '归档',
-      icon: <ContainerOutlined /> 
+      path: '/tools',
+      name: '工具',
+      icon: <ToolOutlined />
     },
     {
-      path: '/',
+      path: '/friends',
       name: '友链',
       icon: <LinkOutlined />
     },
