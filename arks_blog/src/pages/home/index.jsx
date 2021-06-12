@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import style from './index.module.scss'
 import './index.scss'
-import Mask from '../../components/maskImg'
-import { Card } from 'antd'
+import Mask from '@/components/maskImg'
+import PageTitle from '@/components/pageTitile'
 import Info from '@/components/info'
 import Notice from '@/components/notice'
 import NewArticle from '@/components/newArticle'
+import Article from './components/ArticleContent'
 
 export default class Home extends Component{
   render() {
@@ -14,11 +15,8 @@ export default class Home extends Component{
         <Mask />
         <div className="content">
           <div className="left">
-            <Card hoverable className="cart">
-              <p>Card content</p>
-              <p>Card content</p>
-              <p>Card content</p>
-            </Card>
+            <PageTitle title="全部文章" />
+            <Article />
           </div>
           <div className="right">
             <Info history={this.props.history} />

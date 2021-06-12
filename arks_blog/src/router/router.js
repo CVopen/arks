@@ -5,6 +5,7 @@ import Register from '../pages/user/register/index' // 注册页
 import Forget from '../pages/user/forget/index' // 忘记密码
 import Test from '../pages/test'
 import Center from '../pages/center/index'
+import Category from '../pages/category/index'
 const routes = [
   {
     path: '/',
@@ -33,6 +34,10 @@ const routes = [
   {
     path: '/user/forget',
     component: Forget,
+  },
+  {
+    path: '/category',
+    component: Category
   },
   {
     path: '*',

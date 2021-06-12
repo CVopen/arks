@@ -7,9 +7,8 @@ export default function Notice(props) {
   return (
     <Card hoverable className="cart">
       <div className="text" style={{fontSize: '20px'}}>
-        <BellOutlined style={{color: 'red'}}/> 公告
+        <BellOutlined style={{color: '#ff7675'}}/> 公告
         <p style={{fontSize: '16px', marginTop: '10px'}}>213124124</p>
-        
       </div>
     </Card>
   )

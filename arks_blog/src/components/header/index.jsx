@@ -46,7 +46,7 @@ function Header(props) {
       icon: <HomeOutlined /> 
     },
     {
-      path: '/user/login',
+      path: '/category',
       name: '分类',
       icon: <FolderOutlined />
     },

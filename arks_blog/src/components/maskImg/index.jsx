@@ -34,7 +34,7 @@ export default function MaskImg(props) {
         alt="a" 
         style={{height: props.height ? '65vh' : window.innerHeight}}
       />
-      <div className={style.maskCom} style={{height: window.innerHeight}}>
+      <div className={style.maskCom} style={{height: props.height ? '65vh' : window.innerHeight}}>
         {
           props.height ? 
             <h2 style={{fontSize: width ? '50px' : '.7rem'}}>{props.text}</h2> :
