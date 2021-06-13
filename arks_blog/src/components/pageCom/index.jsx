@@ -50,7 +50,7 @@ export default function PageCom(props) {
       <Mask height text={text} />
       <div className="content">
         <div className="left">
-          <PageTitle title={title} src={src} text={spanText} />
+          { src && <PageTitle title={title} src={src} text={spanText} /> }
           {
             Array.isArray(props.children) ? 
             props.children[0] :
