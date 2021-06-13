@@ -33,6 +33,9 @@ const Container = styled.div`
         padding-bottom: 10px;
       }
     }
+    & {
+      padding: 10px 0;
+    }
   }
 `
 

@@ -1,9 +1,10 @@
 import Container from './styled'
+import { random } from '@utils/utils'
 export default function CategoryItem(props) {
   return (
     <Container style={{"borderBottom": props.border ? '1px solid #eee' : 'none'}}>
       <div className="category-item">
-        <div className="category-circular">{props.num}</div>
+        <div className="category-circular" style={{backgroundColor: '#' + parseInt(random(0xffffff)).toString(16)}}>{props.num}</div>
         <div className="category-info">
           <div className="category-title">{props.title}</div>
           {/* <p>{props.desc}</p> */}

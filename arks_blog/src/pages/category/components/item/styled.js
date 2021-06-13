@@ -42,7 +42,6 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ff7675;
     margin-right: 20px;
     color: #fff;
     font-size: 20px;
