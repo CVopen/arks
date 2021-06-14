@@ -19,7 +19,9 @@ body {
 a {
     text-decoration: none
 }
-
+div {
+    box-sizing: border-box;
+}
 
 .content-box {
     position: absolute;

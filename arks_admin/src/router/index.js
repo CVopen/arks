@@ -1,6 +1,6 @@
-import {createRouter, createWebHistory} from "vue-router";
+import {createRouter, createWebHashHistory } from "vue-router"
 import Home from "../views/Home.vue";
-
+import Session from '../utils/sessionStorage'
 const routes = [
     {
         path: '/',
@@ -123,31 +123,32 @@ const routes = [
         path: "/login",
         name: "Login",
         meta: {
-            title: '登录'
+            title: 'login'
         },
         component: () => import (
         /* webpackChunkName: "login" */
-        "../views/Login.vue")
+        "../views/login/index.vue")
     }
 ];
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+    history: createWebHashHistory(),
     routes
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | vue-manage-system`;
-    const role = localStorage.getItem('ms_username');
-    if (!role && to.path !== '/login') {
-        next('/login');
-    } else if (to.meta.permission) {
-        // 如果是管理员权限则可进入，这里只是简单的模拟管理员权限而已
-        role === 'admin'
-            ? next()
-            : next('/403');
+    document.title = `${to.meta.title ? to.meta.title : 'login'} | ark_admin`
+    const token = Session('get', 'token')
+    if (token) {
+        if (to.path === '/login') {
+            next('/')
+        }
+        next()
     } else {
-        next();
+        if (to.path === '/login') {
+            next()
+        }
+        next('/login')
     }
 });
 
