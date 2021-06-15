@@ -15,7 +15,7 @@
         </ul>
         <div class="tags-close-box">
             <el-dropdown @command="handleTags">
-                <el-button size="mini" type="primary">
+                <el-button size="mini">
                     标签选项
                     <i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
@@ -107,12 +107,12 @@ export default {
 </script>
 
 
-<style>
+<style scoped lang="scss">
 .tags {
     position: relative;
     height: 30px;
     overflow: hidden;
-    background: #fff;
+    background: rgba(255, 255, 255, .3);
     padding-right: 120px;
     box-shadow: 0 5px 10px #ddd;
 }
@@ -133,7 +133,7 @@ export default {
     height: 23px;
     line-height: 23px;
     border: 1px solid #e9eaec;
-    background: #fff;
+    /* background: #fff; */
     padding: 0 5px 0 12px;
     vertical-align: middle;
     color: #666;
@@ -143,11 +143,26 @@ export default {
 }
 
 .tags-li:not(.active):hover {
-    background: #f8f8f8;
+    background: #ff69b4;
+    border-color: #ff69b4;
 }
-
+.tags-li {
+    color: #fff;
+    a {
+        color: #fff;
+        transition: all 0.3s ease-in;
+    }
+    i {
+        transition: all 0.3s ease-in;
+    }
+}
+.tags-li :hover {
+    background-color: #ff69b4;
+}
 .tags-li.active {
     color: #fff;
+    background-color: #ff69b4;
+    border-color: #ff69b4;
 }
 
 .tags-li-title {
@@ -173,8 +188,22 @@ export default {
     text-align: center;
     width: 110px;
     height: 30px;
-    background: #fff;
+    /* background: #fff; */
     box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
     z-index: 10;
+}
+
+button {
+    background-color: #ff69b4 !important;
+    border-color: #ff69b4 !important;
+    color: #fff !important;
+    &:hover {
+        background-color: #ff69b4 !important;
+        color: #fff !important;
+        border-color: #ff69b4 !important;
+    }
+}
+::v-deep(.el-dropdown-menu__item:hover) {
+    color: #ff69b4 !important;
 }
 </style>

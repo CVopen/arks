@@ -4,9 +4,9 @@
             class="sidebar-el-menu"
             :default-active="onRoutes"
             :collapse="collapse"
-            background-color="#324157"
-            text-color="#bfcbd9"
-            active-text-color="#20a0ff"
+            background-color="transparent"
+            text-color="#fff"
+            active-text-color="#ff69b4"
             unique-opened
             router
         >
@@ -14,7 +14,7 @@
                 <template v-if="item.subs">
                     <el-submenu :index="item.index" :key="item.index">
                         <template #title>
-                            <i :class="item.icon"></i>
+                            <i :class="item.icon" style="color:#fff"></i>
                             <span>{{ item.title }}</span>
                         </template>
                         <template v-for="subItem in item.subs">
@@ -40,7 +40,7 @@
                 </template>
                 <template v-else>
                     <el-menu-item :index="item.index" :key="item.index">
-                        <i :class="item.icon"></i>
+                        <i :class="item.icon" style="color:#fff"></i>
                         <template #title>{{ item.title }}</template>
                     </el-menu-item>
                 </template>
@@ -180,5 +180,21 @@ export default {
 }
 .sidebar > ul {
     height: 100%;
+}
+
+::v-deep(.el-menu) {
+    border: none;
+}
+::v-deep(.el-menu-item:hover) {
+    background-color: rgba(255, 105, 180, .7) !important;
+}
+::v-deep(.el-submenu__title:hover) {
+    background-color: rgba(255, 105, 180, .7) !important;
+}
+::v-deep(.is-active i) {
+    color: #ff69b4 !important;
+}
+::v-deep(.is-opened i) {
+    color: #fff !important;
 }
 </style>

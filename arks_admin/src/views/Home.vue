@@ -37,3 +37,17 @@ export default {
     }
 };
 </script>
+<style scoped lang="scss">
+.content {
+    &::-webkit-scrollbar {
+        width: 2px;    
+    }
+    &::-webkit-scrollbar-thumb {
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background-image: linear-gradient(150deg, #3f51b1 0%, #5a55ae 13%, #7b5fac 25%, #8f6aae 38%, #a86aa4 50%, #cc6b8e 62%, #f18271 75%, #f3a469 87%, #f7c978 100%);
+    }
+    &::-webkit-scrollbar-track {
+        background: #e7deea;
+    }
+}
+</style>
