@@ -1,24 +1,24 @@
 import {createRouter, createWebHashHistory } from "vue-router"
-import Home from "../views/Home.vue";
+import Home from "../views/index.vue";
 import Session from '../utils/sessionStorage'
 const routes = [
     {
         path: '/',
-        redirect: '/dashboard'
+        redirect: '/home'
     }, {
         path: "/",
         name: "Home",
         component: Home,
         children: [
             {
-                path: "/dashboard",
-                name: "dashboard",
+                path: "/home",
+                name: "home",
                 meta: {
                     title: '系统首页'
                 },
                 component: () => import (
                 /* webpackChunkName: "dashboard" */
-                "../views/Dashboard.vue")
+                "../views/home/index.vue")
             }, {
                 path: "/table",
                 name: "basetable",

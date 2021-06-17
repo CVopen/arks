@@ -15,3 +15,11 @@ export const login = ({ username, password, captcha_id, captcha_val }) => post({
       captcha_val // 验证码
     }
 })
+
+// 添加分类
+export const addCategory = ({ name }) => post({
+  url: '/category/add',
+  data: {
+    name, // 分类名
+  }
+})

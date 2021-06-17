@@ -50,4 +50,8 @@ export default {
         background: #e7deea;
     }
 }
+
+::v-deep(.el-card) {
+    background-color: rgba(255,255,255,.6) !important;
+}
 </style>

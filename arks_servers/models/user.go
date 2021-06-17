@@ -3,7 +3,6 @@ package models
 import (
 	"arks_servers/config/db"
 	"arks_servers/utils"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -22,10 +21,7 @@ type User struct {
 
 // 创建用户
 func (u User) Create() error {
-	fmt.Println(u.UserImg)
-	fmt.Println(u.Username)
 	u.Password = utils.CryptoPwd(u.Password)
-	fmt.Println(u.Password)
 	// return nil
 	return db.Db.Create(&u).Error
 }

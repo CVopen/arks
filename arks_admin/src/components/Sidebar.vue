@@ -57,13 +57,28 @@ export default {
             items: [
                 {
                     icon: "el-icon-lx-home",
-                    index: "dashboard",
+                    index: "home",
                     title: "系统首页"
                 },
                 {
                     icon: "el-icon-lx-cascades",
                     index: "table",
                     title: "基础表格"
+                },
+                {
+                    icon: "el-icon-lx-cascades",
+                    index: "arcilte",
+                    title: "类别",
+                    subs: [
+                        {
+                            index: "category",
+                            title: "文章分类"
+                        },
+                        {
+                            index: "tag",
+                            title: "文章标签"
+                        }
+                    ]
                 },
                 {
                     icon: "el-icon-lx-copy",

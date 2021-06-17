@@ -3,7 +3,7 @@ import {createStore} from 'vuex'
 export default createStore({
     state: {
         tagsList: [],
-        collapse: true
+        collapse: false
     },
     mutations: {
         delTagsItem(state, data) {

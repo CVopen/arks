@@ -7,5 +7,10 @@ import (
 
 // 自动迁移数据表
 func Migrate() {
-	db.Db.AutoMigrate(&models.User{})
+	db.Db.AutoMigrate(
+		&models.User{},
+		&models.Artice{},
+		&models.Category{},
+		&models.Tag{},
+	)
 }

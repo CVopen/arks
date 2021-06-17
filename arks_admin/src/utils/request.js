@@ -5,7 +5,7 @@ import md5 from 'js-md5'
 // import store from '../store/index'
 
 const instance = axios.create({
-  baseURL: '/blog',
+  baseURL: '/admin/v2',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
