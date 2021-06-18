@@ -17,9 +17,15 @@ export const login = ({ username, password, captcha_id, captcha_val }) => post({
 })
 
 // 添加分类
-export const addCategory = ({ name }) => post({
+export const addCategory = ({ name, desc }) => post({
   url: '/category/add',
   data: {
     name, // 分类名
+    desc
   }
+})
+
+// 分类列表
+export const getCategoryAll = () => post({
+  url: '/category/all'
 })

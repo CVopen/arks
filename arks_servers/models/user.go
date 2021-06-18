@@ -46,3 +46,10 @@ func (u User) EditUserPwd() error {
 	return db.Db.Model(&User{}).Where("`email` = ?", u.Email).
 		Update("password", pwd).Error
 }
+
+// 根据id获取用户
+func (u User) FindUser(id uint) (User, error) {
+	var user User
+	err := db.Db.Where("`id` = ?", id).First(&user).Error
+	return user, err
+}

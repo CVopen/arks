@@ -2,6 +2,7 @@ package controller
 
 import (
 	"arks_servers/forms"
+	"arks_servers/models"
 	"arks_servers/utils"
 	"net/http"
 
@@ -19,13 +20,15 @@ type CategoryHandler struct{}
 // @Router /admin/register [post]
 func (ch CategoryHandler) GetAllCategory(ctx *gin.Context) {
 	id, _ := ctx.Get("id")
-	categoryAllForm := forms.CategoryAllForm{}
+	getCategoryForm := forms.GetCategoryForm{
+		Id: id.(uint),
+	}
 	result := utils.Result{
 		Code: utils.Success,
 		Msg:  "",
 		Data: nil,
 	}
-	category := categoryAllForm.BindToModel(id.(uint))
+	category := getCategoryForm.BindToModel()
 	list, err := category.GetAllList()
 	if err != nil {
 		result.Msg = ""
@@ -34,6 +37,7 @@ func (ch CategoryHandler) GetAllCategory(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, result)
 		return
 	}
+
 	result.Data = list
 	ctx.JSON(http.StatusOK, result)
 }
@@ -59,11 +63,22 @@ func (ch CategoryHandler) CreateCategory(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, result)
 		return
 	}
-	category := createCategoryForm.BindToModel(id.(uint))
+	category := createCategoryForm.BindToModel()
 
-	err := category.Create()
+	user := models.User{}
+	user, err := user.FindUser(id.(uint))
 	if err != nil {
-		result.Msg = ""
+		result.Msg = "查找用户失败"
+		result.Code = utils.RequestError
+		result.Data = err
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+	category.User = user
+	category.UserId = id.(uint)
+	err = category.Create()
+	if err != nil {
+		result.Msg = "添加失败"
 		result.Code = utils.RequestError
 		result.Data = err
 		ctx.JSON(http.StatusOK, result)
