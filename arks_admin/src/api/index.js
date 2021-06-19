@@ -26,6 +26,6 @@ export const addCategory = ({ name, desc }) => post({
 })
 
 // 分类列表
-export const getCategoryAll = () => post({
-  url: '/category/all'
+export const getCategoryAll = () => get({
+  url: '/category/list'
 })

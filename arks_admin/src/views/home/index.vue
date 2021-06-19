@@ -52,7 +52,8 @@
 
 <script>
 import Schart from "vue-schart";
-import { addCategory, getCategoryAll } from '../../api/index'
+// import { addCategory, getCategoryAll } from '../../api/index'
+import { getCategoryAll } from '../../api/index'
 export default {
     name: "dashboard",
     data() {
@@ -143,13 +144,16 @@ export default {
         }
     },
     created() {
+        // addCategory({name: '要删除'}).then(res => {
+        //     console.log(res)
+        // })
         getCategoryAll().then(res => {
             console.log(res)
         }).catch(() => {
             
-            addCategory({name: '测试分类'}).then(res => {
-                console.log(res)
-            })
+            // addCategory({name: '测试分类'}).then(res => {
+            //     console.log(res)
+            // })
         })
     },
     methods: {

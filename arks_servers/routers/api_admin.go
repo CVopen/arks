@@ -29,8 +29,12 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 	userRouter := admin.Group("/category", middlewares.JwtAuth())
 	{
 		// 获取全部分类
-		userRouter.POST("/all", categoryHandler.GetAllCategory)
+		userRouter.GET("/list", categoryHandler.GetAllCategory)
 		// 新增分类
 		userRouter.POST("/add", categoryHandler.CreateCategory)
+		// 修改分类
+		userRouter.PUT("/edit", categoryHandler.EditCategory)
+		// 删除分类
+		userRouter.DELETE("/del", categoryHandler.RemoveCategory)
 	}
 }

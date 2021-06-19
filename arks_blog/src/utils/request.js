@@ -28,7 +28,7 @@ instance.interceptors.request.use(
     const token = Storage('get', 'token')
     config.headers.timestamp = timestamp
     config.headers.Authorization = token ? 'Bearer ' + token : ''
-    config.headers.sign = signString({ timestamp, Authorization: token ? 'Bearer ' + token : '' })
+    config.headers.sign = signString({ timestamp: timestamp / 1000, Authorization: token ? 'Bearer ' + token : '' })
     return config
   },
   function(error) {

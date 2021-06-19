@@ -9,12 +9,12 @@ import (
 // 标签
 type Tag struct {
 	gorm.Model
-	Name       string   `gorm:"type:varchar(30);not null;" json:"name"`
-	Count      uint     `gorm:"type:int;default:0;" json:"count"`      // 文章数量
+	Name  string `gorm:"type:varchar(30);not null;" json:"name"`
+	Count uint   `gorm:"type:int;default:0;" json:"count"` // 文章数量
+	// User       User     `gorm:"ForeignKey:UserId" json:"user"`         // 用户
+	UserId     uint     `gorm:"type:int;not null;" json:"user_id"`     // 用户id
 	Category   Category `gorm:"ForeignKey:CategoryId" json:"category"` // 分类
 	CategoryId uint     `json:"category_id"`                           // 分类id
-	User       User     `gorm:"ForeignKey:UserId" json:"user"`         // 用户
-	UserId     uint     `json:"user_id"`                               // 用户id
 }
 
 type tag struct {

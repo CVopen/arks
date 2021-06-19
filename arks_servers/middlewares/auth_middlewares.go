@@ -26,7 +26,7 @@ func JwtAuth() gin.HandlerFunc {
 		}
 		token, err := utils.ParseToken(tokenHeader)
 		if err != nil {
-			result.Msg = err.Error()
+			result.Msg = "签名失效"
 			ctx.JSON(http.StatusOK, result)
 			ctx.Abort()
 			return

@@ -24,7 +24,7 @@ func (uh *UserHandler) CreateUser(ctx *gin.Context) {
 	registerForm := forms.RegisterForm{}
 	result := utils.Result{
 		Code: utils.Success,
-		Msg:  "注册用户成功",
+		Msg:  "success",
 		Data: nil,
 	}
 	var err error
@@ -32,7 +32,7 @@ func (uh *UserHandler) CreateUser(ctx *gin.Context) {
 		fmt.Println(err)
 		result.Msg = "参数错误"
 		result.Code = utils.RequestError
-		ctx.JSON(http.StatusBadRequest, result)
+		ctx.JSON(http.StatusOK, result)
 		return
 	}
 
@@ -87,7 +87,7 @@ func (uh *UserHandler) LoginUser(ctx *gin.Context) {
 	loginForm := forms.LoginForm{}
 	result := utils.Result{
 		Code: utils.Success,
-		Msg:  "登录成功",
+		Msg:  "success",
 		Data: nil,
 	}
 
@@ -164,7 +164,7 @@ func (u *UserHandler) Captcha(ctx *gin.Context) {
 	captcha := utils.CaptchaConfig{} // 创建验证码配置结构
 	result := utils.Result{          // 返回数据结构
 		Code: utils.Success,
-		Msg:  "验证码创建成功",
+		Msg:  "success",
 		Data: nil,
 	}
 
@@ -195,7 +195,7 @@ func (uh *UserHandler) ForgetPws(ctx *gin.Context) {
 	forgetForm := forms.ForgetForm{}
 	result := utils.Result{
 		Code: utils.Success,
-		Msg:  "验证成功",
+		Msg:  "success",
 		Data: nil,
 	}
 	if err := ctx.ShouldBindJSON(&forgetForm); err != nil {
@@ -240,7 +240,7 @@ func (uh *UserHandler) EditPwd(ctx *gin.Context) {
 	editPwdForm := forms.EditPwdForm{}
 	result := utils.Result{
 		Code: utils.Success,
-		Msg:  "重置密码成功",
+		Msg:  "success",
 		Data: nil,
 	}
 
@@ -287,10 +287,10 @@ func (uh *UserHandler) RefreshToken(ctx *gin.Context) {
 	id, _ := ctx.Get("id")
 	result := utils.Result{
 		Code: utils.Success,
-		Msg:  "刷新token成功",
+		Msg:  "success",
 		Data: nil,
 	}
-	token, err := utils.RefreshToken(id.(uint))
+	token, err := utils.RefreshToken(utils.TypeInterFaceToUint(id))
 	if err != nil {
 		// 检验失败
 		result.Code = utils.RequestError

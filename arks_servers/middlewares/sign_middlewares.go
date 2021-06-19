@@ -4,6 +4,7 @@ import (
 	"arks_servers/config/setting"
 	"arks_servers/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -49,9 +50,16 @@ import (
 func Sign() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		timestamp := ctx.Request.Header.Get("timestamp")
+		// 将时间戳改成秒
+		time, _ := strconv.Atoi(timestamp)
+		time = time / 1000
+		timestamp = strconv.Itoa(time)
+
 		token := ctx.Request.Header.Get("Authorization")
 		sign := ctx.Request.Header.Get("sign")
+
 		str := utils.CryptoPwd("timestamp" + timestamp + "Authorization" + token + setting.Config.Server.Keysign)
+
 		if sign != str {
 			ctx.JSON(http.StatusOK, utils.Result{
 				Code: utils.Forbidden,
