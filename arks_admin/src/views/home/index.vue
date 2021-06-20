@@ -147,7 +147,7 @@ export default {
         // addCategory({name: '要删除'}).then(res => {
         //     console.log(res)
         // })
-        getCategoryAll().then(res => {
+        getCategoryAll({name: 'vue'}).then(res => {
             console.log(res)
         }).catch(() => {
             

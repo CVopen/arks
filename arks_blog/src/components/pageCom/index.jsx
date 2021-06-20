@@ -11,7 +11,7 @@ export default function PageCom(props) {
 
   const [ text, changeText ] = useState('')
   const [ title, changeTitle ] = useState('')
-  const [ src, changeSrc ] = useState('home')
+  const [ src, changeSrc ] = useState('')
   const [ spanText, changeSpanText ] = useState('')
 
   const init = () => {

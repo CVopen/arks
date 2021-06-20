@@ -29,6 +29,7 @@ func InitApp() *gin.Engine {
 	apiblog.InitBlogApi("/blog", router)
 
 	router.Static("../../static", "static")
+	router.LoadHTMLGlob("template/**/*")
 
 	apiadmin := routers.ApiAdmin{}
 	apiadmin.InitAdminApi("/admin/v2", router)

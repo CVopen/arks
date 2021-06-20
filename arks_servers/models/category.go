@@ -9,7 +9,7 @@ import (
 // 分类
 type Category struct {
 	gorm.Model
-	Name string `gorm:"type:varchar(30);not null;" json:"name"` // 类别名称
+	Name string `gorm:"unique;type:varchar(30);not null;" json:"name"` // 类别名称
 	// User   User   `gorm:"ForeignKey:UserId" json:"user"`           // 用户
 	UserId uint   `gorm:"type:int;not null;" json:"user_id"`       // 用户id
 	Desc   string `gorm:"type:varchar(255);not null;" json:"desc"` // 介绍

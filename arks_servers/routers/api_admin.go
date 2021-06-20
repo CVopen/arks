@@ -12,12 +12,9 @@ type ApiAdmin struct{}
 
 func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 	userHandler := controller.UserHandler{}
-	categoryHandler := controller.CategoryHandler{}
-
-	router.LoadHTMLGlob("template/admin/*")
 
 	router.GET("/admin", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", nil)
+		c.HTML(http.StatusOK, "admin/index.html", nil)
 	})
 
 	// 签名验证
@@ -26,15 +23,29 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 	admin.GET("/captcha", userHandler.Captcha)
 	//登录
 	admin.POST("/login", userHandler.LoginUser)
-	userRouter := admin.Group("/category", middlewares.JwtAuth())
+	categoryRouter := admin.Group("/category", middlewares.JwtAuth())
+	categoryHandler := controller.CategoryHandler{}
 	{
 		// 获取全部分类
-		userRouter.GET("/list", categoryHandler.GetAllCategory)
+		categoryRouter.GET("/list", categoryHandler.GetAllCategory)
 		// 新增分类
-		userRouter.POST("/add", categoryHandler.CreateCategory)
+		categoryRouter.POST("/add", categoryHandler.CreateCategory)
 		// 修改分类
-		userRouter.PUT("/edit", categoryHandler.EditCategory)
+		categoryRouter.PUT("/edit", categoryHandler.EditCategory)
 		// 删除分类
-		userRouter.DELETE("/del", categoryHandler.RemoveCategory)
+		categoryRouter.DELETE("/del", categoryHandler.RemoveCategory)
+	}
+
+	tagRouter := admin.Group("/tag", middlewares.JwtAuth())
+	tagHandler := controller.TagHandler{}
+	{
+		// 获取全部分类
+		tagRouter.GET("/list", categoryHandler.GetAllCategory)
+		// 新增分类
+		tagRouter.POST("/add", tagHandler.CreateTag)
+		// 修改分类
+		tagRouter.PUT("/edit", categoryHandler.EditCategory)
+		// 删除分类
+		tagRouter.DELETE("/del", categoryHandler.RemoveCategory)
 	}
 }

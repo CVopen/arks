@@ -5,32 +5,24 @@ import (
 )
 
 type CreateTagForm struct {
-	Name string
+	UserId uint   // 用户 ID
+	Name   string // 标签
+	Id     uint   // 分类id
 }
 
 type GetTagByUserForm struct {
-	Id uint
+	Id uint // user_id
 }
 
 type GetTagByCategoryForm struct {
-	Id uint
+	Id uint // category_id
 }
 
 // 绑定表单到实体结构
 func (form CreateTagForm) BindToModel() models.Tag {
 	return models.Tag{
-		Name: form.Name,
-	}
-}
-
-func (form GetTagByCategoryForm) BindToModel() models.Category {
-	return models.Category{
-		UserId: form.Id,
-	}
-}
-
-func (form GetTagByUserForm) BindToModel() models.Category {
-	return models.Category{
-		UserId: form.Id,
+		UserId:     form.UserId,
+		CategoryId: form.Id,
+		Name:       form.Name,
 	}
 }

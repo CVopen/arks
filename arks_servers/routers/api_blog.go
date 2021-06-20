@@ -20,9 +20,8 @@ type CaptchaConfig struct {
 func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 	userHandler := controller.UserHandler{}
 
-	router.LoadHTMLGlob("template/blog/*")
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", nil)
+		c.HTML(http.StatusOK, "blog/index.html", nil)
 	})
 	// 签名验证
 	blog := router.Group(path, middlewares.Sign())

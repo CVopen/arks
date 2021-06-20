@@ -1,0 +1,76 @@
+package controller
+
+import (
+	"arks_servers/forms"
+	"arks_servers/utils"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
+
+type TagHandler struct{}
+
+// @Summary 添加标签
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @data name string
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/v2/tag/add [post]
+func (th TagHandler) CreateTag(ctx *gin.Context) {
+	id, _ := ctx.Get("id")
+
+	type bodyRequest struct {
+		Id   float64 `json:"id" binding:"min=1,max=30" label:"类别id"`
+		Name string  `json:"name" binding:"min=1,max=30" label:"标签名称"`
+	}
+	bodyR := bodyRequest{}
+
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+
+	if err := ctx.ShouldBindJSON(&bodyR); err != nil {
+		result.Msg = "参数错误"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	createTagForm := forms.CreateTagForm{
+		UserId: utils.TypeInterFaceToUint(id),
+		Id:     utils.TypeFloat64ToUint(bodyR.Id),
+		Name:   bodyR.Name,
+	}
+
+	tag := createTagForm.BindToModel()
+
+	tagDetail, err := tag.GetByUidNameToTag()
+	if err != nil {
+		result.Msg = "error"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	if tagDetail.Name != "" {
+		result.Msg = "标签已存在"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+	err = tag.Create()
+
+	if err != nil {
+		result.Msg = "添加失败"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, result)
+
+}

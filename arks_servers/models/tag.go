@@ -10,7 +10,7 @@ import (
 type Tag struct {
 	gorm.Model
 	Name  string `gorm:"type:varchar(30);not null;" json:"name"`
-	Count uint   `gorm:"type:int;default:0;" json:"count"` // 文章数量
+	Count uint   `gorm:"unique_index;type:int;default:0;" json:"count"` // 文章数量
 	// User       User     `gorm:"ForeignKey:UserId" json:"user"`         // 用户
 	UserId     uint     `gorm:"type:int;not null;" json:"user_id"`     // 用户id
 	Category   Category `gorm:"ForeignKey:CategoryId" json:"category"` // 分类
@@ -37,9 +37,16 @@ func (t Tag) Create() error {
 }
 
 // 根据分类id获取标签
-func (t Tag) GetfromCategoryList() ([]tag, error) {
+func (t Tag) GetByCategoryToList() ([]tag, error) {
 	var tagList []tag
 
-	err := db.Db.Where("`user_id` = ?", t.CategoryId).Find(&tagList).Error
+	err := db.Db.Where("`user_id` = ? and `name` = ?", t.UserId, t.Name).Find(&tagList).Error
 	return tagList, err
+}
+
+// 确定分类是否存在
+func (t Tag) GetByUidNameToTag() (Tag, error) {
+	var tagDetail Tag
+	err := db.Db.Where("`user_id` = ? and `name` = ?", t.UserId, t.Name).First(&tagDetail).Error
+	return tagDetail, err
 }

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"arks_servers/forms"
-	"arks_servers/models"
 	"arks_servers/utils"
 	"encoding/json"
 	"net/http"
@@ -29,23 +28,11 @@ func (ch CategoryHandler) GetAllCategory(ctx *gin.Context) {
 		Data: nil,
 	}
 
-	b, err := ctx.GetRawData() // 从c.Request.Body读取请求数据
-	if err != nil {
-		result.Msg = "参数错误"
-		result.Code = utils.RequestError
-		ctx.JSON(http.StatusOK, result)
-		return
-	}
-
-	var m map[string]interface{}
-	// 反序列化
-	_ = json.Unmarshal(b, &m)
-
-	if m["name"] != nil {
+	name := ctx.Query("name")
+	if name != "" {
 		getCategoryForm := forms.CategoryInfoForm{
 			UserId: utils.TypeInterFaceToUint(id),
-			Name:   utils.TypeInterFaceToString(m["name"]),
-			Id:     utils.TypeFloat64ToUint(m["id"]),
+			Name:   name,
 		}
 		category := getCategoryForm.BindToModel()
 		data, err := category.GetCategoryByName()
@@ -103,18 +90,22 @@ func (ch CategoryHandler) CreateCategory(ctx *gin.Context) {
 		return
 	}
 	category := createCategoryForm.BindToModel()
-
-	user := models.User{}
-	user, err := user.FindUser(utils.TypeInterFaceToUint(id))
+	category.UserId = utils.TypeInterFaceToUint(id)
+	// category.User = user
+	cList, err := category.GetCategoryByName()
 	if err != nil {
-		result.Msg = "查找用户失败"
+		result.Msg = "error"
 		result.Code = utils.RequestError
-		result.Data = err
 		ctx.JSON(http.StatusOK, result)
 		return
 	}
-	// category.User = user
-	category.UserId = utils.TypeInterFaceToUint(id)
+	if len(cList) > 0 {
+		result.Msg = "分类已存在"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
 	err = category.Create()
 	if err != nil {
 		result.Msg = "添加失败"
@@ -196,7 +187,7 @@ func (ch CategoryHandler) RemoveCategory(ctx *gin.Context) {
 		category := categoryIdForm.BindToModel()
 		err = category.RemoveCategory()
 		if err != nil {
-			result.Msg = "error"
+			result.Msg = "参数错误"
 			result.Code = utils.RequestError
 			ctx.JSON(http.StatusOK, result)
 			return
