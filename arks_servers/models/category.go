@@ -2,6 +2,7 @@ package models
 
 import (
 	"arks_servers/config/db"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -52,7 +53,7 @@ func (c Category) EditCategory() error {
 }
 
 // 删除分类
-func (c Category) RemoveCategory() error {
+func (c Category) RemoveCategory() ([]Tag, error) {
 	// 事务开始
 	tx := db.Db.Begin()
 	defer func() {
@@ -60,30 +61,48 @@ func (c Category) RemoveCategory() error {
 			tx.Rollback()
 		}
 	}()
+	var list []Tag
 
 	if err := tx.Error; err != nil {
-		return err
+		return list, err
 	}
 
 	// 删除分类下所有文章
 	if err := db.Db.Unscoped().Where("category_id = ?", c.ID).Delete(&Artice{}).Error; err != nil {
 		tx.Rollback()
-		return err
+		return list, err
 	}
 
+	// 获取分类下所有标签id
+	tag := Tag{
+		Model: gorm.Model{ID: c.ID},
+	}
+	if err := db.Db.Table("tags").Where("`category_id` = ?", tag.ID).Find(&list).Error; err != nil {
+		tx.Rollback()
+		return list, err
+	}
+	fmt.Println("分类下的所有id", list, tag.ID)
+	return list, tx.Commit().Error
 	// 删除分类下所有标签
-	if err := db.Db.Unscoped().Where("category_id = ?", c.ID).Delete(&Tag{}).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
+	// if err := db.Db.Unscoped().Where("category_id = ?", c.ID).Delete(&Tag{}).Error; err != nil {
+	// 	tx.Rollback()
+	// 	return err
+	// }
 
-	// 删除分类
-	if err := db.Db.Unscoped().Delete(&c).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
+	// // 删除标签文章表中的记录
+	// err := tx.Exec("delete from `tag_article` where `tag_id` = ?", id).Error
+	// if err != nil {
+	// 	tx.Rollback()
+	// 	return err
+	// }
 
-	return tx.Commit().Error
+	// // 删除分类
+	// if err := db.Db.Unscoped().Delete(&c).Error; err != nil {
+	// 	tx.Rollback()
+	// 	return err
+	// }
+
+	// return tx.Commit().Error
 }
 
 // 批量删除

@@ -3,7 +3,6 @@ package controller
 import (
 	"arks_servers/forms"
 	"arks_servers/utils"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -29,7 +28,6 @@ func (uh *UserHandler) CreateUser(ctx *gin.Context) {
 	}
 	var err error
 	if err := ctx.ShouldBindJSON(&registerForm); err != nil {
-		fmt.Println(err)
 		result.Msg = "参数错误"
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusOK, result)

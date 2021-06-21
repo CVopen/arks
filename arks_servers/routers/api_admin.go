@@ -40,11 +40,11 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 	tagHandler := controller.TagHandler{}
 	{
 		// 获取全部分类
-		tagRouter.GET("/list", categoryHandler.GetAllCategory)
+		tagRouter.GET("/list", tagHandler.GetList)
 		// 新增分类
 		tagRouter.POST("/add", tagHandler.CreateTag)
 		// 修改分类
-		tagRouter.PUT("/edit", categoryHandler.EditCategory)
+		tagRouter.PUT("/edit", tagHandler.EditTag)
 		// 删除分类
 		tagRouter.DELETE("/del", categoryHandler.RemoveCategory)
 	}

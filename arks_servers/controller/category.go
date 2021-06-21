@@ -4,6 +4,7 @@ import (
 	"arks_servers/forms"
 	"arks_servers/utils"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,6 +30,7 @@ func (ch CategoryHandler) GetAllCategory(ctx *gin.Context) {
 	}
 
 	name := ctx.Query("name")
+
 	if name != "" {
 		getCategoryForm := forms.CategoryInfoForm{
 			UserId: utils.TypeInterFaceToUint(id),
@@ -126,6 +128,7 @@ func (ch CategoryHandler) CreateCategory(ctx *gin.Context) {
 // @Failure 103/104 object utils.Result 失败
 // @Router /admin/register [post]
 func (ch CategoryHandler) EditCategory(ctx *gin.Context) {
+	id, _ := ctx.Get("id")
 	createCategoryForm := forms.CategoryInfoForm{}
 	result := utils.Result{
 		Code: utils.Success,
@@ -141,8 +144,24 @@ func (ch CategoryHandler) EditCategory(ctx *gin.Context) {
 	}
 
 	category := createCategoryForm.BindToModel()
+	category.UserId = utils.TypeInterFaceToUint(id)
+	fmt.Println(category.Name, category.UserId)
+	cList, err := category.GetCategoryByName()
+	fmt.Println(cList)
+	if err != nil {
+		result.Msg = "error"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+	if len(cList) > 0 {
+		result.Msg = "分类已存在"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
 
-	err := category.EditCategory()
+	err = category.EditCategory()
 	if err != nil {
 		result.Msg = "修改失败"
 		result.Code = utils.RequestError
@@ -185,14 +204,14 @@ func (ch CategoryHandler) RemoveCategory(ctx *gin.Context) {
 			Id: utils.TypeFloat64ToUint(m["id"]),
 		}
 		category := categoryIdForm.BindToModel()
-		err = category.RemoveCategory()
+		list, err := category.RemoveCategory()
 		if err != nil {
-			result.Msg = "参数错误"
+			result.Msg = "error"
 			result.Code = utils.RequestError
 			ctx.JSON(http.StatusOK, result)
 			return
 		}
-
+		result.Data = list
 		ctx.JSON(http.StatusOK, result)
 		return
 	}
