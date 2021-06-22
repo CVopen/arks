@@ -46,6 +46,6 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 		// 修改分类
 		tagRouter.PUT("/edit", tagHandler.EditTag)
 		// 删除分类
-		tagRouter.DELETE("/del", categoryHandler.RemoveCategory)
+		tagRouter.DELETE("/del", tagHandler.Remove)
 	}
 }

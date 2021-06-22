@@ -5,14 +5,14 @@ import (
 )
 
 // 文章
-type Artice struct {
+type Article struct {
 	gorm.Model
 	User             User     `gorm:"ForeignKey:UserId;not null;" json:"user"`           // 用户
 	UserId           uint     `json:"user_id"`                                           // 用户id
 	Category         Category `gorm:"ForeignKey:CategoryId" json:"category"`             // 分类
 	CategoryId       uint     `json:"category_id"`                                       // 分类id
 	OrderId          uint     `gorm:"type:int;default:0;" json:"order_id"`               // 排序id
-	TagList          []Tag    `gorm:"many2many:tag_artice;" json:"tag_list"`             // 标签列表
+	TagList          []Tag    `gorm:"many2many:tag_article;" json:"tag_list"`            // 标签列表
 	IsTop            bool     `gorm:"type:bool;defalut:false;" json:"is_top"`            // 是否置顶
 	IsRecycled       bool     `gorm:"type:bool;defalut:false;" json:"is_recycled"`       // 是否回收
 	IsPublished      bool     `gorm:"type:bool;defalut:false;" json:"is_published"`      // 是否发布

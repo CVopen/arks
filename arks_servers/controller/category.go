@@ -87,6 +87,7 @@ func (ch CategoryHandler) CreateCategory(ctx *gin.Context) {
 	}
 	if err := ctx.ShouldBindJSON(&createCategoryForm); err != nil {
 		result.Msg = "参数错误"
+		result.Data = err
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusOK, result)
 		return
@@ -98,6 +99,7 @@ func (ch CategoryHandler) CreateCategory(ctx *gin.Context) {
 	if err != nil {
 		result.Msg = "error"
 		result.Code = utils.RequestError
+		result.Data = err
 		ctx.JSON(http.StatusOK, result)
 		return
 	}
@@ -138,6 +140,7 @@ func (ch CategoryHandler) EditCategory(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&createCategoryForm); err != nil {
 		result.Msg = "参数错误"
+		result.Data = err
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusOK, result)
 		return
@@ -151,6 +154,7 @@ func (ch CategoryHandler) EditCategory(ctx *gin.Context) {
 	if err != nil {
 		result.Msg = "error"
 		result.Code = utils.RequestError
+		result.Data = err
 		ctx.JSON(http.StatusOK, result)
 		return
 	}
@@ -189,6 +193,7 @@ func (ch CategoryHandler) RemoveCategory(ctx *gin.Context) {
 	}
 	if err != nil {
 		result.Msg = "参数错误"
+		result.Data = err
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusOK, result)
 		return
@@ -204,16 +209,14 @@ func (ch CategoryHandler) RemoveCategory(ctx *gin.Context) {
 			Id: utils.TypeFloat64ToUint(m["id"]),
 		}
 		category := categoryIdForm.BindToModel()
-		list, err := category.RemoveCategory()
+		err := category.RemoveCategory()
 		if err != nil {
 			result.Msg = "error"
+			result.Data = err
 			result.Code = utils.RequestError
 			ctx.JSON(http.StatusOK, result)
 			return
 		}
-		result.Data = list
-		ctx.JSON(http.StatusOK, result)
-		return
 	}
 	if utils.TypeChck(m["id"], "[]interface {}") {
 		list := utils.TypeInterFaceListToListUint(m["id"])
@@ -222,10 +225,12 @@ func (ch CategoryHandler) RemoveCategory(ctx *gin.Context) {
 		err = category.RemoveBatchCategory(list)
 		if err != nil {
 			result.Msg = "error"
+			result.Data = err
 			result.Code = utils.RequestError
 			ctx.JSON(http.StatusOK, result)
+			return
 		}
-		ctx.JSON(http.StatusOK, result)
-		return
 	}
+
+	ctx.JSON(http.StatusOK, result)
 }

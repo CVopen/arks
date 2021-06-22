@@ -88,14 +88,48 @@ func (t Tag) DelTagOne() error {
 	if err := tx.Error; err != nil {
 		return err
 	}
-	// 删除分类下所有文章
-	if err := db.Db.Unscoped().Where("category_id = ?", t.ID).Delete(&Artice{}).Error; err != nil {
+
+	// 删除标签文章表中的记录
+	err := tx.Exec("delete from `tag_article` where `tag_id` = ?", t.ID).Error
+	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	// 删除分类下所有标签
-	if err := db.Db.Unscoped().Where("category_id = ?", t.ID).Delete(&Tag{}).Error; err != nil {
+	// 删除标签表中的记录
+	err = tx.Where("`id` in (?)", t.ID).Unscoped().Delete(&Tag{}).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
+// 批量删除tag
+func (t Tag) DelTagList(list []uint) error {
+	// 事务开始
+	tx := db.Db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	// 删除标签文章表中的记录
+	err := tx.Exec("delete from `tag_article` where `tag_id` in (?)", list).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 删除标签表中的记录
+	err = tx.Where("`id` in (?)", list).Unscoped().Delete(&Tag{}).Error
+	if err != nil {
 		tx.Rollback()
 		return err
 	}

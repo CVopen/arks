@@ -3,6 +3,7 @@ package controller
 import (
 	"arks_servers/forms"
 	"arks_servers/utils"
+	"encoding/json"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -35,6 +36,7 @@ func (th TagHandler) CreateTag(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&bodyR); err != nil {
 		result.Msg = "参数错误"
+		result.Data = err
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusOK, result)
 		return
@@ -59,6 +61,7 @@ func (th TagHandler) CreateTag(ctx *gin.Context) {
 
 	if err != nil {
 		result.Msg = "添加失败"
+		result.Data = err
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusOK, result)
 		return
@@ -105,6 +108,7 @@ func (th TagHandler) GetList(ctx *gin.Context) {
 
 	if err != nil {
 		result.Code = utils.RequestError
+		result.Data = err
 		ctx.JSON(http.StatusOK, result)
 	}
 
@@ -153,6 +157,7 @@ func (th TagHandler) EditTag(ctx *gin.Context) {
 
 	if err := tag.Edit(); err != nil {
 		result.Msg = "error"
+		result.Data = err
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusOK, result)
 		return
@@ -170,5 +175,52 @@ func (th TagHandler) EditTag(ctx *gin.Context) {
 // @Failure 103/104 object utils.Result 失败
 // @Router /admin/v2/tag/del [put]
 func (th TagHandler) Remove(ctx *gin.Context) {
+	b, err := ctx.GetRawData() // 从c.Request.Body读取请求数据
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+	if err != nil {
+		result.Msg = "参数错误"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	var m map[string]interface{}
+	// 反序列化
+	_ = json.Unmarshal(b, &m)
+
+	if utils.TypeChck(m["id"], "float64") {
+		delTagByIdForm := forms.DelTagByIdForm{
+			Id: utils.TypeFloat64ToUint(m["id"]),
+		}
+		tag := delTagByIdForm.BindToModel()
+		err := tag.DelTagOne()
+		if err != nil {
+			result.Msg = "error"
+			result.Data = err
+			result.Code = utils.RequestError
+			ctx.JSON(http.StatusOK, result)
+			return
+		}
+	}
+
+	if utils.TypeChck(m["id"], "[]interface {}") {
+		list := utils.TypeInterFaceListToListUint(m["id"])
+		delTagByListForm := forms.DelTagByListForm{}
+		tag := delTagByListForm.BindToModel()
+		err = tag.DelTagList(list)
+		if err != nil {
+			result.Msg = "error"
+			result.Data = err
+			result.Code = utils.RequestError
+			ctx.JSON(http.StatusOK, result)
+			return
+		}
+	}
+
+	ctx.JSON(http.StatusOK, result)
 
 }

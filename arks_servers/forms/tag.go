@@ -25,9 +25,11 @@ type EditTagForm struct {
 	Id   uint   `json:"id" binding:"min=1,max=30" label:"tag_id"`
 }
 
-type GetTagByCategoryForm struct {
-	Id uint // category_id
+type DelTagByIdForm struct {
+	Id uint // tag_id
 }
+
+type DelTagByListForm struct{}
 
 // 绑定表单到实体结构
 func (form CreateTagForm) BindToModel() models.Tag {
@@ -52,4 +54,14 @@ func (form EditTagForm) BindToModel() models.Tag {
 		UserId: form.UserId,
 		Name:   form.Name,
 	}
+}
+
+func (form DelTagByIdForm) BindToModel() models.Tag {
+	return models.Tag{
+		Model: gorm.Model{ID: form.Id},
+	}
+}
+
+func (form DelTagByListForm) BindToModel() models.Tag {
+	return models.Tag{}
 }
