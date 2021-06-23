@@ -88,23 +88,22 @@ func (th TagHandler) GetList(ctx *gin.Context) {
 		Data: nil,
 	}
 
-	form := forms.GetTagByUserForm{
-		Id:   utils.TypeInterFaceToUint(id),
-		Name: ctx.Query("name"),
+	pageForm := forms.TagPageForm{
+		UserId: utils.TypeInterFaceToUint(id),
 	}
 
-	tag := form.BindToModel()
-
-	var (
-		tagList interface{}
-		err     error
-	)
-
-	if form.Name == "" {
-		tagList, err = tag.GetAllList()
-	} else {
-		tagList, err = tag.GetAllNameList()
+	if err := ctx.ShouldBindQuery(&pageForm); err != nil {
+		ctx.JSON(http.StatusOK, utils.Result{
+			Code: utils.RequestError,
+			Msg:  "error",
+			Data: nil,
+		})
+		return
 	}
+
+	tag := pageForm.BindToModel()
+
+	list, total, err := tag.GetAllList(&pageForm.Pagination)
 
 	if err != nil {
 		result.Code = utils.RequestError
@@ -112,7 +111,7 @@ func (th TagHandler) GetList(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, result)
 	}
 
-	result.Data = tagList
+	result.Data = utils.PageData(list, total, pageForm.Pagination)
 	ctx.JSON(http.StatusOK, result)
 }
 

@@ -2,6 +2,7 @@ package forms
 
 import (
 	"arks_servers/models"
+	"arks_servers/utils"
 
 	"gorm.io/gorm"
 )
@@ -30,6 +31,13 @@ type DelTagByIdForm struct {
 }
 
 type DelTagByListForm struct{}
+
+// 分类分页表单
+type TagPageForm struct {
+	Name             string `form:"name"` // 关键词
+	UserId           uint   // 用户id
+	utils.Pagination        // 分页结构
+}
 
 // 绑定表单到实体结构
 func (form CreateTagForm) BindToModel() models.Tag {
@@ -64,4 +72,11 @@ func (form DelTagByIdForm) BindToModel() models.Tag {
 
 func (form DelTagByListForm) BindToModel() models.Tag {
 	return models.Tag{}
+}
+
+func (form TagPageForm) BindToModel() models.Tag {
+	return models.Tag{
+		Name:   form.Name,
+		UserId: form.UserId,
+	}
 }

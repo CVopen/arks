@@ -1,12 +1,12 @@
 <template>
-    <router-view />
+  <router-view />
 </template>
 
 <script>
-export default {};
+export default {}
 </script>
 
-<style>
+<style lang="scss">
 @import "./assets/css/main.css";
 @import "./assets/css/color-dark.css";
 </style>

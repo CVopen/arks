@@ -2,6 +2,7 @@ package models
 
 import (
 	"arks_servers/config/db"
+	"arks_servers/utils"
 
 	"gorm.io/gorm"
 )
@@ -23,10 +24,20 @@ type category struct {
 }
 
 // 获取用户下的所有分类
-func (c Category) GetAllList() ([]category, error) {
+func (c Category) GetAllList(page *utils.Pagination) ([]category, uint, error) {
 	var categoryList []category
-	err := db.Db.Where("`user_id` = ?", c.UserId).Find(&categoryList).Error
-	return categoryList, err
+
+	// 创建语句
+	query := db.Db.Model(&Category{}).Where("`user_id` = ?", c.UserId)
+
+	if c.Name != "" {
+		query = query.Where("`name` like concat('%',?,'%')", c.Name)
+	}
+
+	// 分页
+	total, err := utils.ToPage(page, query, &categoryList)
+
+	return categoryList, total, err
 }
 
 // 添加分类
@@ -34,7 +45,7 @@ func (c Category) Create() error {
 	return db.Db.Create(&c).Error
 }
 
-// 根据分类名获取分类
+// 验证分类名是否存在
 func (c Category) GetCategoryByName() ([]category, error) {
 	var categoryList []category
 	err := db.Db.Where("`name` = ? and `user_id` = ?", c.Name, c.UserId).Find(&categoryList).Error

@@ -2,6 +2,7 @@ package forms
 
 import (
 	"arks_servers/models"
+	"arks_servers/utils"
 
 	"gorm.io/gorm"
 )
@@ -24,6 +25,13 @@ type CategoryIdForm struct {
 }
 
 type CategoryIdListForm struct{}
+
+// 分类分页表单
+type CategoryPageForm struct {
+	Name             string `form:"name"` // 关键词
+	UserId           uint   // 用户id
+	utils.Pagination        // 分页结构
+}
 
 // 绑定表单到实体结构
 func (form CreateCategoryForm) BindToModel() models.Category {
@@ -51,4 +59,11 @@ func (form CategoryInfoForm) BindToModel() models.Category {
 
 func (form CategoryIdListForm) BindToModel() models.Category {
 	return models.Category{}
+}
+
+func (form CategoryPageForm) BindToModel() models.Category {
+	return models.Category{
+		Name:   form.Name,
+		UserId: form.UserId,
+	}
 }

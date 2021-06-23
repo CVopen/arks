@@ -24,5 +24,7 @@ type Article struct {
 	Content          string   `gorm:"type:MediumText;not null;" json:"content"`          // 内容
 	MDContent        string   `gorm:"type:MediumText;not null;" json:"md_content"`       // markdown渲染后的内容
 	CommentCount     string   `gorm:"type:int;defalut:0;" json:"comment_count"`          // 评论数
-	VisitCount       string   `gorm:"type:int;defalut:0;" json:"visit_count"`            // 评论数
+	VisitCount       string   `gorm:"type:int;defalut:0;" json:"visit_count"`            // 浏览数
 }
+
+// 新增文章

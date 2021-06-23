@@ -22,7 +22,7 @@ export default function ArticleItem(props) {
           </div>
         </div>
         <div className="tag-right">
-          <AppstoreOutlined style={{color: '#000058'}}/>
+          <AppstoreOutlined style={{color: '#39A2DB'}}/>
           分类: jvav
         </div>
       </div>

@@ -29,43 +29,31 @@ func (ch CategoryHandler) GetAllCategory(ctx *gin.Context) {
 		Data: nil,
 	}
 
-	name := ctx.Query("name")
-
-	if name != "" {
-		getCategoryForm := forms.CategoryInfoForm{
-			UserId: utils.TypeInterFaceToUint(id),
-			Name:   name,
-		}
-		category := getCategoryForm.BindToModel()
-		data, err := category.GetCategoryByName()
-		if err != nil {
-			result.Msg = ""
-			result.Code = utils.RequestError
-			result.Data = err
-			ctx.JSON(http.StatusOK, result)
-			return
-		}
-		result.Data = data
-		ctx.JSON(http.StatusOK, result)
-	} else {
-
-		getCategoryForm := forms.CategoryInfoForm{
-			UserId: utils.TypeInterFaceToUint(id),
-		}
-		category := getCategoryForm.BindToModel()
-
-		list, err := category.GetAllList()
-		if err != nil {
-			result.Msg = ""
-			result.Code = utils.RequestError
-			result.Data = err
-			ctx.JSON(http.StatusOK, result)
-			return
-		}
-
-		result.Data = list
-		ctx.JSON(http.StatusOK, result)
+	pageForm := forms.CategoryPageForm{
+		UserId: utils.TypeInterFaceToUint(id),
 	}
+
+	if err := ctx.ShouldBindQuery(&pageForm); err != nil {
+		ctx.JSON(http.StatusOK, utils.Result{
+			Code: utils.RequestError,
+			Msg:  "error",
+			Data: nil,
+		})
+		return
+	}
+	category := pageForm.BindToModel()
+
+	list, total, err := category.GetAllList(&pageForm.Pagination)
+	if err != nil {
+		result.Msg = "error"
+		result.Code = utils.RequestError
+		result.Data = err
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	result.Data = utils.PageData(list, total, pageForm.Pagination)
+	ctx.JSON(http.StatusOK, result)
 
 }
 

@@ -1,0 +1,22 @@
+.el-table,
+.el-table__expanded-cell {
+  background-color: transparent;
+}
+::v-deep .el-table, .el-table__expanded-cell {
+  background-color: transparent !important;
+}
+::v-deep .el-table {
+  color: #000;
+  th,
+  tr {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    color: #000 !important;
+  }
+  .el-table__body tr:hover>td{
+    background-color: rgba(255, 255, 255, 0.5) !important;
+  }
+}
+
+::v-deep(.el-input__inner) {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+}

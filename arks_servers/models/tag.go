@@ -2,6 +2,7 @@ package models
 
 import (
 	"arks_servers/config/db"
+	"arks_servers/utils"
 
 	"gorm.io/gorm"
 )
@@ -24,11 +25,19 @@ type tag struct {
 }
 
 // 获取用户下的所有标签
-func (t Tag) GetAllList() ([]tag, error) {
+func (t Tag) GetAllList(page *utils.Pagination) ([]tag, uint, error) {
 	var tagList []tag
 
-	err := db.Db.Where("`user_id` = ?", t.UserId).Find(&tagList).Error
-	return tagList, err
+	// 创建语句
+	query := db.Db.Model(&Tag{}).Where("`user_id` = ?", t.UserId)
+
+	if t.Name != "" {
+		query = query.Where("`name` like concat('%',?'%')", t.Name)
+	}
+	// 分页
+	total, err := utils.ToPage(page, query, &tagList)
+
+	return tagList, total, err
 }
 
 // 查询用户下单个tag
