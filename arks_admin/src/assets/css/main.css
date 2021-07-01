@@ -16,6 +16,16 @@ body,
     background-size: cover;
 }
 
+.el-popper {
+  background: rgba(255, 105, 180, .4) !important;
+}
+.el-popper__arrow::before {
+  background: rgba(255, 105, 180, .4) !important;
+}
+.el-popper li:hover {
+  background: rgba(255, 255, 255, .7) !important;
+  color:rgba(255, 105, 180) !important;
+}
 body {
     font-family: 'PingFang SC', "Helvetica Neue", Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;
 }

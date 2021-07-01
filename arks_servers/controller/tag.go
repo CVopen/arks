@@ -147,7 +147,7 @@ func (th TagHandler) EditTag(ctx *gin.Context) {
 
 	tagDetail, _ := tag.GetName()
 
-	if tagDetail.Name != "" {
+	if tagDetail.Name != "" && tag.ID != tagDetail.ID {
 		result.Msg = "标签已存在"
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusOK, result)

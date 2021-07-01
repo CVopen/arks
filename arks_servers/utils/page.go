@@ -13,8 +13,8 @@ var (
 
 // 分页结构体
 type Pagination struct {
-	Size     uint        `form:"size"` // 每页条数
-	Page     uint        `form:"page"` // 页码
+	Size     uint        `form:"pageSize"` // 每页条数
+	Page     uint        `form:"page"`     // 页码
 	Data     interface{} // 分页数据
 	Total    uint        // 总数
 	lastMore bool        // 总页数

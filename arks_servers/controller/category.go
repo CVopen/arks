@@ -146,7 +146,7 @@ func (ch CategoryHandler) EditCategory(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, result)
 		return
 	}
-	if len(cList) > 0 {
+	if len(cList) > 0 && category.ID != cList[0].ID {
 		result.Msg = "分类已存在"
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusOK, result)

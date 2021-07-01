@@ -1,4 +1,4 @@
-import { get, post } from '../utils/request'
+import { get, post, put } from '../utils/request'
 
 // 获取验证码base64
 export const getCaptcha = () => get({
@@ -25,8 +25,14 @@ export const addCategory = ({ name, desc }) => post({
   }
 })
 
+// 修改分类
+export const editCategory = ({ name, desc, id }) => put({
+  url: '/category/edit',
+  data: { name, desc, id }
+})
+
 // 分类列表
-export const getCategoryAll = (params) => get({
+export const getCategoryList = (params) => get({
   url: '/category/list',
   params
 })

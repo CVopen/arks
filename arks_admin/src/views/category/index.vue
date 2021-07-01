@@ -14,7 +14,7 @@
           placeholder="用户名"
           class="handle-input mr10"
         />
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
+        <el-button type="primary" icon="el-icon-search" @click="getList(1)"
           >搜索</el-button
         >
       </div>
@@ -47,7 +47,7 @@
             <el-button
               type="text"
               icon="el-icon-edit"
-              @click="handleEdit(scope.$index, scope.row)"
+              @click="handleEdit(scope)"
               >编辑</el-button
             >
             <el-button
@@ -64,123 +64,115 @@
         <el-pagination
           background
           layout="total, prev, pager, next"
-          :current-page="params.pageIndex"
+          :current-page="params.page"
           :page-size="params.pageSize"
           :total="pageTotal"
           @current-change="handlePageChange"
         ></el-pagination>
       </div>
     </div>
-
-    <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" v-model="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="用户名">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="editVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveEdit">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+    <Edit 
+      @change="getList" 
+      :showModel="show" 
+      :form="form"
+      @close-modal="handleEdit"
+    />
   </div>
 </template>
 
 <script>
-import { getCategoryAll } from "../api/index"
-export default {
-  name: "basetable",
-  data() {
-    return {
+import { getCategoryList } from "../../api/index"
+import { formatTime } from "../../utils/index"
+import Edit from "./modal/editCategory.vue"
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { 
+  defineComponent, 
+  toRefs,
+  reactive,
+  onMounted
+} from "vue"
+export default defineComponent({
+  name: "category",
+  components: {
+    Edit
+  },
+  setup() {
+    const data = reactive({
       params: {
         name: "",
         page: 1,
-        pageSize: 10
+        pageSize: 2
       },
       pageTotal: 0,
       tableData: [],
       multipleSelection: [],
-      delList: [],
-      editVisible: false,
+      show: false,
       form: {},
-      idx: -1,
-      id: -1
+    })
+    const getList = (page) => {
+      if (page) {
+        data.params.page = 1
+      }
+      getCategoryList(data.params).then((res) => {
+        console.log(res)
+        res.data.data.forEach((item) => {
+          item.CreatedAt = formatTime(item.CreatedAt)
+        })
+        data.tableData = res.data.data
+        data.pageTotal = res.data.total
+      })
     }
-  },
-  // created() {
-  //   this.getList()
-  // },
-  created() {
-    this.getList()
-  },
-  methods: {
-    // 触发搜索按钮
-    handleSearch() {
-      this.$set(this.query, "pageIndex", 1)
-      this.getList()
-    },
     // 删除操作
-    handleDelete(index) {
+    const handleDelete = (index) => {
       // 二次确认删除
-      this.$confirm("确定要删除吗？", "提示", {
+      ElMessageBox.confirm("确定要删除吗？", "提示", {
         type: "warning"
       })
         .then(() => {
-          this.$message.success("删除成功")
-          this.tableData.splice(index, 1)
+          ElMessage.success({
+            message: '删除成功',
+            type: 'success'
+          })
+          data.tableData.splice(index, 1)
         })
         .catch(() => {})
-    },
+    }
     // 多选操作
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-    },
-    delAllSelection() {
-      const length = this.multipleSelection.length
-      let str = ""
-      this.delList = this.delList.concat(this.multipleSelection)
-      for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].name + " "
-      }
-      this.$message.error(`删除了${str}`)
-      this.multipleSelection = []
-    },
+    const handleSelectionChange = (val) => {
+      data.multipleSelection = val
+    }
     // 编辑操作
-    handleEdit(index, row) {
-      this.idx = index
-      this.form = row
-      this.editVisible = true
-    },
-    // 保存编辑
-    saveEdit() {
-      this.editVisible = false
-      this.$message.success(`修改第 ${this.idx + 1} 行成功`)
-      this.$set(this.tableData, this.idx, this.form)
-    },
+    const handleEdit = (scoped) => {
+      if (!scoped) return data.show = false
+      data.form = scoped.row
+      data.show = true
+    }
+    const delAllSelection = () => {}
     // 分页导航
-    handlePageChange(val) {
-      this.$set(this.query, "pageIndex", val)
-      this.getData()
-    },
-    getList() {
-      getCategoryAll(this.params).then((res) => {
-        console.log(res)
-        this.tableData = res.data.data
-        this.pageTotal = res.data.total
-      })
+    const handlePageChange = (val) => {
+      data.params.page = val
+      getList()
+    }
+    
+    onMounted(() => {
+      getList(1)
+    })
+
+    return { 
+      ...toRefs(data),
+      getList,
+      handleDelete,
+      handleSelectionChange,
+      handleEdit,
+      delAllSelection,
+      handlePageChange
     }
   }
-}
+})
 </script>
 
 <style scoped lang="scss">
-@import "../assets/css/element.scss";
+@import "../../assets/css/element.scss";
 .handle-box {
   margin-bottom: 20px;
 }
@@ -209,18 +201,4 @@ export default {
   width: 40px;
   height: 40px;
 }
-/* ::v-deep(.el-table, .el-table__expanded-cell) {
-  background-color: transparent;
-}
-::v-deep(.el-table) {
-  color: #000;
-  th,
-  tr {
-    background-color: rgba(255, 255, 255, 0.5) !important;
-    color: #000 !important;
-  }
-  .el-table__row :hover {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-  }
-} */
 </style>

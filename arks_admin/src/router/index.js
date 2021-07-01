@@ -1,5 +1,5 @@
 import {createRouter, createWebHashHistory } from "vue-router"
-import Home from "../views/index.vue";
+import Home from "../views/index.vue"
 import Session from '../utils/sessionStorage'
 const routes = [
     {
@@ -18,19 +18,19 @@ const routes = [
               title: '系统首页'
           },
           component: () => import (
-          /* webpackChunkName: "dashboard" */
+          /* webpackChunkName: "home" */
           "../views/home/index.vue")
-        }, 
+        },
         {
-          path: "/table",
-          name: "basetable",
+          path: "/category",
+          name: "category",
           meta: {
-              title: '表格'
+              title: '文章分类'
           },
           component: () => import (
-          /* webpackChunkName: "table" */
-          "../views/BaseTable.vue")
-        }, 
+            /* webpackChunkName: "category" */
+            "../views/category/index.vue")
+        },
         {
           path: "/charts",
           name: "basecharts",
