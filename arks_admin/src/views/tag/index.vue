@@ -9,12 +9,19 @@
           @click="delAllSelection"
           >批量删除</el-button
         >
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          class="handle-del mr10"
+          @click="() => showAdd = true"
+          >新增标签</el-button
+        >
         <el-input
           v-model="params.name"
-          placeholder="用户名"
+          placeholder="标签名"
           class="handle-input mr10"
         />
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
+        <el-button type="primary" icon="el-icon-search" @click="getList(1)"
           >搜索</el-button
         >
       </div>
@@ -28,33 +35,40 @@
       >
         <el-table-column
           type="selection"
+          :selectable="isSelect"
           width="55"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column
           prop="ID"
           label="ID"
           width="55"
           align="center"
-        ></el-table-column>
-        <el-table-column prop="name" label="分类名称"></el-table-column>
-        <el-table-column prop="desc" label="介绍"> </el-table-column>
-        <el-table-column prop="count" label="文章总数" align="center">
-        </el-table-column>
-        <el-table-column prop="CreatedAt" label="创建时间"></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        />
+        <el-table-column prop="name" label="标签名称" />
+        <el-table-column prop="count" label="文章总数" align="center" />
+        <el-table-column prop="CreatedAt" label="创建时间" />
+        <el-table-column label="操作" align="center">
           <template #default="scope">
             <el-button
               type="text"
+              icon="el-icon-document"
+              @click="handleEdit(scope)"
+              >查看</el-button
+            >
+            <el-button
+              v-if="scope.row.edit"
+              type="text"
               icon="el-icon-edit"
-              @click="handleEdit(scope.$index, scope.row)"
+              @click="handleEdit(scope)"
               >编辑</el-button
             >
             <el-button
+              v-if="scope.row.del"
               type="text"
               icon="el-icon-delete"
               class="red"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.row.ID)"
               >删除</el-button
             >
           </template>
@@ -64,41 +78,48 @@
         <el-pagination
           background
           layout="total, prev, pager, next"
-          :current-page="params.pageIndex"
+          :current-page="params.page"
           :page-size="params.pageSize"
           :total="pageTotal"
           @current-change="handlePageChange"
         ></el-pagination>
       </div>
     </div>
-
-    <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" v-model="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="用户名">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="editVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveEdit">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
+    <EditTag 
+      @change="getList" 
+      :showModel="showEdit"
+      :form="form"
+      @close-modal="handleEdit"
+    />
+    <AddTag 
+      @change="getList(1)" 
+      :showModel="showAdd"
+      :form="form"
+      @close-modal="() => showAdd = false"
+    />
   </div>
 </template>
 
 <script>
-import { getCategoryList } from "../../api/index"
+import { getTagList, delTag } from "../../api/index"
 import { formatTime } from "../../utils/index"
-export default {
+import EditTag from "./modal/editTag.vue"
+import AddTag from "./modal/addTag.vue"
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { 
+  defineComponent, 
+  toRefs,
+  reactive,
+  onMounted
+} from "vue"
+export default defineComponent({
   name: "tag",
-  data() {
-    return {
+  components: {
+    EditTag,
+    AddTag
+  },
+  setup() {
+    const data = reactive({
       params: {
         name: "",
         page: 1,
@@ -107,77 +128,81 @@ export default {
       pageTotal: 0,
       tableData: [],
       multipleSelection: [],
-      delList: [],
-      editVisible: false,
+      showEdit: false,
+      showAdd: false,
       form: {},
-      idx: -1,
-      id: -1
-    }
-  },
-  created() {
-    this.getList()
-  },
-  methods: {
-    // 触发搜索按钮
-    handleSearch() {
-      this.params.page = 1
-      this.getList()
-    },
-    // 删除操作
-    handleDelete(index) {
-      // 二次确认删除
-      this.$confirm("确定要删除吗？", "提示", {
-        type: "warning"
-      })
-        .then(() => {
-          this.$message.success("删除成功")
-          this.tableData.splice(index, 1)
-        })
-        .catch(() => {})
-    },
-    // 多选操作
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-    },
-    delAllSelection() {
-      const length = this.multipleSelection.length
-      let str = ""
-      this.delList = this.delList.concat(this.multipleSelection)
-      for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].name + " "
+    })
+    const getList = (page) => {
+      if (page) {
+        data.params.page = 1
       }
-      this.$message.error(`删除了${str}`)
-      this.multipleSelection = []
-    },
-    // 编辑操作
-    handleEdit(index, row) {
-      this.idx = index
-      this.form = row
-      this.editVisible = true
-    },
-    // 保存编辑
-    saveEdit() {
-      this.editVisible = false
-      this.$message.success(`修改第 ${this.idx + 1} 行成功`)
-      this.$set(this.tableData, this.idx, this.form)
-    },
-    // 分页导航
-    handlePageChange(val) {
-      this.params.page = val
-      this.getList()
-    },
-    getList() {
-      getCategoryList(this.params).then((res) => {
+      getTagList(data.params).then((res) => {
         console.log(res)
         res.data.data.forEach((item) => {
           item.CreatedAt = formatTime(item.CreatedAt)
         })
-        this.tableData = res.data.data
-        this.pageTotal = res.data.total
+        data.tableData = res.data.data
+        data.pageTotal = res.data.total
       })
     }
+
+    const delList = (id) => {
+      delTag({ id }).then(() => {
+        ElMessage.success({
+          message: '删除成功',
+          type: 'success'
+        })
+        getList(1)
+      })
+    }
+    // 删除操作
+    const handleDelete = (id) => {
+      // 二次确认删除
+      ElMessageBox.confirm("确定要删除吗？", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          delList(id)
+        })
+        .catch(() => {})
+    }
+    // 多选操作
+    const handleSelectionChange = (val) => {
+      data.multipleSelection = val
+    }
+    // 编辑操作
+    const handleEdit = (scoped) => {
+      if (!scoped) return data.showEdit = false
+      data.form = scoped.row
+      data.showEdit = true
+    }
+    const delAllSelection = () => {
+      handleDelete(data.multipleSelection.map(item => item.ID))
+    }
+    // 分页导航
+    const handlePageChange = (val) => {
+      data.params.page = val
+      getList()
+    }
+    
+    const isSelect = (row) => row.del
+
+    onMounted(() => {
+      getList(1)
+    })
+
+    return { 
+      ...toRefs(data),
+      getList,
+      handleDelete,
+      handleSelectionChange,
+      handleEdit,
+      delAllSelection,
+      handlePageChange,
+      isSelect
+    }
   }
-}
+})
 </script>
 
 <style scoped lang="scss">

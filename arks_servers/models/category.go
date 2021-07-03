@@ -12,23 +12,18 @@ type Category struct {
 	gorm.Model
 	Name string `gorm:"unique;type:varchar(30);not null;" json:"name"` // 类别名称
 	// User   User   `gorm:"ForeignKey:UserId" json:"user"`           // 用户
+	Count uint   `gorm:"unique_index;type:int;default:0;" json:"count"` // 文章数量
 	UserId uint   `gorm:"type:int;not null;" json:"user_id"`       // 用户id
 	Desc   string `gorm:"type:varchar(255);not null;" json:"desc"` // 介绍
 }
 
-// 返回值指定模型
-type category struct {
-	gorm.Model
-	Name string `json:"name"`
-	Desc string `json:"desc"`
-}
-
 // 获取用户下的所有分类
-func (c Category) GetAllList(page *utils.Pagination) ([]category, uint, error) {
-	var categoryList []category
+func (c Category) GetAllList(page *utils.Pagination) ([]Category, uint, error) {
+	var categoryList []Category
 
 	// 创建语句
-	query := db.Db.Model(&Category{}).Where("`user_id` = ?", c.UserId)
+	// query := db.Db.Model(&Category{}).Where("`user_id` = ?", c.UserId)
+	query := db.Db.Model(&Category{})
 
 	if c.Name != "" {
 		query = query.Where("`name` like concat('%',?,'%')", c.Name)
@@ -46,9 +41,9 @@ func (c Category) Create() error {
 }
 
 // 验证分类名是否存在
-func (c Category) GetCategoryByName() ([]category, error) {
-	var categoryList []category
-	err := db.Db.Where("`name` = ? and `user_id` = ?", c.Name, c.UserId).Find(&categoryList).Error
+func (c Category) GetCategoryByName() ([]Category, error) {
+	var categoryList []Category
+	err := db.Db.Where("`name` = ? ", c.Name).Find(&categoryList).Error
 	return categoryList, err
 }
 

@@ -52,7 +52,27 @@ func (ch CategoryHandler) GetAllCategory(ctx *gin.Context) {
 		return
 	}
 
-	result.Data = utils.PageData(list, total, pageForm.Pagination)
+	dataList := make([]map[string]interface{}, len(list))
+	for i, v := range list {
+		dataList[i] = make(map[string]interface{}, 7)
+		dataList[i]["ID"] = v.ID
+		dataList[i]["CreatedAt"] = v.CreatedAt
+		dataList[i]["name"] = v.Name
+		dataList[i]["desc"] = v.Desc
+		dataList[i]["del"] = false
+		dataList[i]["edit"] = false
+		dataList[i]["count"] = v.Count
+		if v.UserId == pageForm.UserId {
+			dataList[i]["del"] = true
+			dataList[i]["edit"] = true
+		}
+		if pageForm.UserId == 1 {
+			dataList[i]["del"] = true
+			dataList[i]["edit"] = true
+		}
+	}
+
+	result.Data = utils.PageData(dataList, total, pageForm.Pagination)
 	ctx.JSON(http.StatusOK, result)
 
 }

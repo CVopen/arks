@@ -23,7 +23,7 @@ func (th TagHandler) CreateTag(ctx *gin.Context) {
 	id, _ := ctx.Get("id")
 
 	type bodyRequest struct {
-		Id   float64 `json:"id" binding:"min=1,max=30" label:"类别id"`
+		Id   float64 `json:"id" label:"类别id"`
 		Name string  `json:"name" binding:"min=1,max=30" label:"标签名称"`
 	}
 	bodyR := bodyRequest{}
@@ -36,7 +36,6 @@ func (th TagHandler) CreateTag(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&bodyR); err != nil {
 		result.Msg = "参数错误"
-		result.Data = err
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusOK, result)
 		return
@@ -111,7 +110,26 @@ func (th TagHandler) GetList(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, result)
 	}
 
-	result.Data = utils.PageData(list, total, pageForm.Pagination)
+	dataList := make([]map[string]interface{}, len(list))
+	for i, v := range list {
+		dataList[i] = make(map[string]interface{}, 6)
+		dataList[i]["ID"] = v.ID
+		dataList[i]["CreatedAt"] = v.CreatedAt
+		dataList[i]["name"] = v.Name
+		dataList[i]["del"] = false
+		dataList[i]["edit"] = false
+		dataList[i]["count"] = v.Count
+		if v.UserId == pageForm.UserId {
+			dataList[i]["del"] = true
+			dataList[i]["edit"] = true
+		}
+		if pageForm.UserId == 1 {
+			dataList[i]["del"] = true
+			dataList[i]["edit"] = true
+		}
+	}
+
+	result.Data = utils.PageData(dataList, total, pageForm.Pagination)
 	ctx.JSON(http.StatusOK, result)
 }
 

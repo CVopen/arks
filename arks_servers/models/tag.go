@@ -18,18 +18,12 @@ type Tag struct {
 	CategoryId uint     `json:"category_id"`                           // 分类id
 }
 
-type tag struct {
-	gorm.Model
-	Name  string `json:"name"`
-	Count uint   `json:"count"` // 文章数量
-}
-
 // 获取用户下的所有标签
-func (t Tag) GetAllList(page *utils.Pagination) ([]tag, uint, error) {
-	var tagList []tag
+func (t Tag) GetAllList(page *utils.Pagination) ([]Tag, uint, error) {
+	var tagList []Tag
 
 	// 创建语句
-	query := db.Db.Model(&Tag{}).Where("`user_id` = ?", t.UserId)
+	query := db.Db.Model(&Tag{})
 
 	if t.Name != "" {
 		query = query.Where("`name` like concat('%',?'%')", t.Name)
@@ -41,9 +35,9 @@ func (t Tag) GetAllList(page *utils.Pagination) ([]tag, uint, error) {
 }
 
 // 查询用户下单个tag
-func (t Tag) GetAllNameList() ([]tag, error) {
-	var tagList []tag
-	err := db.Db.Where("`name` = ? and `user_id` = ?", t.Name, t.UserId).Find(&tagList).Error
+func (t Tag) GetAllNameList() ([]Tag, error) {
+	var tagList []Tag
+	err := db.Db.Where("`name` = ?", t.Name).Find(&tagList).Error
 	return tagList, err
 }
 
@@ -70,8 +64,8 @@ func (t Tag) Edit() error {
 }
 
 // 根据分类id获取标签
-func (t Tag) GetByCategoryToList() ([]tag, error) {
-	var tagList []tag
+func (t Tag) GetByCategoryToList() ([]Tag, error) {
+	var tagList []Tag
 
 	err := db.Db.Where("`user_id` = ? and `name` = ?", t.UserId, t.Name).Find(&tagList).Error
 	return tagList, err

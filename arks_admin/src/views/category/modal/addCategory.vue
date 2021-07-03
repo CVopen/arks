@@ -12,21 +12,21 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="close">取 消</el-button>
-        <el-button type="primary" @click="saveEdit">确 定</el-button>
+        <el-button type="primary" @click="saveAdd">确 定</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script>
-import { editCategory } from "../../../api/index"
+import { addCategory } from "../../../api/index"
+import { ElMessage } from 'element-plus'
 import { 
   defineComponent, 
   toRefs,
   reactive,
   watch
 } from "vue"
-import { ElMessage } from 'element-plus'
 export default defineComponent({
   name: "edit-catagory",
   props: {
@@ -51,27 +51,26 @@ export default defineComponent({
     const data = reactive({
       show: props.showModel,
       formData: {
-        name: props.form.name,
-        desc: props.form.desc
+        name: '',
+        desc: ''
       }
     })
     
     watch(props, (newVal) => {
         data.show = newVal.showModel
         data.formData = {
-          id: newVal.form.ID,
-          name: newVal.form.name,
-          desc: newVal.form.desc
+          name: '',
+          desc: ''
         }
       }
     )
     const close = () => {
       context.emit('close-modal')
     }
-    const saveEdit = () => {
-      editCategory(data.formData).then(() => {
-        ElMessage.success({
-          message: '修改成功',
+    const saveAdd = () => {
+      addCategory(data.formData).then(() => {
+        ElMessage({
+          message: '添加成功',
           type: 'success'
         })
         context.emit('change')
@@ -80,7 +79,7 @@ export default defineComponent({
     }
     return { 
       ...toRefs(data),
-      saveEdit, 
+      saveAdd,
       close
     }
   }

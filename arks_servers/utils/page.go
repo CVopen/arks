@@ -38,7 +38,7 @@ func ToPage(p *Pagination, db *gorm.DB, list interface{}) (uint, error) {
 	}
 	offset := p.Size * (p.Page - 1)
 	// 获取偏移量数据
-	err = db.Limit(int(p.Size)).Offset(int(offset)).Find(list).Error
+	err = db.Limit(int(p.Size)).Offset(int(offset)).Order("created_at desc").Find(list).Error
 
 	if err != nil {
 		return 0, err

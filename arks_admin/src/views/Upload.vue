@@ -80,6 +80,7 @@
 <script>
 import VueCropper from "vue-cropperjs";
 import "cropperjs/dist/cropper.css";
+
 export default {
     name: "upload",
     data() {

@@ -9,9 +9,16 @@
           @click="delAllSelection"
           >批量删除</el-button
         >
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          class="handle-del mr10"
+          @click="() => showAdd = true"
+          >新增分类</el-button
+        >
         <el-input
           v-model="params.name"
-          placeholder="用户名"
+          placeholder="分类名"
           class="handle-input mr10"
         />
         <el-button type="primary" icon="el-icon-search" @click="getList(1)"
@@ -28,6 +35,7 @@
       >
         <el-table-column
           type="selection"
+          :selectable="isSelect"
           width="55"
           align="center"
         ></el-table-column>
@@ -42,19 +50,27 @@
         <el-table-column prop="count" label="文章总数" align="center">
         </el-table-column>
         <el-table-column prop="CreatedAt" label="创建时间"></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" align="center">
           <template #default="scope">
             <el-button
+              type="text"
+              icon="el-icon-document"
+              @click="handleEdit(scope)"
+              >查看</el-button
+            >
+            <el-button
+              v-if="scope.row.edit"
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope)"
               >编辑</el-button
             >
             <el-button
+              v-if="scope.row.del"
               type="text"
               icon="el-icon-delete"
               class="red"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.row.ID)"
               >删除</el-button
             >
           </template>
@@ -73,17 +89,24 @@
     </div>
     <Edit 
       @change="getList" 
-      :showModel="show" 
+      :showModel="showEdit"
       :form="form"
       @close-modal="handleEdit"
+    />
+    <AddCategory 
+      @change="getList(1)" 
+      :showModel="showAdd"
+      :form="form"
+      @close-modal="() => showAdd = false"
     />
   </div>
 </template>
 
 <script>
-import { getCategoryList } from "../../api/index"
+import { getCategoryList, delCategory } from "../../api/index"
 import { formatTime } from "../../utils/index"
 import Edit from "./modal/editCategory.vue"
+import AddCategory from "./modal/addCategory.vue"
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { 
   defineComponent, 
@@ -94,19 +117,21 @@ import {
 export default defineComponent({
   name: "category",
   components: {
-    Edit
+    Edit,
+    AddCategory
   },
   setup() {
     const data = reactive({
       params: {
         name: "",
         page: 1,
-        pageSize: 2
+        pageSize: 10
       },
       pageTotal: 0,
       tableData: [],
       multipleSelection: [],
-      show: false,
+      showEdit: false,
+      showAdd: false,
       form: {},
     })
     const getList = (page) => {
@@ -122,18 +147,24 @@ export default defineComponent({
         data.pageTotal = res.data.total
       })
     }
+
+    const delList = (id) => {
+      delCategory({ id }).then(() => {
+        ElMessage.success({
+          message: '删除成功',
+          type: 'success'
+        })
+        getList(1)
+      })
+    }
     // 删除操作
-    const handleDelete = (index) => {
+    const handleDelete = (id) => {
       // 二次确认删除
       ElMessageBox.confirm("确定要删除吗？", "提示", {
         type: "warning"
       })
         .then(() => {
-          ElMessage.success({
-            message: '删除成功',
-            type: 'success'
-          })
-          data.tableData.splice(index, 1)
+          delList(id)
         })
         .catch(() => {})
     }
@@ -143,16 +174,20 @@ export default defineComponent({
     }
     // 编辑操作
     const handleEdit = (scoped) => {
-      if (!scoped) return data.show = false
+      if (!scoped) return data.showEdit = false
       data.form = scoped.row
-      data.show = true
+      data.showEdit = true
     }
-    const delAllSelection = () => {}
+    const delAllSelection = () => {
+      handleDelete(data.multipleSelection.map(item => item.ID))
+    }
     // 分页导航
     const handlePageChange = (val) => {
       data.params.page = val
       getList()
     }
+
+    const isSelect = (row) => row.del
     
     onMounted(() => {
       getList(1)
@@ -165,7 +200,8 @@ export default defineComponent({
       handleSelectionChange,
       handleEdit,
       delAllSelection,
-      handlePageChange
+      handlePageChange,
+      isSelect
     }
   }
 })

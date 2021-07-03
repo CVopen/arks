@@ -2,31 +2,34 @@
   <!-- 编辑弹出框 -->
   <el-dialog title="编辑" v-model="show" width="30%" @close="close">
     <el-form ref="form" :model="formData" label-width="70px">
-      <el-form-item label="分类名">
-        <el-input v-model="formData.name"></el-input>
+      <el-form-item label="所属分类">
+        <el-select v-model="formData.id" filterable placeholder="请选择分类">
+          <el-option v-for="item in list" :key="item.ID" :label="item.name" :value="item.ID"></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="简介">
-        <el-input v-model="formData.desc"></el-input>
+      <el-form-item label="标签名">
+        <el-input v-model="formData.name"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="close">取 消</el-button>
-        <el-button type="primary" @click="saveEdit">确 定</el-button>
+        <el-button type="primary" @click="saveAdd">确 定</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script>
-import { editCategory } from "../../../api/index"
+import { addTag, getCategoryList } from "../../../api/index"
+import { ElMessage } from 'element-plus'
 import { 
   defineComponent, 
   toRefs,
   reactive,
-  watch
+  watch,
+  onMounted
 } from "vue"
-import { ElMessage } from 'element-plus'
 export default defineComponent({
   name: "edit-catagory",
   props: {
@@ -51,27 +54,31 @@ export default defineComponent({
     const data = reactive({
       show: props.showModel,
       formData: {
-        name: props.form.name,
-        desc: props.form.desc
-      }
+        name: '',
+        id: ''
+      },
+      list: []
     })
-    
+    onMounted(() => {
+      getCategoryList({pageSize: 1000}).then(res => {
+        data.list = res.data.data
+      })
+    })
     watch(props, (newVal) => {
         data.show = newVal.showModel
         data.formData = {
-          id: newVal.form.ID,
-          name: newVal.form.name,
-          desc: newVal.form.desc
+          name: '',
+          id: ''
         }
       }
     )
     const close = () => {
       context.emit('close-modal')
     }
-    const saveEdit = () => {
-      editCategory(data.formData).then(() => {
-        ElMessage.success({
-          message: '修改成功',
+    const saveAdd = () => {
+      addTag(data.formData).then(() => {
+        ElMessage({
+          message: '添加成功',
           type: 'success'
         })
         context.emit('change')
@@ -80,11 +87,15 @@ export default defineComponent({
     }
     return { 
       ...toRefs(data),
-      saveEdit, 
+      saveAdd,
       close
     }
   }
 })
 </script>
 
-<style scoped lang="scss"></style>
+<style lang="scss">
+.el-select {
+  width: 100%;
+}
+</style>

@@ -32,6 +32,16 @@ const routes = [
             "../views/category/index.vue")
         },
         {
+          path: "/tag",
+          name: "tag",
+          meta: {
+              title: '标签分类'
+          },
+          component: () => import (
+            /* webpackChunkName: "category" */
+            "../views/tag/index.vue")
+        },
+        {
           path: "/charts",
           name: "basecharts",
           meta: {

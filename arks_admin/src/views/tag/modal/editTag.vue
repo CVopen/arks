@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { editCategory } from "../../../api/index"
+import { editTag } from "../../../api/index"
 import { 
   defineComponent, 
   toRefs,
@@ -69,7 +69,7 @@ export default defineComponent({
       context.emit('close-modal')
     }
     const saveEdit = () => {
-      editCategory(data.formData).then(() => {
+      editTag(data.formData).then(() => {
         ElMessage.success({
           message: '修改成功',
           type: 'success'
