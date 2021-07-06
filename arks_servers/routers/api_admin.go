@@ -48,4 +48,10 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 		// 删除分类
 		tagRouter.DELETE("/del", tagHandler.Remove)
 	}
+
+	articleRouter := admin.Group("/article", middlewares.JwtAuth())
+	articleHandler := controller.ArticleHandler{}
+	{
+		articleRouter.POST("/add", articleHandler.CreatedArticle)
+	}
 }

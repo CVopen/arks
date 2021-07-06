@@ -28,6 +28,10 @@ func (t Tag) GetAllList(page *utils.Pagination) ([]Tag, uint, error) {
 	if t.Name != "" {
 		query = query.Where("`name` like concat('%',?'%')", t.Name)
 	}
+
+	if t.CategoryId != 0 {
+		query = query.Where("`category_id` = ?", t.CategoryId)
+	}
 	// 分页
 	total, err := utils.ToPage(page, query, &tagList)
 

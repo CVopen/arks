@@ -1,91 +1,82 @@
 <template>
-  <div>
-    <div class="container">
-      <div class="handle-box">
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          class="handle-del mr10"
-          @click="delAllSelection"
-          >批量删除</el-button
-        >
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          class="handle-del mr10"
-          @click="() => showAdd = true"
-          >新增分类</el-button
-        >
-        <el-input
-          v-model="params.name"
-          placeholder="分类名"
-          class="handle-input mr10"
-        />
-        <el-button type="primary" icon="el-icon-search" @click="getList(1)"
-          >搜索</el-button
-        >
-      </div>
-      <el-table
-        :data="tableData"
-        border
-        class="table"
-        ref="multipleTable"
-        header-cell-class-name="table-header"
-        @selection-change="handleSelectionChange"
+  <div class="container">
+    <div class="handle-box">
+      <el-button
+        type="primary"
+        icon="el-icon-delete"
+        class="handle-del mr10"
+        @click="delAllSelection"
+        >批量删除</el-button
       >
-        <el-table-column
-          type="selection"
-          :selectable="isSelect"
-          width="55"
-          align="center"
-        ></el-table-column>
-        <el-table-column
-          prop="ID"
-          label="ID"
-          width="55"
-          align="center"
-        ></el-table-column>
-        <el-table-column prop="name" label="分类名称"></el-table-column>
-        <el-table-column prop="desc" label="介绍"> </el-table-column>
-        <el-table-column prop="count" label="文章总数" align="center">
-        </el-table-column>
-        <el-table-column prop="CreatedAt" label="创建时间"></el-table-column>
-        <el-table-column label="操作" align="center">
-          <template #default="scope">
-            <el-button
-              type="text"
-              icon="el-icon-document"
-              @click="$router.push({path: '/category/tag', query: {id: scope.row.ID}})"
-              >查看</el-button
-            >
-            <el-button
-              v-if="scope.row.edit"
-              type="text"
-              icon="el-icon-edit"
-              @click="handleEdit(scope)"
-              >编辑</el-button
-            >
-            <el-button
-              v-if="scope.row.del"
-              type="text"
-              icon="el-icon-delete"
-              class="red"
-              @click="handleDelete(scope.row.ID)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="pagination">
-        <el-pagination
-          background
-          layout="total, prev, pager, next"
-          :current-page="params.page"
-          :page-size="params.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
-        ></el-pagination>
-      </div>
+      <el-input
+        v-model="params.name"
+        placeholder="文章名称"
+        class="handle-input mr10"
+      />
+      <el-button type="primary" icon="el-icon-search" @click="getList(1)"
+        >搜索</el-button
+      >
+    </div>
+    <el-table
+      :data="tableData"
+      border
+      class="table"
+      ref="multipleTable"
+      header-cell-class-name="table-header"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        type="selection"
+        :selectable="isSelect"
+        width="55"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="ID"
+        label="ID"
+        width="55"
+        align="center"
+      ></el-table-column>
+      <el-table-column prop="name" label="分类名称"></el-table-column>
+      <el-table-column prop="desc" label="介绍"> </el-table-column>
+      <el-table-column prop="count" label="文章总数" align="center">
+      </el-table-column>
+      <el-table-column prop="CreatedAt" label="创建时间"></el-table-column>
+      <el-table-column label="操作" align="center">
+        <template #default="scope">
+          <el-button
+            type="text"
+            icon="el-icon-document"
+            @click="$router.push({path: '/tag', query: {id: scope.row.ID}})"
+            >查看</el-button
+          >
+          <el-button
+            v-if="scope.row.edit"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleEdit(scope)"
+            >编辑</el-button
+          >
+          <el-button
+            v-if="scope.row.del"
+            type="text"
+            icon="el-icon-delete"
+            class="red"
+            @click="handleDelete(scope.row.ID)"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="pagination">
+      <el-pagination
+        background
+        layout="total, prev, pager, next"
+        :current-page="params.page"
+        :page-size="params.pageSize"
+        :total="pageTotal"
+        @current-change="handlePageChange"
+      ></el-pagination>
     </div>
     <Edit 
       @change="getList" 
@@ -115,7 +106,7 @@ import {
   onMounted
 } from "vue"
 export default defineComponent({
-  name: "category",
+  name: "arcitle-list",
   components: {
     Edit,
     AddCategory

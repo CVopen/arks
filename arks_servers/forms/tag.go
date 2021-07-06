@@ -37,6 +37,7 @@ type TagPageForm struct {
 	Name             string `form:"name"` // 关键词
 	UserId           uint   // 用户id
 	utils.Pagination        // 分页结构
+	CategoryId uint `form:"id"` // 分类id
 }
 
 // 绑定表单到实体结构
@@ -78,5 +79,6 @@ func (form TagPageForm) BindToModel() models.Tag {
 	return models.Tag{
 		Name:   form.Name,
 		UserId: form.UserId,
+		CategoryId: form.CategoryId,
 	}
 }

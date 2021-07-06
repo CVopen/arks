@@ -12,9 +12,9 @@ type Category struct {
 	gorm.Model
 	Name string `gorm:"unique;type:varchar(30);not null;" json:"name"` // 类别名称
 	// User   User   `gorm:"ForeignKey:UserId" json:"user"`           // 用户
-	Count uint   `gorm:"unique_index;type:int;default:0;" json:"count"` // 文章数量
-	UserId uint   `gorm:"type:int;not null;" json:"user_id"`       // 用户id
-	Desc   string `gorm:"type:varchar(255);not null;" json:"desc"` // 介绍
+	Count  uint   `gorm:"unique_index;type:int;default:0;" json:"count"` // 文章数量
+	UserId uint   `gorm:"type:int;not null;" json:"user_id"`             // 用户id
+	Desc   string `gorm:"type:varchar(255);not null;" json:"desc"`       // 介绍
 }
 
 // 获取用户下的所有分类

@@ -12,34 +12,14 @@ const routes = [
       component: Home,
       children: [
         {
-          path: "/home",
-          name: "home",
+          path: '/home',
+          name: 'home',
           meta: {
-              title: '系统首页'
+            title: '系统首页'
           },
           component: () => import (
           /* webpackChunkName: "home" */
-          "../views/home/index.vue")
-        },
-        {
-          path: "/category",
-          name: "category",
-          meta: {
-              title: '文章分类'
-          },
-          component: () => import (
-            /* webpackChunkName: "category" */
-            "../views/category/index.vue")
-        },
-        {
-          path: "/tag",
-          name: "tag",
-          meta: {
-              title: '标签分类'
-          },
-          component: () => import (
-            /* webpackChunkName: "category" */
-            "../views/tag/index.vue")
+          "../views/home/index.vue"),
         },
         {
           path: "/charts",
@@ -50,17 +30,7 @@ const routes = [
           component: () => import (
           /* webpackChunkName: "charts" */
           "../views/BaseCharts.vue")
-        }, 
-        {
-          path: "/form",
-          name: "baseform",
-          meta: {
-              title: '表单'
-          },
-          component: () => import (
-          /* webpackChunkName: "form" */
-          "../views/BaseForm.vue")
-        }, 
+        },
         {
           path: "/tabs",
           name: "tabs",
@@ -70,17 +40,7 @@ const routes = [
           component: () => import (
           /* webpackChunkName: "tabs" */
           "../views/Tabs.vue")
-        }, 
-        {
-          path: "/donate",
-          name: "donate",
-          meta: {
-              title: '鼓励作者'
-          },
-          component: () => import (
-          /* webpackChunkName: "donate" */
-          "../views/Donate.vue")
-        }, 
+        },
         {
           path: "/permission",
           name: "permission",
@@ -141,7 +101,61 @@ const routes = [
           '../views/403.vue')
         }
       ]
-    }, 
+    },
+    {
+      path: "/category",
+      name: "category",
+      component: Home,
+      children: [
+        {
+          path: "list",
+          name: "category-list",
+          meta: {
+              title: '文章分类'
+          },
+          component: () => import (
+            /* webpackChunkName: "category" */
+            "../views/category/index.vue")
+        },
+        {
+          path: "tag",
+          name: "category-tag",
+          meta: {
+              title: '标签分类'
+          },
+          component: () => import (
+            /* webpackChunkName: "category" */
+            "../views/tag/index.vue")
+        }
+      ],
+    },
+    {
+      path: "/arcitle",
+      name: "arcitle",
+      component: Home,
+      children: [
+        {
+          path: "list",
+          name: "arcitle-list",
+          meta: {
+              title: '文章列表'
+          },
+          component: () => import (
+            /* webpackChunkName: "arcitle-list" */
+            "../views/arcitle/list.vue")
+        },
+        {
+          path: "add",
+          name: "arcitle-add",
+          meta: {
+              title: '添加文章'
+          },
+          component: () => import (
+            /* webpackChunkName: "category-add" */
+            "../views/arcitle/detail.vue")
+        }
+      ],
+    },
     {
       path: "/login",
       name: "Login",

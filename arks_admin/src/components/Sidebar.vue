@@ -64,16 +64,31 @@ export default {
         },
         {
           icon: "el-icon-lx-cascades",
-          index: "arcilte",
+          index: "category",
           title: "类别",
           subs: [
             {
-              index: "category",
+              index: "/category/list",
               title: "文章分类"
             },
             {
-              index: "tag",
+              index: "/category/tag",
               title: "文章标签"
+            }
+          ]
+        },
+        {
+          icon: "el-icon-lx-copy",
+          index: "arcitle",
+          title: "文章",
+          subs: [
+            {
+              index: "/arcitle/list",
+              title: "文章列表"
+            },
+            {
+              index: "/arcitle/add",
+              title: "添加文章"
             }
           ]
         },
@@ -87,24 +102,6 @@ export default {
           index: "3",
           title: "表单相关",
           subs: [
-            {
-              index: "form",
-              title: "基本表单"
-            },
-            //         {
-            //             index: "3-2",
-            //             title: "三级菜单",
-            //             subs: [
-            //                 {
-            //                     index: "editor",
-            //                     title: "富文本编辑器"
-            //                 },
-            //                 {
-            //                     index: "markdown",
-            //                     title: "markdown编辑器"
-            //                 }
-            //             ]
-            //         },
             {
               index: "upload",
               title: "文件上传"
@@ -121,21 +118,6 @@ export default {
           index: "charts",
           title: "schart图表"
         },
-        // {
-        //     icon: "el-icon-rank",
-        //     index: "6",
-        //     title: "拖拽组件",
-        //     subs: [
-        //         {
-        //             index: "drag",
-        //             title: "拖拽列表"
-        //         },
-        //         {
-        //             index: "dialog",
-        //             title: "拖拽弹框"
-        //         }
-        //     ]
-        // },
         {
           icon: "el-icon-lx-global",
           index: "i18n",
@@ -155,11 +137,6 @@ export default {
               title: "404页面"
             }
           ]
-        },
-        {
-          icon: "el-icon-lx-redpacket_fill",
-          index: "/donate",
-          title: "支持作者"
         }
       ]
     }

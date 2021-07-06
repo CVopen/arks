@@ -66,3 +66,9 @@ export const delTag = ({ id }) => del({
   url: '/tag/del',
   data: { id }
 })
+
+// 添加文章
+export const addArcitle = (data) => post({
+  url: '/article/add',
+  data
+})

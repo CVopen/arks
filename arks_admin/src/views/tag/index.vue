@@ -21,7 +21,7 @@
           placeholder="标签名"
           class="handle-input mr10"
         />
-        <el-button type="primary" icon="el-icon-search" @click="getList(1)"
+        <el-button type="primary" icon="el-icon-search" @click="params.id=0;getList(1)"
           >搜索</el-button
         >
       </div>
@@ -112,6 +112,7 @@ import {
   reactive,
   onMounted
 } from "vue"
+import { useRoute } from 'vue-router'
 export default defineComponent({
   name: "tag",
   components: {
@@ -119,6 +120,7 @@ export default defineComponent({
     AddTag
   },
   setup() {
+    const router = useRoute()
     const data = reactive({
       params: {
         name: "",
@@ -188,6 +190,9 @@ export default defineComponent({
     const isSelect = (row) => row.del
 
     onMounted(() => {
+      if (router.query.id) {
+        data.params.id = router.query.id
+      }
       getList(1)
     })
 
