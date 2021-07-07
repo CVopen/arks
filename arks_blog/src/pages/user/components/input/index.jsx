@@ -10,9 +10,10 @@ export default function InputCom (props) {
   useEffect(() => {
     if (props.type) typeInputChange(props.type)
   }, [])
+
   const changeInput = (e) => {
-    props.onChange(e.target.value.replace(/[\u4e00-\u9fa5]/ig,''))
-    setValue(e.target.value.replace(/[\u4e00-\u9fa5]/ig,''))
+    props.onChange(props.ban ? e.target.value : e.target.value.replace(/[\u4e00-\u9fa5]/ig,''))
+    setValue(props.ban ? e.target.value : e.target.value.replace(/[\u4e00-\u9fa5]/ig,''))
   }
 
   const clear = () => {

@@ -71,12 +71,6 @@ func (c Category) RemoveCategory() error {
 		return err
 	}
 
-	// 删除分类下所有文章
-	// if err := tx.Unscoped().Where("category_id = ?", c.ID).Delete(&Article{}).Error; err != nil {
-	// 	tx.Rollback()
-	// 	return err
-	// }
-
 	// 获取分类下所有标签id
 	var list []Tag
 	if err := tx.Table("tags").Where("`category_id` = ?", c.ID).Find(&list).Error; err != nil {
@@ -103,8 +97,14 @@ func (c Category) RemoveCategory() error {
 		return err
 	}
 
+	// 删除分类下所有文章
+	if err := tx.Unscoped().Where("category_id = ?", c.ID).Delete(&Article{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	// 删除分类
-	if err := tx.Unscoped().Delete(&c).Error; err != nil {
+	if err := tx.Unscoped().Where("`id` = ?", c.ID).Delete(&Category{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
@@ -125,12 +125,6 @@ func (c Category) RemoveBatchCategory(list []uint) error {
 	if err := tx.Error; err != nil {
 		return err
 	}
-
-	// 删除分类下所有文章
-	// if err := tx.Unscoped().Where("category_id in ?", list).Delete(&Article{}).Error; err != nil {
-	// 	tx.Rollback()
-	// 	return err
-	// }
 
 	// 获取分类下所有标签id
 	var listTag []Tag
@@ -154,6 +148,12 @@ func (c Category) RemoveBatchCategory(list []uint) error {
 
 	// 删除分类下所有标签
 	if err := tx.Unscoped().Where("category_id in ?", list).Delete(&Tag{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 删除分类下所有文章
+	if err := tx.Unscoped().Where("category_id in (?)", list).Delete(&Article{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}

@@ -4,13 +4,6 @@
       <div class="handle-box">
         <el-button
           type="primary"
-          icon="el-icon-delete"
-          class="handle-del mr10"
-          @click="delAllSelection"
-          >批量删除</el-button
-        >
-        <el-button
-          type="primary"
           icon="el-icon-plus"
           class="handle-del mr10"
           @click="() => showAdd = true"
@@ -129,7 +122,6 @@ export default defineComponent({
       },
       pageTotal: 0,
       tableData: [],
-      multipleSelection: [],
       showEdit: false,
       showAdd: false,
       form: {},
@@ -139,7 +131,6 @@ export default defineComponent({
         data.params.page = 1
       }
       getTagList(data.params).then((res) => {
-        console.log(res)
         res.data.data.forEach((item) => {
           item.CreatedAt = formatTime(item.CreatedAt)
         })
@@ -168,19 +159,14 @@ export default defineComponent({
         })
         .catch(() => {})
     }
-    // 多选操作
-    const handleSelectionChange = (val) => {
-      data.multipleSelection = val
-    }
+
     // 编辑操作
     const handleEdit = (scoped) => {
       if (!scoped) return data.showEdit = false
       data.form = scoped.row
       data.showEdit = true
     }
-    const delAllSelection = () => {
-      handleDelete(data.multipleSelection.map(item => item.ID))
-    }
+
     // 分页导航
     const handlePageChange = (val) => {
       data.params.page = val
@@ -200,9 +186,7 @@ export default defineComponent({
       ...toRefs(data),
       getList,
       handleDelete,
-      handleSelectionChange,
       handleEdit,
-      delAllSelection,
       handlePageChange,
       isSelect
     }

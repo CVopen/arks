@@ -32,6 +32,7 @@
     </div>
 </template>
 <script>
+import Session from "../utils/sessionStorage"
 export default {
     data() {
         return {
@@ -53,8 +54,9 @@ export default {
         // 用户名下拉菜单选择事件
         handleCommand(command) {
             if (command == "loginout") {
-                localStorage.removeItem("ms_username");
-                this.$router.push("/login");
+              Session("remove", "userInfo")
+              Session("remove", "token")
+              this.$router.push("/login");
             }
         },
         // 侧边栏折叠

@@ -20,3 +20,6 @@
 ::v-deep(.el-input__inner) {
   background-color: rgba(255, 255, 255, 0.7) !important;
 }
+::v-deep(.el-table__empty-text) {
+  color: #000 !important;
+}

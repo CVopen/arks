@@ -6,7 +6,7 @@
         <el-input v-model="formData.name"></el-input>
       </el-form-item>
       <el-form-item label="简介">
-        <el-input v-model="formData.desc"></el-input>
+        <el-input type="textarea" show-word-limit maxlength="200" v-model="formData.desc"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>

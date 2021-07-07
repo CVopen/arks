@@ -13,41 +13,20 @@ export default function RegisterCom(props) {
   const [ tip, tipText ] = useState('')
   const [ userInfo, setUserInfo ] = useState({})
 
-  const inputChange = (type) => {
-    return (e) => {
-      tipText('')
-      userInfo[type] = e
-      setUserInfo({...userInfo})
-    }
+  const inputChange = (type) => (e) => {
+    tipText('')
+    userInfo[type] = e
+    setUserInfo({...userInfo})
   }
 
-  const captcha = (data) => {
-    setUserInfo({...userInfo , ...data})
-  }
+  const captcha = (data) => setUserInfo({...userInfo , ...data})
   
   const fromArr = [
-    {
-      placeholder: '用户名',
-      inputType: 'username'
-    },
-    {
-      placeholder: '邮箱',
-      inputType: 'email'
-    },
-    {
-      placeholder: '昵称',
-      inputType: 'nickname'
-    },
-    {
-      placeholder: '密码',
-      type: 'password',
-      inputType: 'password'
-    },
-    {
-      placeholder: '确认密码',
-      type: 'password',
-      inputType: 'second_pwd'
-    }
+    { placeholder: '用户名', inputType: 'username' },
+    { placeholder: '邮箱', inputType: 'email' },
+    { placeholder: '昵称', inputType: 'nickname', ban: true },
+    { placeholder: '密码', type: 'password', inputType: 'password' },
+    { placeholder: '确认密码', type: 'password', inputType: 'second_pwd' }
   ]
 
   const validate = () => {
@@ -98,6 +77,7 @@ export default function RegisterCom(props) {
             onChange={inputChange(item.inputType)}
             type={item.type}
             placeholder={item.placeholder}
+            ban={item.ban}
             clear
           />
         ))

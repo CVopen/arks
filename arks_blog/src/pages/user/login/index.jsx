@@ -14,9 +14,8 @@ export default function LoginCom(props) {
   const { history } = props
   const [ userInfo, setUserInfo ] = useState({})
   const [ tip, tipText ] = useState('')
-  const captcha = (data) => {
-    setUserInfo({...userInfo , ...data})
-  }
+  
+  const captcha = (data) => setUserInfo({...userInfo , ...data})
 
   const userLogin = () => {
     if (!validate()) return
@@ -31,12 +30,10 @@ export default function LoginCom(props) {
     })
   }
   
-  const inputChange = (type) => {
-    return (e) => {
-      tipText('')
-      userInfo[type] = e
-      setUserInfo({...userInfo})
-    }
+  const inputChange = (type) => (e) => {
+    tipText('')
+    userInfo[type] = e
+    setUserInfo({...userInfo})
   }
 
   const validate = () => {

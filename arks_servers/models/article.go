@@ -2,6 +2,7 @@ package models
 
 import (
 	"arks_servers/config/db"
+	"errors"
 	"fmt"
 	"time"
 
@@ -65,9 +66,9 @@ func (article Article) Create(tagIds []int) error {
 	article.CreatedAt = time.Now()
 
 	// 添加文章
-	err = tx.Exec("INSERT INTO `articles` (`user_id`, `category_id`, `order_id`, `is_top`, `is_recycled`, `is_published`, `is_allow_commented`, `pwd`, `title`, `summary`, `img`, `content`, `md_content`, `created_at`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", article.UserId, article.CategoryId, article.OrderId, article.IsTop, article.IsRecycled,
+	err = tx.Exec("INSERT INTO `articles` (`user_id`, `category_id`, `order_id`, `is_top`, `is_recycled`, `is_published`, `is_allow_commented`, `pwd`, `title`, `summary`, `img`, `content`, `md_content`, `created_at`, `comment_count`, `visit_count`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", article.UserId, article.CategoryId, article.OrderId, article.IsTop, article.IsRecycled,
 		article.IsPublished, article.IsAllowCommented, article.Pwd, article.Title,
-		article.Summary, article.Img, article.Content, article.MDContent, article.CreatedAt).Error
+		article.Summary, article.Img, article.Content, article.MDContent, article.CreatedAt, 0, 0).Error
 
 	if err != nil {
 		tx.Rollback()
@@ -94,7 +95,7 @@ func (article Article) Create(tagIds []int) error {
 			article.ID, tagId).Error
 		if err != nil {
 			tx.Rollback()
-			return err
+			return errors.New("文章名已经存在")
 		}
 
 		err = tx.Exec("update `tags` set `count` = `count` + 1 where `id` = ?", tagId).Error

@@ -132,12 +132,12 @@ export default {
     submitForm() {
       this.$refs.login.validate((valid) => {
         if (valid) {
-          login(this.param).then((res) => {
+          login(this.param).then(res => {
             Session("set", "userInfo", res.data)
             Session("set", "token", res.data.token)
             this.$router.push("/")
             // dispatch({type: 'SET_USERINFO', value: res.data})
-          })
+          }).catch(() => this.captcha())
         } else {
           this.$message.error("请输入账号和密码")
           return false
@@ -149,6 +149,7 @@ export default {
     },
     captcha() {
       getCaptcha().then((res) => {
+        this.param.captcha_url = ''
         this.param = Object.assign(this.param, res.data)
       })
     }

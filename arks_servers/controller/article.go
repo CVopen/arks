@@ -42,6 +42,9 @@ func (ar ArticleHandler) CreatedArticle(ctx *gin.Context) {
 	err := acricle.Create(articleForm.TagList)
 	if err != nil {
 		result.Msg = "error"
+		if err.Error() == "文章名已经存在" {
+			result.Msg = err.Error()
+		}
 		result.Code = utils.RequestError
 		result.Data = err
 		ctx.JSON(http.StatusOK, result)

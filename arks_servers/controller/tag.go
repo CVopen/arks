@@ -224,20 +224,6 @@ func (th TagHandler) Remove(ctx *gin.Context) {
 		}
 	}
 
-	if utils.TypeChck(m["id"], "[]interface {}") {
-		list := utils.TypeInterFaceListToListUint(m["id"])
-		delTagByListForm := forms.DelTagByListForm{}
-		tag := delTagByListForm.BindToModel()
-		err = tag.DelTagList(list)
-		if err != nil {
-			result.Msg = "error"
-			result.Data = err
-			result.Code = utils.RequestError
-			ctx.JSON(http.StatusOK, result)
-			return
-		}
-	}
-
 	ctx.JSON(http.StatusOK, result)
 
 }

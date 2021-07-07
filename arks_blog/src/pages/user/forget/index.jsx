@@ -16,30 +16,18 @@ export default function ForgetCom(props) {
 
   useEffect(() => {
     setArr([
-      {
-        placeholder: '用户名',
-        inputType: 'username'
-      },
-      {
-        placeholder: '邮箱',
-        inputType: 'email'
-      }
+      { placeholder: '用户名', inputType: 'username' },
+      { placeholder: '邮箱', inputType: 'email' }
     ])
   }, [])
 
-  const inputChange = (type) => {
-    return (e) => {
-      tipText('')
-      userInfo[type] = e
-      setUserInfo({...userInfo})
-    }
+  const inputChange = (type) => (e) => {
+    tipText('')
+    userInfo[type] = e
+    setUserInfo({...userInfo})
   }
 
-  const captcha = (data) => {
-    setUserInfo({...userInfo , ...data})
-  }
-  
-  
+  const captcha = (data) => setUserInfo({...userInfo , ...data})
 
   const validate = () => {
     const { username, captcha_val, email } = userInfo 
