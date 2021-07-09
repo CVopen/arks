@@ -2,6 +2,7 @@ package models
 
 import (
 	"arks_servers/config/db"
+	"arks_servers/utils"
 	"errors"
 	"fmt"
 	"time"
@@ -106,4 +107,43 @@ func (article Article) Create(tagIds []int) error {
 	}
 
 	return tx.Commit().Error
+}
+
+// 获取文章
+func (article Article) GetList(page *utils.Pagination, state uint, list []uint) ([]Article, uint, error) {
+	var articleList []Article
+	query := db.Db.Model(&Article{}).Preload("TagList").Preload("Category").Order("is_top desc,order_id desc")
+
+	if article.Title != "" {
+		query = query.Where("`title` like concat('%',?,'%')", article.Title)
+	}
+
+	if article.CategoryId > 0 {
+		query = query.Where("`category_id` = ?)", article.CategoryId)
+	}
+
+	fmt.Println("state", state, "list", list, "title", article.Title)
+
+	switch state {
+	case 1:
+		// 已发布
+		query = query.Where("is_published = 1 and is_recycled = 0")
+	case 2:
+		// 回收站
+		query = query.Where("is_recycled = 1")
+	case 3:
+		// 加密
+		query = query.Where("pwd != ''")
+	default:
+		break
+	}
+
+	if len(list) > 0 {
+		query = query.Where("tag_id in (?)", list)
+	}
+
+	// 分页
+	total, err := utils.ToPage(page, query, &articleList)
+
+	return articleList, total, err
 }

@@ -103,7 +103,7 @@ export default {
     }
   },
   created() {
-    this.$store.commit("clearTags")
+    this.$store.commit("app/clearTags")
     this.initTime()
     this.timer = setInterval(() => {
       this.initTime()
@@ -117,16 +117,9 @@ export default {
   methods: {
     initTime() {
       const date = new Date()
-      const hours =
-        date.getHours() >= 10 ? date.getHours() : 0 + date.getHours().toString()
-      const min =
-        date.getMinutes() >= 10
-          ? date.getMinutes()
-          : 0 + date.getMinutes().toString()
-      const sec =
-        date.getSeconds() >= 10
-          ? date.getSeconds()
-          : 0 + date.getSeconds().toString()
+      const hours = date.getHours() >= 10 ? date.getHours() : 0 + date.getHours().toString()
+      const min = date.getMinutes() >= 10 ? date.getMinutes() : 0 + date.getMinutes().toString()
+      const sec = date.getSeconds() >= 10 ? date.getSeconds() : 0 + date.getSeconds().toString()
       this.time = `${hours}:${min}:${sec}`
     },
     submitForm() {
@@ -135,8 +128,8 @@ export default {
           login(this.param).then(res => {
             Session("set", "userInfo", res.data)
             Session("set", "token", res.data.token)
+            this.$store.commit('user/setInfo', res.data)
             this.$router.push("/")
-            // dispatch({type: 'SET_USERINFO', value: res.data})
           }).catch(() => this.captcha())
         } else {
           this.$message.error("请输入账号和密码")

@@ -72,3 +72,9 @@ export const addArcitle = (data) => post({
   url: '/article/add',
   data
 })
+
+// 获取文章
+export const getArcitleList = (params) => get({
+  url: '/article/list',
+  params
+})

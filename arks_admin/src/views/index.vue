@@ -21,18 +21,25 @@
 import vHeader from "../components/Header"
 import vSidebar from "../components/Sidebar"
 import vTags from "../components/Tags.vue"
+import Session from '../utils/sessionStorage'
 export default {
   components: {
     vHeader,
     vSidebar,
     vTags
   },
+  mounted() {
+    const userInfo = Session('get', 'userInfo')
+    if (userInfo) {
+      this.$store.commit('user/setInfo', JSON.parse(userInfo))
+    }
+  },
   computed: {
     tagsList() {
-      return this.$store.state.tagsList.map((item) => item.name)
+      return this.$store.state.app.tagsList.map((item) => item.name)
     },
     collapse() {
-      return this.$store.state.collapse
+      return this.$store.state.app.collapse
     }
   }
 }

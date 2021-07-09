@@ -8,14 +8,19 @@
         @click="delAllSelection"
         >批量删除</el-button
       >
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        class="handle-del mr10"
+        @click="$router.push('/arcitle/add')"
+        >添加文章</el-button
+      >
       <el-input
-        v-model="params.name"
+        v-model="params.title"
         placeholder="文章名称"
         class="handle-input mr10"
       />
-      <el-button type="primary" icon="el-icon-search" @click="getList(1)"
-        >搜索</el-button
-      >
+      <el-button type="primary" icon="el-icon-search" @click="getList(1)">搜 索</el-button>
     </div>
     <el-table
       :data="tableData"
@@ -30,18 +35,33 @@
         :selectable="isSelect"
         width="55"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         prop="ID"
         label="ID"
         width="55"
         align="center"
-      ></el-table-column>
-      <el-table-column prop="name" label="分类名称"></el-table-column>
-      <el-table-column prop="desc" label="介绍"> </el-table-column>
-      <el-table-column prop="count" label="文章总数" align="center">
+      />
+      <el-table-column width="180" prop="title" label="文章标题" />
+      <el-table-column prop="summary" label="简介" />
+      <el-table-column
+        prop="img"
+        label="封面图"
+        width="140"
+      >
+        <template #default="scope">
+          <el-image
+            fit="contain"
+            style="height: 60px"
+            :src="scope.row.img"
+            :preview-src-list="[scope.row.img]" 
+          />
+        </template>
       </el-table-column>
-      <el-table-column prop="CreatedAt" label="创建时间"></el-table-column>
+      <el-table-column width="55" prop="category_name" label="分类名称" />
+      <el-table-column width="55" prop="comment_count" label="评论数" align="center" />
+      <el-table-column width="55" prop="visit_count" label="浏览数" align="center" />
+      <el-table-column width="180" prop="CreatedAt" label="创建时间" />
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
@@ -56,6 +76,32 @@
             icon="el-icon-edit"
             @click="handleEdit(scope)"
             >编辑</el-button
+          >
+          <el-button
+            type="text"
+            icon="el-icon-takeaway-box"
+            @click="$router.push({path: '/tag', query: {id: scope.row.ID}})"
+            >回收</el-button
+          >
+          <el-button
+            type="text"
+            :icon="scope.row.is_published ? 'el-icon-close-notification' : 'el-icon-bell'"
+            @click="$router.push({path: '/tag', query: {id: scope.row.ID}})"
+            >{{ scope.row.is_published ? '下架' : '发布' }}</el-button
+          >
+          <el-button
+            v-if="scope.row.is_published"
+            type="text"
+            :icon="scope.row.is_top ? 'el-icon-bottom' : 'el-icon-top'"
+            @click="$router.push({path: '/tag', query: {id: scope.row.ID}})"
+            >{{ scope.row.is_top ? '取消置顶' : '文章置顶'}}</el-button
+          >
+          <el-button
+            v-if="scope.row.is_published"
+            type="text"
+            icon="el-icon-s-comment"
+            @click="$router.push({path: '/tag', query: {id: scope.row.ID}})"
+            >{{ scope.row.is_allow_commented ? '取消评论' : '允许评论'}}</el-button
           >
           <el-button
             v-if="scope.row.del"
@@ -94,7 +140,7 @@
 </template>
 
 <script>
-import { getCategoryList, delCategory } from "../../api/index"
+import { getArcitleList, delCategory } from "../../api/index"
 import { formatTime } from "../../utils/index"
 import Edit from "./modal/editCategory.vue"
 import AddCategory from "./modal/addCategory.vue"
@@ -114,9 +160,11 @@ export default defineComponent({
   setup() {
     const data = reactive({
       params: {
-        name: "",
+        title: "",
         page: 1,
-        pageSize: 10
+        pageSize: 10,
+        state: 0,
+        tagList: [1]
       },
       pageTotal: 0,
       tableData: [],
@@ -129,7 +177,7 @@ export default defineComponent({
       if (page) {
         data.params.page = 1
       }
-      getCategoryList(data.params).then((res) => {
+      getArcitleList(data.params).then((res) => {
         console.log(res)
         res.data.data.forEach((item) => {
           item.CreatedAt = formatTime(item.CreatedAt)
@@ -181,7 +229,7 @@ export default defineComponent({
     const isSelect = (row) => row.del
 
     onMounted(() => {
-      getList(1)
+      getList()
     })
 
     return { 

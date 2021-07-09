@@ -34,10 +34,10 @@
 export default {
     computed: {
         tagsList() {
-            return this.$store.state.tagsList;
+          return this.$store.state.app.tagsList;
         },
         showTags() {
-            return this.tagsList.length > 0;
+          return this.tagsList.length > 0;
         }
     },
     methods: {
@@ -47,7 +47,7 @@ export default {
         // 关闭单个标签
         closeTags(index) {
             const delItem = this.tagsList[index];
-            this.$store.commit("delTagsItem", { index });
+            this.$store.commit("app/delTagsItem", { index });
             const item = this.tagsList[index]
                 ? this.tagsList[index]
                 : this.tagsList[index - 1];
@@ -60,7 +60,7 @@ export default {
         },
         // 关闭全部标签
         closeAll() {
-            this.$store.commit("clearTags");
+            this.$store.commit("app/clearTags");
             this.$router.push("/");
         },
         // 关闭其他标签
@@ -68,7 +68,7 @@ export default {
             const curItem = this.tagsList.filter(item => {
                 return item.path === this.$route.fullPath;
             });
-            this.$store.commit("closeTagsOther", curItem);
+            this.$store.commit("app/closeTagsOther", curItem);
         },
         // 设置标签
         setTags(route) {
@@ -77,9 +77,9 @@ export default {
             });
             if (!isExist) {
                 if (this.tagsList.length >= 8) {
-                    this.$store.commit("delTagsItem", { index: 0 });
+                    this.$store.commit("app/delTagsItem", { index: 0 });
                 }
-                this.$store.commit("setTagsItem", {
+                this.$store.commit("app/setTagsItem", {
                     name: route.name,
                     title: route.meta.title,
                     path: route.fullPath

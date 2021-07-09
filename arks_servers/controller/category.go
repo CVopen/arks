@@ -54,14 +54,16 @@ func (ch CategoryHandler) GetAllCategory(ctx *gin.Context) {
 
 	dataList := make([]map[string]interface{}, len(list))
 	for i, v := range list {
-		dataList[i] = make(map[string]interface{}, 7)
-		dataList[i]["ID"] = v.ID
-		dataList[i]["CreatedAt"] = v.CreatedAt
-		dataList[i]["name"] = v.Name
-		dataList[i]["desc"] = v.Desc
-		dataList[i]["del"] = false
-		dataList[i]["edit"] = false
-		dataList[i]["count"] = v.Count
+		dataList[i] = map[string]interface{}{
+			"ID":        v.ID,
+			"CreatedAt": v.CreatedAt,
+			"name":      v.Name,
+			"desc":      v.Desc,
+			"del":       false,
+			"edit":      false,
+			"count":     v.Count,
+		}
+
 		if v.UserId == pageForm.UserId {
 			dataList[i]["del"] = true
 			dataList[i]["edit"] = true

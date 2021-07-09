@@ -52,6 +52,9 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 	articleRouter := admin.Group("/article", middlewares.JwtAuth())
 	articleHandler := controller.ArticleHandler{}
 	{
+		// 新增文章
 		articleRouter.POST("/add", articleHandler.CreatedArticle)
+		// 获取文章列表
+		articleRouter.GET("/list", articleHandler.GetArticle)
 	}
 }

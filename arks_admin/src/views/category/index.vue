@@ -115,7 +115,7 @@ import {
   onMounted
 } from "vue"
 export default defineComponent({
-  name: "category",
+  name: "category-list",
   components: {
     Edit,
     AddCategory
@@ -162,11 +162,7 @@ export default defineComponent({
       // 二次确认删除
       ElMessageBox.confirm("确定要删除吗？", "提示", {
         type: "warning"
-      })
-        .then(() => {
-          delList(id)
-        })
-        .catch(() => {})
+      }).then(() => delList(id)).catch(() => {})
     }
     // 多选操作
     const handleSelectionChange = (val) => {

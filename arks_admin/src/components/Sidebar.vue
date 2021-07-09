@@ -146,7 +146,7 @@ export default {
       return this.$route.path.replace("/", "")
     },
     collapse() {
-      return this.$store.state.collapse
+      return this.$store.state.app.collapse
     }
   }
 }

@@ -107,7 +107,7 @@ import {
 } from "vue"
 import { useRoute } from 'vue-router'
 export default defineComponent({
-  name: "tag",
+  name: "tag-list",
   components: {
     EditTag,
     AddTag
@@ -153,11 +153,7 @@ export default defineComponent({
       // 二次确认删除
       ElMessageBox.confirm("确定要删除吗？", "提示", {
         type: "warning"
-      })
-        .then(() => {
-          delList(id)
-        })
-        .catch(() => {})
+      }).then(() => delList(id)).catch(() => {})
     }
 
     // 编辑操作
