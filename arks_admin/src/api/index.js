@@ -78,3 +78,9 @@ export const getArcitleList = (params) => get({
   url: '/article/list',
   params
 })
+
+// 修改标签
+export const editPublish = ({ id ,state }) => put({
+  url: '/article/publish',
+  data: { state, id }
+})

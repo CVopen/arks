@@ -3,6 +3,7 @@ package controller
 import (
 	"arks_servers/forms"
 	"arks_servers/utils"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +19,7 @@ type ArticleHandler struct{}
 // @Success 100 object utils.Result 成功
 // @Failure 103/104 object utils.Result 失败
 // @Router /admin/register [post]
-func (ar ArticleHandler) CreatedArticle(ctx *gin.Context) {
+func (ArticleHandler) CreatedArticle(ctx *gin.Context) {
 	id, _ := ctx.Get("id")
 
 	result := utils.Result{
@@ -62,7 +63,7 @@ func (ar ArticleHandler) CreatedArticle(ctx *gin.Context) {
 // @Success 100 object utils.Result 成功
 // @Failure 103/104 object utils.Result 失败
 // @Router /admin/register [post]
-func (ar ArticleHandler) GetArticle(ctx *gin.Context) {
+func (ArticleHandler) GetArticle(ctx *gin.Context) {
 	id, _ := ctx.Get("id")
 	result := utils.Result{
 		Code: utils.Success,
@@ -122,6 +123,56 @@ func (ar ArticleHandler) GetArticle(ctx *gin.Context) {
 	}
 
 	result.Data = utils.PageData(dataList, total, pageForm.Pagination)
+
+	ctx.JSON(http.StatusOK, result)
+}
+
+// @Summary 修改文章状态文章
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @data name string
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/register [put]
+func (ArticleHandler) PutArticle(ctx *gin.Context) {
+	reqType, _ := ctx.Get("type")
+
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+
+	form := forms.PuTArticleForm{}
+
+	err := ctx.ShouldBindJSON(&form)
+
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "参数错误"
+		fmt.Println(err)
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	switch reqType {
+	case utils.PublishedArticle:
+		err = form.BindToModel().PublishedArticle()
+	case utils.TopArticle:
+		err = form.BindToModel().TopArticle()
+	case utils.CommentedArticle:
+		err = form.BindToModel().AllowCommented()
+	case utils.RecycledArticle:
+		err = form.BindToModel().RecycledArticle()
+	}
+
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "更改失败"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
 
 	ctx.JSON(http.StatusOK, result)
 }

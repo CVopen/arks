@@ -147,3 +147,31 @@ func (article Article) GetList(page *utils.Pagination, state uint, list []uint) 
 
 	return articleList, total, err
 }
+
+// 发布文章
+func (article Article) PublishedArticle() error {
+	return db.Db.Model(&article).Updates(map[string]interface{}{
+		"is_published": article.IsPublished,
+	}).Error
+}
+
+// 文章置顶
+func (article Article) TopArticle() error {
+	return db.Db.Model(&article).Updates(map[string]interface{}{
+		"is_top": article.IsTop,
+	}).Error
+}
+
+// 文章评论
+func (article Article) AllowCommented() error {
+	return db.Db.Model(&article).Updates(map[string]interface{}{
+		"is_allow_commented": article.IsAllowCommented,
+	}).Error
+}
+
+// 回收文章
+func (article Article) RecycledArticle() error {
+	return db.Db.Model(&article).Updates(map[string]interface{}{
+		"is_recycled": article.IsRecycled,
+	}).Error
+}

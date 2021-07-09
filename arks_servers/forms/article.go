@@ -3,6 +3,8 @@ package forms
 import (
 	"arks_servers/models"
 	"arks_servers/utils"
+
+	"gorm.io/gorm"
 )
 
 // 新增文章表单
@@ -30,6 +32,15 @@ type GetArticlePageForm struct {
 	utils.Pagination        // 分页结构
 }
 
+// 发布文章表单
+// 文章置顶表单
+// 文章评论表单
+// 回收文章表单
+type PuTArticleForm struct {
+	ID    uint `json:"id" binding:"required" label:"文章ID"`
+	State bool `json:"state" label:"是否发布"`
+}
+
 func (create CreateArticleForm) BindToModel() models.Article {
 	return models.Article{
 		UserId:           create.UserId,
@@ -51,5 +62,12 @@ func (create GetArticlePageForm) BindToModel() models.Article {
 	return models.Article{
 		CategoryId: create.CategoryId,
 		Title:      create.Title,
+	}
+}
+
+func (put PuTArticleForm) BindToModel() models.Article {
+	return models.Article{
+		Model:       gorm.Model{ID: put.ID},
+		IsPublished: put.State,
 	}
 }

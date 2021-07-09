@@ -3,6 +3,7 @@ package routers
 import (
 	"arks_servers/controller"
 	"arks_servers/middlewares"
+	"arks_servers/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -56,5 +57,13 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 		articleRouter.POST("/add", articleHandler.CreatedArticle)
 		// 获取文章列表
 		articleRouter.GET("/list", articleHandler.GetArticle)
+		// 发布文章
+		articleRouter.PUT("/publish", middlewares.TypeArticle(utils.PublishedArticle), articleHandler.PutArticle)
+		// 置顶文章
+		articleRouter.PUT("/top", middlewares.TypeArticle(utils.TopArticle), articleHandler.PutArticle)
+		// 评论文章
+		articleRouter.PUT("/comment", middlewares.TypeArticle(utils.CommentedArticle), articleHandler.PutArticle)
+		// 回收文章
+		articleRouter.PUT("/recovery", middlewares.TypeArticle(utils.RecycledArticle), articleHandler.PutArticle)
 	}
 }
