@@ -108,3 +108,9 @@ export const delArticle = ({ id }) => del({
   url: '/article/del',
   data: { id }
 })
+
+// 文章详情
+export const getArticleDetail = ({ id }) => get({
+  url: '/article/detail',
+  params: { id }
+})

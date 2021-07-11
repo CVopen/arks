@@ -1,25 +1,24 @@
 <template>
   <div class="container">
     <div class="handle-box">
-      <el-button
-        type="primary"
-        icon="el-icon-delete"
-        class="handle-del mr10"
-        @click="delAllSelection"
-        >批量删除</el-button
-      >
-      <el-button
-        type="primary"
-        icon="el-icon-plus"
-        class="handle-del mr10"
-        @click="$router.push('/arcitle/add')"
-        >添加文章</el-button
-      >
-      <el-input
-        v-model="params.title"
-        placeholder="文章名称"
-        class="handle-input mr10"
-      />
+      <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
+      <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="$router.push('/arcitle/add')">添加文章</el-button>
+      <el-select v-model="params.ids" class="handle-input mr10" placeholder="请选择分类">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.name"
+          :value="item.ID"
+        />
+      </el-select>
+      <el-select v-model="params.state" class="handle-input mr10" placeholder="请选择状态">
+        <el-option label="请选择" value="0" />
+        <el-option label="已发布" value="1" />
+        <el-option label="未发布" value="4" />
+        <el-option label="回收站" value="2" />
+        <el-option label="加密" value="3" />
+      </el-select>
+      <el-input v-model="params.title" placeholder="文章名称" clearable class="handle-input mr10" />
       <el-button type="primary" icon="el-icon-search" @click="getList(1)">搜 索</el-button>
     </div>
     <el-table
@@ -30,32 +29,13 @@
       header-cell-class-name="table-header"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column
-        type="selection"
-        :selectable="isSelect"
-        width="55"
-        align="center"
-      />
-      <el-table-column
-        prop="ID"
-        label="ID"
-        width="55"
-        align="center"
-      />
+      <el-table-column type="selection" :selectable="isSelect" width="55" align="center"/>
+      <el-table-column prop="ID" label="ID" width="55" align="center"/>
       <el-table-column width="180" prop="title" label="文章标题" />
       <el-table-column prop="summary" label="简介" />
-      <el-table-column
-        prop="img"
-        label="封面图"
-        width="140"
-      >
+      <el-table-column prop="img" label="封面图" width="140">
         <template #default="scope">
-          <el-image
-            fit="contain"
-            style="height: 60px"
-            :src="scope.row.img"
-            :preview-src-list="[scope.row.img]" 
-          />
+          <el-image fit="contain" style="height: 60px" :src="scope.row.img" :preview-src-list="[scope.row.img]" />
         </template>
       </el-table-column>
       <el-table-column width="120" prop="category_name" label="分类名称" align="center" />
@@ -64,17 +44,17 @@
       <el-table-column width="180" prop="CreatedAt" label="创建时间" />
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <el-button
+          <el-button 
             type="text"
             icon="el-icon-document"
-            @click="$router.push({path: '/tag', query: {id: scope.row.ID}})"
+            @click="$router.push({path: '/arcitle/add', query: {see: false, id: scope.row.ID}})"
             >查看</el-button
           >
           <el-button
             v-if="scope.row.edit"
             type="text"
             icon="el-icon-edit"
-            @click="handleEdit(scope)"
+            @click="$router.push({path: '/arcitle/add', query: {id: scope.row.ID}})"
             >编辑</el-button
           >
           <Pop
@@ -122,25 +102,14 @@
         :page-size="params.pageSize"
         :total="pageTotal"
         @current-change="handlePageChange"
-      ></el-pagination>
+      />
     </div>
-    <Edit 
-      @change="getList" 
-      :showModel="showEdit"
-      :form="form"
-      @close-modal="handleEdit"
-    />
-    <AddCategory 
-      @change="getList(1)" 
-      :showModel="showAdd"
-      :form="form"
-      @close-modal="() => showAdd = false"
-    />
   </div>
 </template>
 
 <script>
 import { 
+  getCategoryList,
   getArcitleList, 
   editPublish,
   editTop,
@@ -149,8 +118,6 @@ import {
   delArticle
 } from "../../api/index"
 import { formatTime } from "../../utils/index"
-import Edit from "./modal/editCategory.vue"
-import AddCategory from "./modal/addCategory.vue"
 import PopConfirm from "../../components/popconfirm.vue"
 import { 
   defineComponent, 
@@ -160,27 +127,22 @@ import {
 } from "vue"
 export default defineComponent({
   name: "arcitle-list",
-  components: {
-    Edit,
-    AddCategory,
-    Pop: PopConfirm
-  },
+  components: { Pop: PopConfirm },
   setup() {
     const data = reactive({
       params: {
         title: "",
         page: 1,
         pageSize: 10,
-        state: 0,
-        tagList: [1],
-        category_id: ''
+        state: '',
+        category_id: '',
+        ids: []
       },
       pageTotal: 0,
       tableData: [],
       multipleSelection: [],
       showEdit: false,
-      showAdd: false,
-      form: {},
+      options: []
     })
     const getList = (page) => {
       if (page) {
@@ -195,18 +157,20 @@ export default defineComponent({
       })
     }
 
+    // 获取分类列表
+    const getCategory = () => {
+      getCategoryList({ pageSize: 1000 }).then((res) => {
+        data.options = res.data.data
+      })
+    }
+
     // 多选操作
     const handleSelectionChange = (val) => {
       data.multipleSelection = val
     }
-    // 编辑操作
-    const handleEdit = (scoped) => {
-      if (!scoped) return data.showEdit = false
-      data.form = scoped.row
-      data.showEdit = true
-    }
 
     const delAllSelection = () => {
+      delArticle({ id: data.multipleSelection.map(item => item.ID) }).then(() => getList())
     }
 
     // 分页导航
@@ -244,13 +208,15 @@ export default defineComponent({
       delArticle({ id }).then(() => getList())
     }
 
-    onMounted(() => getList())
+    onMounted(() => {
+      getList()
+      getCategory()
+    })
 
     return { 
       ...toRefs(data),
       getList,
       handleSelectionChange,
-      handleEdit,
       delAllSelection,
       handlePageChange,
       isSelect,

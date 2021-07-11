@@ -81,7 +81,7 @@ func (ArticleHandler) GetArticle(ctx *gin.Context) {
 
 	article := pageForm.BindToModel()
 
-	list, total, err := article.GetList(&pageForm.Pagination, pageForm.State, pageForm.TagList)
+	list, total, err := article.GetList(&pageForm.Pagination, pageForm.State)
 
 	if err != nil {
 		result.Code = utils.RequestError
@@ -209,5 +209,69 @@ func (ArticleHandler) DelArticleHandler(ctx *gin.Context) {
 		return
 	}
 
+	if len(form.IDS) > 0 {
+		if err = form.BindToModelDel().DelMult(form.IDS); err != nil {
+			result.Code = utils.RequestError
+			result.Msg = "删除失败"
+			ctx.JSON(http.StatusOK, result)
+			return
+		}
+	}
+
+	ctx.JSON(http.StatusOK, result)
+}
+
+// @Summary 文章详情
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @data name string
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/register [put]
+func (ArticleHandler) GetArticleDetailHandler(ctx *gin.Context) {
+	id, _ := ctx.Get("id")
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+
+	form := forms.GetArticleDetailForm{}
+
+	err := ctx.ShouldBindQuery(&form)
+
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "参数错误"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+	article, err := form.BindToModelDetail().GetDetail()
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "查询失败"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	data := make(map[string]interface{}, 10)
+	data["title"] = article.Title
+	data["summary"] = article.Summary
+	data["img"] = article.Img
+	data["content"] = article.Content
+	data["md_content"] = article.MDContent
+	data["is_published"] = article.IsPublished
+	data["category_id"] = article.CategoryId
+	if utils.TypeInterFaceToUint(id) == 1 {
+		data["is_top"] = article.IsTop
+	}
+	list := make([]interface{}, len(article.TagList))
+	for i, v := range article.TagList {
+		list[i] = v.ID
+	}
+	data["tagList"] = list
+
+	result.Data = data
 	ctx.JSON(http.StatusOK, result)
 }

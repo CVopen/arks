@@ -15,6 +15,10 @@
         <el-radio v-model="formData.is_allow_commented" :label="true">是</el-radio>
         <el-radio v-model="formData.is_allow_commented" :label="false">否</el-radio>
       </el-form-item>
+      <el-form-item label="置顶" v-if="$store.state.user.userInfo.userId == 1">
+        <el-radio v-model="formData.is_top" :label="true">是</el-radio>
+        <el-radio v-model="formData.is_top" :label="false">否</el-radio>
+      </el-form-item>
       <el-form-item label="密码">
         <el-input v-model="formData.pwd" type="password" placeholder="请输入密码" />
       </el-form-item>
@@ -31,8 +35,8 @@
         <div id="addEditor"></div>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="createArcitle">提交</el-button>
-        <el-button >重置</el-button>
+        <el-button v-if="see" type="primary" @click="createArcitle">提交</el-button>
+        <el-button @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -45,18 +49,20 @@ import {
   onMounted,
   ref
 } from 'vue'
-import { getCategoryList, getTagList, addArcitle } from "../../api/index"
+import { getCategoryList, getTagList, addArcitle, getArticleDetail } from "../../api/index"
 import Vditor from 'vditor'
 import 'vditor/src/assets/scss/index.scss'
+import { ElMessage } from 'element-plus'
+import { useRouter, useRoute } from 'vue-router'
 export default defineComponent({
   setup() {
+    const router = useRouter()
+    const route = useRoute()
     const data = reactive({
       formData: {
-        name: '',
-        category_id: '',
         tagList: [],
-        desc: '',
-        is_allow_commented: true
+        is_allow_commented: true,
+        is_top: false
       },
       categoryList: [],
       tagList: [],
@@ -84,6 +90,7 @@ export default defineComponent({
           enable: false
         },
         counter: 100000,
+        see: true,
         hint: {
           emoji: {
             pray: '🙏',
@@ -127,8 +134,13 @@ export default defineComponent({
           // }
         },
         after: () => {
-          // this.setContent(this.content)
-          console.log(123)
+          if (!route.query.see) data.see = false
+          if (route.query.id) {
+            getArticleDetail({ id: route.query.id }).then(res => {
+              data.formData = res.data
+              data.contentEditor.setValue(res.data.content)
+            })
+          }
         }
       })
     }
@@ -144,6 +156,7 @@ export default defineComponent({
         data.categoryList = res.data.data
       })
       initEditor()
+      
     })
 
     const createArcitle = () => {
@@ -151,18 +164,31 @@ export default defineComponent({
         if (valid) {
           data.formData.content = data.contentEditor.getValue()
           data.formData.md_content = data.contentEditor.getHTML()
-          addArcitle(data.formData).then(res => {
-            console.log(res)
+          addArcitle(data.formData).then(() => {
+            ElMessage.success({
+              message: '修改成功',
+              type: 'success'
+            })
+            router.push('/arcitle/list')
           })
         }
       });
+    }
+    const reset = () => {
+      data.formData = {
+        tagList: [],
+        is_allow_commented: true,
+        is_top: false
+      }
+      data.tagList = []
     }
 
     return {
       ...toRefs(data),
       createArcitle,
       form,
-      changeCategory
+      changeCategory,
+      reset
     }
   },
 })

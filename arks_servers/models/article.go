@@ -110,16 +110,16 @@ func (article Article) Create(tagIds []int) error {
 }
 
 // 获取文章
-func (article Article) GetList(page *utils.Pagination, state uint, list []uint) ([]Article, uint, error) {
+func (article Article) GetList(page *utils.Pagination, state uint) ([]Article, uint, error) {
 	var articleList []Article
-	query := db.Db.Model(&Article{}).Preload("TagList").Preload("Category").Order("is_top desc,order_id desc")
+	query := db.Db.Model(&Article{}).Preload("Category").Preload("TagList").Order("is_top desc,order_id desc")
 
 	if article.Title != "" {
 		query = query.Where("`title` like concat('%',?,'%')", article.Title)
 	}
 
 	if article.CategoryId > 0 {
-		query = query.Where("`category_id` = ?)", article.CategoryId)
+		query = query.Where("`category_id` = ?", article.CategoryId)
 	}
 
 	switch state {
@@ -132,12 +132,11 @@ func (article Article) GetList(page *utils.Pagination, state uint, list []uint) 
 	case 3:
 		// 加密
 		query = query.Where("pwd != ''")
+	case 4:
+		// 未发布
+		query = query.Where("is_published = 0 and is_recycled = 0")
 	default:
 		break
-	}
-	fmt.Println(list)
-	if len(list) > 0 {
-		query = query.Where("tag_id in (?)", list)
 	}
 
 	// 分页
@@ -220,4 +219,54 @@ func (article Article) DelArticle() error {
 	}
 
 	return tx.Commit().Error
+}
+
+// 批量删除文章
+func (Article) DelMult(list []uint) error {
+	// 开始事务
+	tx := db.Db.Begin()
+	defer func() {
+		if err := recover(); err != nil {
+			tx.Rollback()
+		}
+	}()
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	// 更新分类对应文章数量
+	err := tx.Exec("update `categories` set `count` = `count` - 1 where (`id` in (select `category_id` from `articles` where `id` in (?)) and `count` > 0)", list).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 更新分类对应文章数量
+	err = tx.Exec("update `tags` set `count` = `count` - 1 where (`id` in (select `tag_id` from `tag_article` where `article_id` in (?)) and `count` > 0)", list).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 删除标签文章表中的记录
+	err = tx.Exec("delete from `tag_article` where `article_id` in (?)", list).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 删除文章表中的记录
+	err = tx.Where("`id` in (?)", list).Unscoped().Delete(&Article{}).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
+// 根据id查询文章
+func (article Article) GetDetail() (Article, error) {
+	err := db.Db.Preload("Category").Preload("TagList").Where("`id` = ?", article.ID).First(&article).Error
+	return article, err
 }

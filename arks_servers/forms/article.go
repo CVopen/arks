@@ -11,7 +11,6 @@ import (
 type CreateArticleForm struct {
 	UserId           uint   `binding:"required" label:"用户id"`
 	CategoryId       uint   `json:"category_id" binding:"required" label:"分类id"`
-	OrderId          uint   `json:"order_id" label:"排序id"`
 	TagList          []int  `json:"tagList" label:"标签"`
 	IsTop            bool   `json:"is_top" label:"是否置顶"`
 	IsAllowCommented bool   `json:"is_allow_commented" label:"是否允许评论"`
@@ -26,7 +25,6 @@ type CreateArticleForm struct {
 // 查询文章表单分页
 type GetArticlePageForm struct {
 	CategoryId       uint   `form:"category_id" label:"分类id"`
-	TagList          []uint `form:"tagList" label:"标签"`
 	Title            string `form:"title" label:"文章标题"`
 	State            uint   `form:"state" label:"状态"`
 	utils.Pagination        // 分页结构
@@ -38,15 +36,20 @@ type GetArticlePageForm struct {
 // 回收文章表单
 // 删除文章表单
 type PuTArticleForm struct {
-	ID    uint `json:"id" binding:"required" label:"文章ID"`
-	State bool `json:"state" label:"是否发布"`
+	ID    uint   `json:"id" binding:"required" label:"文章ID"`
+	IDS   []uint `json:"ids" label:"文章id组"`
+	State bool   `json:"state" label:"是否发布"`
+}
+
+// 文章详情表单
+type GetArticleDetailForm struct {
+	ID uint `form:"id" binding:"required" label:"文章ID"`
 }
 
 func (create CreateArticleForm) BindToModel() models.Article {
 	return models.Article{
 		UserId:           create.UserId,
 		CategoryId:       create.CategoryId,
-		OrderId:          create.OrderId,
 		IsTop:            create.IsTop,
 		IsAllowCommented: create.IsAllowCommented,
 		Pwd:              create.Pwd,
@@ -95,6 +98,12 @@ func (put PuTArticleForm) BindToModelRecycled() models.Article {
 }
 
 func (del PuTArticleForm) BindToModelDel() models.Article {
+	return models.Article{
+		Model: gorm.Model{ID: del.ID},
+	}
+}
+
+func (del GetArticleDetailForm) BindToModelDetail() models.Article {
 	return models.Article{
 		Model: gorm.Model{ID: del.ID},
 	}

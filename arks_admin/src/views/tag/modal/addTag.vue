@@ -4,11 +4,11 @@
     <el-form ref="form" :model="formData" label-width="70px">
       <el-form-item label="所属分类">
         <el-select v-model="formData.id" filterable placeholder="请选择分类">
-          <el-option v-for="item in list" :key="item.ID" :label="item.name" :value="item.ID"></el-option>
+          <el-option v-for="item in list" :key="item.ID" :label="item.name" :value="item.ID" />
         </el-select>
       </el-form-item>
       <el-form-item label="标签名">
-        <el-input v-model="formData.name"></el-input>
+        <el-input v-model="formData.name" />
       </el-form-item>
     </el-form>
     <template #footer>

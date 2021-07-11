@@ -3,10 +3,10 @@
   <el-dialog title="编辑" v-model="show" width="30%" @close="close">
     <el-form ref="form" :model="formData" label-width="70px">
       <el-form-item label="分类名">
-        <el-input v-model="formData.name"></el-input>
+        <el-input v-model="formData.name" />
       </el-form-item>
       <el-form-item label="简介">
-        <el-input v-model="formData.desc"></el-input>
+        <el-input v-model="formData.desc" />
       </el-form-item>
     </el-form>
     <template #footer>
