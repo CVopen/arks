@@ -3,7 +3,6 @@ package controller
 import (
 	"arks_servers/forms"
 	"arks_servers/utils"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -151,25 +150,61 @@ func (ArticleHandler) PutArticle(ctx *gin.Context) {
 	if err != nil {
 		result.Code = utils.RequestError
 		result.Msg = "参数错误"
-		fmt.Println(err)
 		ctx.JSON(http.StatusOK, result)
 		return
 	}
 
 	switch reqType {
 	case utils.PublishedArticle:
-		err = form.BindToModel().PublishedArticle()
+		err = form.BindToModelPublish().PublishedArticle()
 	case utils.TopArticle:
-		err = form.BindToModel().TopArticle()
+		err = form.BindToModelTop().TopArticle()
 	case utils.CommentedArticle:
-		err = form.BindToModel().AllowCommented()
+		err = form.BindToModelComment().AllowCommented()
 	case utils.RecycledArticle:
-		err = form.BindToModel().RecycledArticle()
+		err = form.BindToModelRecycled().RecycledArticle()
 	}
 
 	if err != nil {
 		result.Code = utils.RequestError
 		result.Msg = "更改失败"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, result)
+}
+
+// @Summary 删除文章
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @data name string
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/register [put]
+func (ArticleHandler) DelArticleHandler(ctx *gin.Context) {
+
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+
+	form := forms.PuTArticleForm{}
+
+	err := ctx.ShouldBindJSON(&form)
+
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "参数错误"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	if err = form.BindToModelDel().DelArticle(); err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "删除失败"
 		ctx.JSON(http.StatusOK, result)
 		return
 	}

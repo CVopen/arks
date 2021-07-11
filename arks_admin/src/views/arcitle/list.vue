@@ -77,42 +77,40 @@
             @click="handleEdit(scope)"
             >编辑</el-button
           >
-          <el-button
-            type="text"
-            icon="el-icon-takeaway-box"
-            @click="$router.push({path: '/tag', query: {id: scope.row.ID}})"
-            >{{ scope.row.is_recycled ? '恢复' : '回收' }}</el-button
-          >
+          <Pop
+            :text="scope.row.is_recycled ? '恢复' : '回收'"
+            :title="'确定要' + (scope.row.is_recycled ? '恢复' : '回收') + '吗？'"
+            buttonIcon="el-icon-takeaway-box"
+            @confirm="recycled(scope.row.is_recycled ? false : true, scope.row.ID)"
+          />
           <template v-if="!scope.row.is_recycled">
-            <el-button
-              type="text"
-              :icon="scope.row.is_published ? 'el-icon-close-notification' : 'el-icon-bell'"
-              @click="publish(scope.row.is_published ? false : true, scope.row.ID)"
-              >{{ scope.row.is_published ? '下架' : '发布' }}</el-button
-            >
-            <el-button
+            <Pop
+              :text="scope.row.is_published ? '下架' : '发布'"
+              :title="'确定要' + (scope.row.is_published ? '下架' : '发布') + '吗？'"
+              :buttonIcon="scope.row.is_published ? 'el-icon-close-notification' : 'el-icon-bell'"
+              @confirm="recycled(scope.row.is_recycled ? false : true, scope.row.ID)"
+            />
+            <Pop
               v-if="scope.row.is_published"
-              type="text"
-              :icon="scope.row.is_top ? 'el-icon-bottom' : 'el-icon-top'"
-              @click="$router.push({path: '/tag', query: {id: scope.row.ID}})"
-              >{{ scope.row.is_top ? '取消置顶' : '文章置顶'}}</el-button
-            >
-            <el-button
+              :title="'确定要' + (scope.row.is_top ? '取消置顶' : '置顶文章') + '吗？'"
+              :text="scope.row.is_top ? '取消置顶' : '置顶文章'"
+              :buttonIcon="scope.row.is_top ? 'el-icon-bottom' : 'el-icon-top'"
+              @confirm="top(scope.row.is_top ? false : true, scope.row.ID)"
+            />
+            <Pop
               v-if="scope.row.is_published"
-              type="text"
-              icon="el-icon-s-comment"
-              @click="$router.push({path: '/tag', query: {id: scope.row.ID}})"
-              >{{ scope.row.is_allow_commented ? '取消评论' : '允许评论'}}</el-button
-            >
+              :title="'确定要' + (scope.row.is_allow_commented ? '取消评论' : '允许评论') + '吗？'"
+              :text="scope.row.is_allow_commented ? '取消评论' : '允许评论'"
+              buttonIcon="el-icon-s-comment"
+              @confirm="comment(scope.row.is_allow_commented ? false : true, scope.row.ID)"
+            />
           </template>
-          <el-button
+          <Pop
             v-if="scope.row.del"
-            type="text"
-            icon="el-icon-delete"
-            class="red"
-            @click="handleDelete(scope.row.ID)"
-            >删除</el-button
-          >
+            color="red"
+            buttonIcon="el-icon-delete"
+            @confirm="del(scope.row.ID)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -144,13 +142,16 @@
 <script>
 import { 
   getArcitleList, 
-  delCategory,
-  editPublish
+  editPublish,
+  editTop,
+  editCommented,
+  editRecovery,
+  delArticle
 } from "../../api/index"
 import { formatTime } from "../../utils/index"
 import Edit from "./modal/editCategory.vue"
 import AddCategory from "./modal/addCategory.vue"
-import { ElMessage, ElMessageBox } from 'element-plus'
+import PopConfirm from "../../components/popconfirm.vue"
 import { 
   defineComponent, 
   toRefs,
@@ -161,7 +162,8 @@ export default defineComponent({
   name: "arcitle-list",
   components: {
     Edit,
-    AddCategory
+    AddCategory,
+    Pop: PopConfirm
   },
   setup() {
     const data = reactive({
@@ -170,7 +172,8 @@ export default defineComponent({
         page: 1,
         pageSize: 10,
         state: 0,
-        tagList: [1]
+        tagList: [1],
+        category_id: ''
       },
       pageTotal: 0,
       tableData: [],
@@ -192,26 +195,6 @@ export default defineComponent({
       })
     }
 
-    const delList = (id) => {
-      delCategory({ id }).then(() => {
-        ElMessage.success({
-          message: '删除成功',
-          type: 'success'
-        })
-        getList(1)
-      })
-    }
-    // 删除操作
-    const handleDelete = (id) => {
-      // 二次确认删除
-      ElMessageBox.confirm("确定要删除吗？", "提示", {
-        type: "warning"
-      })
-        .then(() => {
-          delList(id)
-        })
-        .catch(() => {})
-    }
     // 多选操作
     const handleSelectionChange = (val) => {
       data.multipleSelection = val
@@ -222,9 +205,10 @@ export default defineComponent({
       data.form = scoped.row
       data.showEdit = true
     }
+
     const delAllSelection = () => {
-      handleDelete(data.multipleSelection.map(item => item.ID))
     }
+
     // 分页导航
     const handlePageChange = (val) => {
       data.params.page = val
@@ -240,20 +224,41 @@ export default defineComponent({
       })
     }
 
-    onMounted(() => {
-      getList()
-    })
+    // 是否回收
+    const recycled = (state, id) => {
+      editRecovery({ state, id }).then(() => getList())
+    }
+
+    // 置顶文章
+    const top = (state, id) => {
+      editTop({ state, id }).then(() => getList())
+    }
+
+    // 是否评论文章
+    const comment = (state, id) => {
+      editCommented({ state, id }).then(() => getList())
+    }
+
+    // 删除文章
+    const del = id => {
+      delArticle({ id }).then(() => getList())
+    }
+
+    onMounted(() => getList())
 
     return { 
       ...toRefs(data),
       getList,
-      handleDelete,
       handleSelectionChange,
       handleEdit,
       delAllSelection,
       handlePageChange,
       isSelect,
-      publish
+      publish,
+      recycled,
+      top,
+      comment,
+      del
     }
   }
 })

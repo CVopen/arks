@@ -65,5 +65,7 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 		articleRouter.PUT("/comment", middlewares.TypeArticle(utils.CommentedArticle), articleHandler.PutArticle)
 		// 回收文章
 		articleRouter.PUT("/recovery", middlewares.TypeArticle(utils.RecycledArticle), articleHandler.PutArticle)
+		// 删除文章
+		articleRouter.DELETE("/del", articleHandler.DelArticleHandler)
 	}
 }

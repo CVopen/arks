@@ -26,6 +26,12 @@ body,
   background: rgba(255, 255, 255, .7) !important;
   color:rgba(255, 105, 180) !important;
 }
+.el-popconfirm p {
+  color: #fff;
+}
+.el-popconfirm__action span {
+  color: #fff;
+}
 body {
     font-family: 'PingFang SC', "Helvetica Neue", Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;
 }

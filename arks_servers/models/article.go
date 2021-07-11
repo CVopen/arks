@@ -122,8 +122,6 @@ func (article Article) GetList(page *utils.Pagination, state uint, list []uint) 
 		query = query.Where("`category_id` = ?)", article.CategoryId)
 	}
 
-	fmt.Println("state", state, "list", list, "title", article.Title)
-
 	switch state {
 	case 1:
 		// 已发布
@@ -137,7 +135,7 @@ func (article Article) GetList(page *utils.Pagination, state uint, list []uint) 
 	default:
 		break
 	}
-
+	fmt.Println(list)
 	if len(list) > 0 {
 		query = query.Where("tag_id in (?)", list)
 	}
@@ -157,6 +155,7 @@ func (article Article) PublishedArticle() error {
 
 // 文章置顶
 func (article Article) TopArticle() error {
+	fmt.Println("IsTop", article.IsTop)
 	return db.Db.Model(&article).Updates(map[string]interface{}{
 		"is_top": article.IsTop,
 	}).Error
@@ -174,4 +173,51 @@ func (article Article) RecycledArticle() error {
 	return db.Db.Model(&article).Updates(map[string]interface{}{
 		"is_recycled": article.IsRecycled,
 	}).Error
+}
+
+// 删除文章
+func (article Article) DelArticle() error {
+	// 开始事务
+	tx := db.Db.Begin()
+	defer func() {
+		if err := recover(); err != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	// 更新分类对应文章数量
+	err := tx.Exec("update `categories` set `count` = `count` - 1 where `id` = (select `category_id` from `articles` where `id` = ?)", article.ID).Error
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 更新标签中对应文章数量
+	err = tx.Exec("update `tags` set `count` = `count` - 1 where `id` in (select `tag_id` from `tag_article` where `article_id` = ?)", article.ID).Error
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 删除标签文章表中的记录
+	err = tx.Exec("delete from `tag_article` where `article_id` = ?", article.ID).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 删除文章
+	err = tx.Unscoped().Delete(&article).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }

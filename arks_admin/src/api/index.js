@@ -79,8 +79,32 @@ export const getArcitleList = (params) => get({
   params
 })
 
-// 修改标签
+// 发布文章
 export const editPublish = ({ id ,state }) => put({
   url: '/article/publish',
   data: { state, id }
+})
+
+// 置顶文章
+export const editTop = ({ id ,state }) => put({
+  url: '/article/top',
+  data: { state, id }
+})
+
+// 是否评论文章
+export const editCommented = ({ id ,state }) => put({
+  url: '/article/comment',
+  data: { state, id }
+})
+
+// 是否回收
+export const editRecovery = ({ id ,state }) => put({
+  url: '/article/recovery',
+  data: { state, id }
+})
+
+// 是否回收
+export const delArticle = ({ id }) => del({
+  url: '/article/del',
+  data: { id }
 })

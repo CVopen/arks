@@ -36,6 +36,7 @@ type GetArticlePageForm struct {
 // 文章置顶表单
 // 文章评论表单
 // 回收文章表单
+// 删除文章表单
 type PuTArticleForm struct {
 	ID    uint `json:"id" binding:"required" label:"文章ID"`
 	State bool `json:"state" label:"是否发布"`
@@ -65,9 +66,36 @@ func (create GetArticlePageForm) BindToModel() models.Article {
 	}
 }
 
-func (put PuTArticleForm) BindToModel() models.Article {
+func (put PuTArticleForm) BindToModelPublish() models.Article {
 	return models.Article{
 		Model:       gorm.Model{ID: put.ID},
 		IsPublished: put.State,
+	}
+}
+
+func (put PuTArticleForm) BindToModelTop() models.Article {
+	return models.Article{
+		Model: gorm.Model{ID: put.ID},
+		IsTop: put.State,
+	}
+}
+
+func (put PuTArticleForm) BindToModelComment() models.Article {
+	return models.Article{
+		Model:            gorm.Model{ID: put.ID},
+		IsAllowCommented: put.State,
+	}
+}
+
+func (put PuTArticleForm) BindToModelRecycled() models.Article {
+	return models.Article{
+		Model:      gorm.Model{ID: put.ID},
+		IsRecycled: put.State,
+	}
+}
+
+func (del PuTArticleForm) BindToModelDel() models.Article {
+	return models.Article{
+		Model: gorm.Model{ID: del.ID},
 	}
 }
