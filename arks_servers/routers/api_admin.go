@@ -69,5 +69,7 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 		articleRouter.DELETE("/del", articleHandler.DelArticleHandler)
 		// 获取详情
 		articleRouter.GET("/detail", articleHandler.GetArticleDetailHandler)
+		// 文章排序
+		articleRouter.PUT("/move", articleHandler.ArticleOrderHandler)
 	}
 }

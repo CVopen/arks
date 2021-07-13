@@ -12,5 +12,7 @@ func Migrate() {
 		&models.Article{},
 		&models.Category{},
 		&models.Tag{},
+		&models.Journal{},
+		&models.Opinion{},
 	)
 }

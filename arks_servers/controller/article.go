@@ -70,7 +70,9 @@ func (ArticleHandler) GetArticle(ctx *gin.Context) {
 		Data: nil,
 	}
 
-	pageForm := forms.GetArticlePageForm{}
+	pageForm := forms.GetArticlePageForm{
+		UserId: utils.TypeInterFaceToUint(id),
+	}
 
 	if err := ctx.ShouldBindQuery(&pageForm); err != nil {
 		result.Code = utils.RequestError
@@ -108,6 +110,7 @@ func (ArticleHandler) GetArticle(ctx *gin.Context) {
 			"edit":               false,
 			"captcha":            false,
 			"is_top":             v.IsTop,
+			"order_id":           v.OrderId,
 		}
 		if v.UserId == utils.TypeInterFaceToUint(id) {
 			dataList[i]["del"] = true
@@ -273,5 +276,52 @@ func (ArticleHandler) GetArticleDetailHandler(ctx *gin.Context) {
 	data["tagList"] = list
 
 	result.Data = data
+	ctx.JSON(http.StatusOK, result)
+}
+
+// @Summary 文章排序
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @data name string
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/register [put]
+func (ArticleHandler) ArticleOrderHandler(ctx *gin.Context) {
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+
+	form := forms.MoveAcricleForm{}
+	err := ctx.ShouldBindJSON(&form)
+	if err != nil {
+		result.Msg = "参数错误"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	article := form.BindToModel()
+	err = article.MoveOrderId(form.Direction)
+	if err != nil && err.Error() == "record not found" {
+		if form.Direction {
+			result.Msg = "无法再向上移动"
+		} else {
+			result.Msg = "无法再向下移动"
+		}
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	if err != nil {
+		result.Msg = "移动失败"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
 	ctx.JSON(http.StatusOK, result)
 }

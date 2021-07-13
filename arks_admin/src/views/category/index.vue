@@ -26,6 +26,7 @@
         >
       </div>
       <el-table
+        v-loading="loading"
         :data="tableData"
         border
         class="table"
@@ -133,8 +134,10 @@ export default defineComponent({
       showEdit: false,
       showAdd: false,
       form: {},
+      loading: false
     })
     const getList = (page) => {
+      data.loading = true
       if (page) {
         data.params.page = 1
       }
@@ -145,7 +148,8 @@ export default defineComponent({
         })
         data.tableData = res.data.data
         data.pageTotal = res.data.total
-      })
+        data.loading = false
+      }).catch(() => data.loading = false)
     }
 
     const delList = (id) => {

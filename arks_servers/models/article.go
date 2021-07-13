@@ -139,6 +139,10 @@ func (article Article) GetList(page *utils.Pagination, state uint) ([]Article, u
 		break
 	}
 
+	if article.UserId != 1 {
+		query = query.Where("`user_id` = ?", article.UserId)
+	}
+
 	// 分页
 	total, err := utils.ToPage(page, query, &articleList)
 
@@ -269,4 +273,44 @@ func (Article) DelMult(list []uint) error {
 func (article Article) GetDetail() (Article, error) {
 	err := db.Db.Preload("Category").Preload("TagList").Where("`id` = ?", article.ID).First(&article).Error
 	return article, err
+}
+
+// 文章排序
+func (a Article) MoveOrderId(direction bool) (err error) {
+	// 开始事务
+	tx := db.Db.Begin()
+	defer func() {
+		if err := recover(); err != nil {
+			tx.Rollback()
+		}
+	}()
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	var article Article
+	if direction {
+		err = tx.Where("`is_published` = 1 and `is_recycled` = 0 and `order_id` > ? and `is_top` = ?", a.OrderId, a.IsTop).First(&article).Error
+	} else {
+		err = tx.Where("`is_published` = 1 and `is_recycled` = 0 and `order_id` < ? and `is_top` = ?", a.OrderId, a.IsTop).First(&article).Error
+	}
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	err = tx.Model(&Article{}).Where("`id` = ?", a.ID).Update("order_id", article.OrderId).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	err = tx.Model(&Article{}).Where("`id` = ?", article.ID).Update("order_id", a.OrderId).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }

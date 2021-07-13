@@ -24,6 +24,7 @@ type CreateArticleForm struct {
 
 // 查询文章表单分页
 type GetArticlePageForm struct {
+	UserId           uint   `binding:"required" label:"用户id"`
 	CategoryId       uint   `form:"category_id" label:"分类id"`
 	Title            string `form:"title" label:"文章标题"`
 	State            uint   `form:"state" label:"状态"`
@@ -46,6 +47,14 @@ type GetArticleDetailForm struct {
 	ID uint `form:"id" binding:"required" label:"文章ID"`
 }
 
+// 文章排序表单
+type MoveAcricleForm struct {
+	ID        uint `json:"id" bindng:"required" label:"ID"`
+	OrderId   uint `json:"order_id" bindng:"required" label:"排序ID"`
+	IsTop     bool `json:"is_top" label:"是否置顶"`
+	Direction bool `json:"direction" label:"移动方向"`
+}
+
 func (create CreateArticleForm) BindToModel() models.Article {
 	return models.Article{
 		UserId:           create.UserId,
@@ -64,6 +73,7 @@ func (create CreateArticleForm) BindToModel() models.Article {
 
 func (create GetArticlePageForm) BindToModel() models.Article {
 	return models.Article{
+		UserId:     create.UserId,
 		CategoryId: create.CategoryId,
 		Title:      create.Title,
 	}
@@ -106,5 +116,14 @@ func (del PuTArticleForm) BindToModelDel() models.Article {
 func (del GetArticleDetailForm) BindToModelDetail() models.Article {
 	return models.Article{
 		Model: gorm.Model{ID: del.ID},
+	}
+}
+
+// 绑定文章排序表单数据到文章实体
+func (form MoveAcricleForm) BindToModel() models.Article {
+	return models.Article{
+		Model:   gorm.Model{ID: form.ID},
+		OrderId: form.OrderId,
+		IsTop:   form.IsTop,
 	}
 }

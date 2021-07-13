@@ -31,37 +31,7 @@ const routes = [
           /* webpackChunkName: "charts" */
           "../views/BaseCharts.vue")
         },
-        {
-          path: "/tabs",
-          name: "tabs",
-          meta: {
-              title: 'tab标签'
-          },
-          component: () => import (
-          /* webpackChunkName: "tabs" */
-          "../views/Tabs.vue")
-        },
-        {
-          path: "/permission",
-          name: "permission",
-          meta: {
-              title: '权限管理',
-              permission: true
-          },
-          component: () => import (
-          /* webpackChunkName: "permission" */
-          "../views/Permission.vue")
-        }, 
-        {
-          path: "/i18n",
-          name: "i18n",
-          meta: {
-              title: '国际化语言'
-          },
-          component: () => import (
-          /* webpackChunkName: "i18n" */
-          "../views/I18n.vue")
-        }, 
+        
         {
           path: "/upload",
           name: "upload",
@@ -71,34 +41,6 @@ const routes = [
           component: () => import (
           /* webpackChunkName: "upload" */
           "../views/Upload.vue")
-        }, 
-        {
-          path: "/icon",
-          name: "icon",
-          meta: {
-              title: '自定义图标'
-          },
-          component: () => import (
-          /* webpackChunkName: "icon" */
-          "../views/Icon.vue")
-        }, 
-        {
-          path: '/404',
-          name: '404',
-          meta: {
-              title: '找不到页面'
-          },
-          component: () => import (/* webpackChunkName: "404" */
-          '../views/404.vue')
-        }, 
-        {
-          path: '/403',
-          name: '403',
-          meta: {
-              title: '没有权限'
-          },
-          component: () => import (/* webpackChunkName: "403" */
-          '../views/403.vue')
         }
       ]
     },
@@ -155,6 +97,35 @@ const routes = [
             "../views/arcitle/detail.vue")
         }
       ],
+    },
+    {
+      path: "/permission",
+      name: "permission",
+      meta: {
+          title: '权限管理',
+          permission: true
+      },
+      component: () => import (
+      /* webpackChunkName: "permission" */
+      "../views/Permission.vue")
+    }, 
+    {
+      path: '/404',
+      name: '404',
+      meta: {
+          title: '找不到页面'
+      },
+      component: () => import (/* webpackChunkName: "404" */
+      '../views/404.vue')
+    }, 
+    {
+      path: '/403',
+      name: '403',
+      meta: {
+          title: '没有权限'
+      },
+      component: () => import (/* webpackChunkName: "403" */
+      '../views/403.vue')
     },
     {
       path: "/login",

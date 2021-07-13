@@ -22,6 +22,7 @@
       <el-button type="primary" icon="el-icon-search" @click="getList(1)">搜 索</el-button>
     </div>
     <el-table
+      v-loading="loading"
       :data="tableData"
       border
       class="table"
@@ -33,7 +34,7 @@
       <el-table-column prop="ID" label="ID" width="55" align="center"/>
       <el-table-column width="180" prop="title" label="文章标题" />
       <el-table-column prop="summary" label="简介" />
-      <el-table-column prop="img" label="封面图" width="140">
+      <el-table-column prop="img" label="封面图" width="160" align="center">
         <template #default="scope">
           <el-image fit="contain" style="height: 60px" :src="scope.row.img" :preview-src-list="[scope.row.img]" />
         </template>
@@ -41,7 +42,7 @@
       <el-table-column width="120" prop="category_name" label="分类名称" align="center" />
       <el-table-column width="80" prop="comment_count" label="评论数" align="center" />
       <el-table-column width="80" prop="visit_count" label="浏览数" align="center" />
-      <el-table-column width="180" prop="CreatedAt" label="创建时间" />
+      <el-table-column width="180" prop="CreatedAt" label="创建时间" align="center" />
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button 
@@ -63,6 +64,10 @@
             buttonIcon="el-icon-takeaway-box"
             @confirm="recycled(scope.row.is_recycled ? false : true, scope.row.ID)"
           />
+          <template v-if="$store.state.user.userInfo.userId == 1 && scope.row.is_published">
+            <Pop text="上移" title="确定要上移排序吗？" buttonIcon="el-icon-arrow-up" @confirm="moveOrderArticle(true, scope.row)" />
+            <Pop text="下移" title="确定要上移排序吗？" buttonIcon="el-icon-arrow-down" @confirm="moveOrderArticle(false, scope.row)" />
+          </template>
           <template v-if="!scope.row.is_recycled">
             <Pop
               :text="scope.row.is_published ? '下架' : '发布'"
@@ -115,7 +120,8 @@ import {
   editTop,
   editCommented,
   editRecovery,
-  delArticle
+  delArticle,
+  moveOrder
 } from "../../api/index"
 import { formatTime } from "../../utils/index"
 import PopConfirm from "../../components/popconfirm.vue"
@@ -142,9 +148,11 @@ export default defineComponent({
       tableData: [],
       multipleSelection: [],
       showEdit: false,
-      options: []
+      options: [],
+      loading: false
     })
     const getList = (page) => {
+      data.loading = true
       if (page) {
         data.params.page = 1
       }
@@ -154,7 +162,8 @@ export default defineComponent({
         })
         data.tableData = res.data.data
         data.pageTotal = res.data.total
-      })
+        data.loading = false
+      }).catch(() => data.loading = false)
     }
 
     // 获取分类列表
@@ -213,6 +222,15 @@ export default defineComponent({
       getCategory()
     })
 
+    const moveOrderArticle = (direction, data) => {
+      moveOrder({
+        id: data.ID,
+        order_id: data.order_id,
+        is_top: data.is_top,
+        direction
+      }).then(() => getList())
+    }
+
     return { 
       ...toRefs(data),
       getList,
@@ -224,7 +242,8 @@ export default defineComponent({
       recycled,
       top,
       comment,
-      del
+      del,
+      moveOrderArticle
     }
   }
 })
