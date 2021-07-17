@@ -80,7 +80,8 @@ export default defineComponent({
         summary: [
           { required: true, message: '请输入文章摘要', trigger: 'blur' }
         ]
-      }
+      },
+      see: true
     })
     const form = ref(null)
     const initEditor = () => {
@@ -90,7 +91,6 @@ export default defineComponent({
           enable: false
         },
         counter: 100000,
-        see: true,
         hint: {
           emoji: {
             pray: '🙏',
@@ -134,7 +134,7 @@ export default defineComponent({
           // }
         },
         after: () => {
-          if (!route.query.see) data.see = false
+          if (route.query.see) data.see = false
           if (route.query.id) {
             getArticleDetail({ id: route.query.id }).then(res => {
               data.formData = res.data
@@ -156,7 +156,6 @@ export default defineComponent({
         data.categoryList = res.data.data
       })
       initEditor()
-      
     })
 
     const createArcitle = () => {

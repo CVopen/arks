@@ -6,7 +6,7 @@
           <div class="grid-content grid-con-1">
             <img src="../../assets/img/docs.svg" />
             <div class="grid-cont-right">
-              <div class="grid-num">1234</div>
+              <div class="grid-num">{{ visit.ACount }}</div>
               <div>文章数量</div>
             </div>
           </div>
@@ -17,7 +17,7 @@
           <div class="grid-content grid-con-2">
             <img src="../../assets/img/see.svg" />
             <div class="grid-cont-right">
-              <div class="grid-num">321</div>
+              <div class="grid-num">{{ visit.visit_count }}</div>
               <div>用户访问量</div>
             </div>
           </div>
@@ -28,8 +28,8 @@
           <div class="grid-content grid-con-3">
             <img src="../../assets/img/message.svg" />
             <div class="grid-cont-right">
-              <div class="grid-num">5000</div>
-              <div>评论数量</div>
+              <div class="grid-num">{{ visit.visit_day_count }}</div>
+              <div>每日访问量</div>
             </div>
           </div>
         </el-card>
@@ -62,12 +62,12 @@
 
 <script>
 import Schart from "vue-schart"
+import { getVisit } from '@/api'
 export default {
   name: "dashboard",
   data() {
     return {
-      name: localStorage.getItem("ms_username"),
-
+      visit: {},
       data: [
         {
           name: "2018/09/04",
@@ -151,7 +151,9 @@ export default {
       return this.name === "admin" ? "超级管理员" : "普通用户"
     }
   },
-  created() {},
+  created() {
+    this.getAll()
+  },
   methods: {
     changeDate() {
       const now = new Date().getTime()
@@ -159,6 +161,11 @@ export default {
         const date = new Date(now - (6 - index) * 86400000)
         item.name = `${date.getFullYear()}/${date.getMonth() +
           1}/${date.getDate()}`
+      })
+    },
+    getAll() {
+      getVisit().then(res => {
+        this.visit = res.data
       })
     }
   }
@@ -208,11 +215,11 @@ export default {
 }
 
 .grid-con-2 .grid-con-icon {
-  background: rgb(100, 213, 114);
+  background: #ff9f43;
 }
 
 .grid-con-2 .grid-num {
-  color: rgb(45, 140, 240);
+  color: #ff9f43;
 }
 
 .grid-con-3 .grid-con-icon {

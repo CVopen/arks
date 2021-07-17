@@ -2,11 +2,8 @@
   <!-- 编辑弹出框 -->
   <el-dialog title="编辑" v-model="show" width="30%" @close="close">
     <el-form ref="form" :model="formData" label-width="70px">
-      <el-form-item label="分类名">
+      <el-form-item label="标签名">
         <el-input v-model="formData.name" />
-      </el-form-item>
-      <el-form-item label="简介">
-        <el-input v-model="formData.desc" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -51,8 +48,7 @@ export default defineComponent({
     const data = reactive({
       show: props.showModel,
       formData: {
-        name: props.form.name,
-        desc: props.form.desc
+        name: props.form.name
       }
     })
     
@@ -60,8 +56,7 @@ export default defineComponent({
         data.show = newVal.showModel
         data.formData = {
           id: newVal.form.ID,
-          name: newVal.form.name,
-          desc: newVal.form.desc
+          name: newVal.form.name
         }
       }
     )

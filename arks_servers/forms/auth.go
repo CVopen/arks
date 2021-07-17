@@ -45,6 +45,7 @@ func (form LoginForm) BindToModel() models.User {
 		Password: form.Password,
 	}
 }
+
 func (form RegisterForm) BindToModel() models.User {
 	return models.User{
 		Username: form.Username,

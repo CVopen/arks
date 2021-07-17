@@ -24,6 +24,10 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 	admin.GET("/captcha", userHandler.Captcha)
 	//登录
 	admin.POST("/login", userHandler.LoginUser)
+
+	visit := controller.VisitHandler{}
+	admin.GET("/visit", middlewares.JwtAuth(), visit.GetVisit)
+
 	categoryRouter := admin.Group("/category", middlewares.JwtAuth())
 	categoryHandler := controller.CategoryHandler{}
 	{

@@ -17,5 +17,8 @@ func Migrate() {
 		&models.UserStatistics{},
 		&models.History{},
 		&models.Comment{},
+		&models.Link{},
+		&models.Statistics{},
+		&models.VisitDayCount{},
 	)
 }

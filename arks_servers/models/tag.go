@@ -55,7 +55,38 @@ func (t Tag) GetName() (Tag, error) {
 
 // 添加标签
 func (t Tag) Create() error {
-	return db.Db.Create(&t).Error
+	// 事务开始
+	tx := db.Db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	err := tx.Create(&t).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	statistics, err := GetStatistics()
+	if err != nil {
+		return err
+	}
+	err = statistics.EditStatistics(map[string]interface{}{
+		"TCount": statistics.TCount + 1,
+	}, tx)
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 // 修改标签名称
@@ -124,13 +155,26 @@ func (t Tag) DelTagOne() error {
 	}
 
 	// 更新分类对应文章数量
-	err = tx.Exec("UPDATE `categories` set `count` = `count` - 1 where `id` = ?", tag.CategoryId).Error
+	err = tx.Exec("UPDATE `categories` set `count` = `count` - ? where `id` = ?", len(list), tag.CategoryId).Error
 	if err != nil {
 		tx.Rollback()
 	}
 
 	// 删除标签表中的记录
 	err = tx.Where("`id` = ?", t.ID).Unscoped().Delete(&Tag{}).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	statistics, err := GetStatistics()
+	if err != nil {
+		return err
+	}
+	err = statistics.EditStatistics(map[string]interface{}{
+		"TCount": statistics.TCount - 1,
+		"ACount": statistics.ACount - uint(len(list)),
+	}, tx)
 	if err != nil {
 		tx.Rollback()
 		return err

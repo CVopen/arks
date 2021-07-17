@@ -48,15 +48,22 @@ func (th TagHandler) CreateTag(ctx *gin.Context) {
 	}
 
 	tag := createTagForm.BindToModel()
-	tagDetail, _ := tag.GetName()
-
-	if tagDetail.Name != "" {
+	tagDetail, err := tag.GetAllNameList()
+	if len(tagDetail) > 0 {
 		result.Msg = "标签已存在"
 		result.Code = utils.RequestError
 		ctx.JSON(http.StatusOK, result)
 		return
 	}
-	err := tag.Create()
+
+	if err != nil {
+		result.Msg = "添加失败"
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	err = tag.Create()
 
 	if err != nil {
 		result.Msg = "添加失败"

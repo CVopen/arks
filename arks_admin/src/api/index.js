@@ -16,6 +16,11 @@ export const login = ({ username, password, captcha_id, captcha_val }) => post({
     }
 })
 
+// 获取整站数据
+export const getVisit = () => get({
+  url: '/visit'
+})
+
 // 添加分类
 export const addCategory = ({ name, desc }) => post({
   url: '/category/add',

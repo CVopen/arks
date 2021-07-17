@@ -44,12 +44,6 @@
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
-            type="text"
-            icon="el-icon-document"
-            @click="handleEdit(scope)"
-            >查看</el-button
-          >
-          <el-button
             v-if="scope.row.edit"
             type="text"
             icon="el-icon-edit"

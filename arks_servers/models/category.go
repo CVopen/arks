@@ -37,7 +37,38 @@ func (c Category) GetAllList(page *utils.Pagination) ([]Category, uint, error) {
 
 // 添加分类
 func (c Category) Create() error {
-	return db.Db.Create(&c).Error
+	// 事务开始
+	tx := db.Db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	err := tx.Create(&c).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	statistics, err := GetStatistics()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	err = statistics.EditStatistics(map[string]interface{}{
+		"CCount": statistics.CCount + 1,
+	}, tx)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 // 验证分类名是否存在
@@ -91,6 +122,18 @@ func (c Category) RemoveCategory() error {
 		return err
 	}
 
+	// 获取删除标签数目和文章数目
+	var totalT, totalA int64
+	if err = tx.Model(&Tag{}).Where("category_id = ?", c.ID).Count(&totalT).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err = tx.Model(&Article{}).Where("category_id = ?", c.ID).Count(&totalA).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	// 删除分类下所有标签
 	if err := tx.Unscoped().Where("category_id = ?", c.ID).Delete(&Tag{}).Error; err != nil {
 		tx.Rollback()
@@ -106,6 +149,20 @@ func (c Category) RemoveCategory() error {
 	// 删除分类
 	if err := tx.Unscoped().Where("`id` = ?", c.ID).Delete(&Category{}).Error; err != nil {
 		tx.Rollback()
+		return err
+	}
+
+	statistics, err := GetStatistics()
+	if err != nil {
+		return err
+	}
+	err = statistics.EditStatistics(map[string]interface{}{
+		"CCount": statistics.CCount - 1,
+		"TCount": statistics.TCount - uint(totalT),
+		"ACount": statistics.ACount - uint(totalA),
+	}, tx)
+
+	if err != nil {
 		return err
 	}
 
@@ -139,6 +196,17 @@ func (c Category) RemoveBatchCategory(list []uint) error {
 		idList[index] = v.ID
 	}
 
+	var totalT, totalA int64
+	if err := tx.Model(&Tag{}).Where("category_id in (?)", list).Count(&totalT).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Model(&Article{}).Where("category_id in (?)", list).Count(&totalA).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	// 删除标签文章表中的记录
 	err := tx.Exec("delete from `tag_article` where `tag_id` in (?)", idList).Error
 	if err != nil {
@@ -147,7 +215,7 @@ func (c Category) RemoveBatchCategory(list []uint) error {
 	}
 
 	// 删除分类下所有标签
-	if err := tx.Unscoped().Where("category_id in ?", list).Delete(&Tag{}).Error; err != nil {
+	if err := tx.Unscoped().Where("category_id in (?)", list).Delete(&Tag{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
@@ -160,6 +228,22 @@ func (c Category) RemoveBatchCategory(list []uint) error {
 
 	// 删除分类
 	if err := tx.Unscoped().Delete(&Category{}, list).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	statistics, err := GetStatistics()
+	if err != nil {
+		return err
+	}
+
+	err = statistics.EditStatistics(map[string]interface{}{
+		"CCount": statistics.CCount - uint(len(list)),
+		"TCount": statistics.TCount - uint(totalT),
+		"ACount": statistics.ACount - uint(totalA),
+	}, tx)
+
+	if err != nil {
 		tx.Rollback()
 		return err
 	}

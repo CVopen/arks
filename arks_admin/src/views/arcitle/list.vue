@@ -48,7 +48,7 @@
           <el-button 
             type="text"
             icon="el-icon-document"
-            @click="$router.push({path: '/arcitle/add', query: {see: false, id: scope.row.ID}})"
+            @click="$router.push({path: '/arcitle/add', query: {see: true, id: scope.row.ID}})"
             >查看</el-button
           >
           <el-button

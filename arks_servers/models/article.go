@@ -106,6 +106,18 @@ func (article Article) Create(tagIds []int) error {
 		}
 	}
 
+	statistics, err := GetStatistics()
+	if err != nil {
+		return err
+	}
+	err = statistics.EditStatistics(map[string]interface{}{
+		"ACount": statistics.ACount + 1,
+	}, tx)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	return tx.Commit().Error
 }
 
@@ -222,6 +234,18 @@ func (article Article) DelArticle() error {
 		return err
 	}
 
+	statistics, err := GetStatistics()
+	if err != nil {
+		return err
+	}
+	err = statistics.EditStatistics(map[string]interface{}{
+		"ACount": statistics.ACount - 1,
+	}, tx)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	return tx.Commit().Error
 }
 
@@ -261,6 +285,18 @@ func (Article) DelMult(list []uint) error {
 
 	// 删除文章表中的记录
 	err = tx.Where("`id` in (?)", list).Unscoped().Delete(&Article{}).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	statistics, err := GetStatistics()
+	if err != nil {
+		return err
+	}
+	err = statistics.EditStatistics(map[string]interface{}{
+		"ACount": statistics.ACount - uint(len(list)),
+	}, tx)
 	if err != nil {
 		tx.Rollback()
 		return err

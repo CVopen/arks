@@ -7,9 +7,7 @@
       <div class="content">
         <router-view v-slot="{ Component }">
           <transition name="move" mode="out-in">
-            <keep-alive :include="tagsList">
-              <component :is="Component" />
-            </keep-alive>
+            <component :is="Component" />
           </transition>
         </router-view>
         <!-- <el-backtop target=".content"></el-backtop> -->
@@ -35,9 +33,6 @@ export default {
     }
   },
   computed: {
-    tagsList() {
-      return this.$store.state.app.tagsList.map((item) => item.name)
-    },
     collapse() {
       return this.$store.state.app.collapse
     }
