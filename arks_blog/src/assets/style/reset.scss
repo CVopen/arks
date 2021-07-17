@@ -127,3 +127,9 @@ table {
   color: $varFontColor;
   transition: all .8s;
 }
+
+.ant-pagination-item-active {
+  border-radius: 50%;
+  background-color: $varTheme;
+  color: #fff;
+}

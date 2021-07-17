@@ -1,6 +1,7 @@
 package app
 
 import (
+	"arks_servers/config/cron"
 	"arks_servers/config/db"
 	"arks_servers/config/migrate"
 	"arks_servers/config/setting"
@@ -17,6 +18,7 @@ func InitApp() *gin.Engine {
 	setting.Config.InitSetting()
 
 	db.InitDb()
+
 	gin.SetMode(setting.Config.Server.Mode)
 	migrate.Migrate()
 
@@ -33,6 +35,7 @@ func InitApp() *gin.Engine {
 
 	apiadmin := routers.ApiAdmin{}
 	apiadmin.InitAdminApi("/admin/v2", router)
+	go cron.CreateCorn()
 
 	return router
 }

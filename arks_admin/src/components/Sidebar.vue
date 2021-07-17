@@ -10,41 +10,25 @@
       unique-opened
       router
     >
-      <template v-for="item in items">
-        <template v-if="item.subs">
-          <el-submenu :index="item.index" :key="item.index">
-            <template #title>
-              <i :class="item.icon" style="color:#fff"></i>
-              <span>{{ item.title }}</span>
-            </template>
-            <template v-for="subItem in item.subs">
-              <el-submenu
-                v-if="subItem.subs"
-                :index="subItem.index"
-                :key="subItem.index"
-              >
-                <template #title>{{ subItem.title }}</template>
-                <el-menu-item
-                  v-for="(threeItem, i) in subItem.subs"
-                  :key="i"
-                  :index="threeItem.index"
-                  >{{ threeItem.title }}</el-menu-item
-                >
-              </el-submenu>
-              <el-menu-item
-                v-else
-                :index="subItem.index"
-                :key="subItem.index"
-                >{{ subItem.title }}</el-menu-item
-              >
-            </template>
-          </el-submenu>
-        </template>
-        <template v-else>
-          <el-menu-item :index="item.index" :key="item.index">
-            <i :class="item.icon" style="color:#fff"></i>
-            <template #title>{{ item.title }}</template>
-          </el-menu-item>
+      <template v-for="item in router">
+        <template v-if="!item.hidden">
+          <template v-if="item.children">
+            <el-submenu :index="item.meta.index" :key="item.meta.index">
+              <template #title>
+                <i :class="item.meta.icon" style="color:#fff"></i>
+                <span>{{ item.meta.title }}</span>
+              </template>
+              <template v-for="subItem in item.children" :key="subItem.meta.index">
+                <el-menu-item :index="subItem.meta.index">{{ subItem.meta.title }}</el-menu-item>
+              </template>
+            </el-submenu>
+          </template>
+          <template v-else>
+            <el-menu-item :index="item.meta.index" :key="item.meta.index">
+              <i :class="item.meta.icon" style="color:#fff"></i>
+              <template #title>{{ item.meta.title }}</template>
+            </el-menu-item>
+          </template>
         </template>
       </template>
     </el-menu>
@@ -54,69 +38,15 @@
 <script>
 // import bus from "../common/bus";
 export default {
-  data() {
-    return {
-      items: [
-        {
-          icon: "el-icon-lx-home",
-          index: "home",
-          title: "系统首页"
-        },
-        {
-          icon: "el-icon-lx-cascades",
-          index: "category",
-          title: "类别",
-          subs: [
-            {
-              index: "/category/list",
-              title: "文章分类"
-            },
-            {
-              index: "/category/tag",
-              title: "文章标签"
-            }
-          ]
-        },
-        {
-          icon: "el-icon-lx-copy",
-          index: "arcitle",
-          title: "文章",
-          subs: [
-            {
-              index: "/arcitle/list",
-              title: "文章列表"
-            },
-            {
-              index: "/arcitle/add",
-              title: "添加文章"
-            }
-          ]
-        },
-        {
-          icon: "el-icon-lx-calendar",
-          index: "3",
-          title: "表单相关",
-          subs: [
-            {
-              index: "upload",
-              title: "文件上传"
-            }
-          ]
-        },
-        {
-          icon: "el-icon-pie-chart",
-          index: "charts",
-          title: "schart图表"
-        }
-      ]
-    }
-  },
   computed: {
     onRoutes() {
-      return this.$route.path.replace("/", "")
+      return this.$route.path
     },
     collapse() {
       return this.$store.state.app.collapse
+    },
+    router() {
+      return this.$router.options.routes
     }
   }
 }
