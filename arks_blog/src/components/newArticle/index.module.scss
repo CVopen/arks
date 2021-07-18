@@ -37,5 +37,14 @@
         color: #e05d44;
       }
     }
+    span {
+      text-overflow: -o-ellipsis-lastline;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
   }
 }

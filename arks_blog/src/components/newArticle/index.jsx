@@ -2,22 +2,39 @@
 import { Card } from 'antd'
 import { ScheduleOutlined } from '@ant-design/icons'
 import style from './index.module.scss'
+import { useState, useEffect } from 'react'
+import { getNewArticle } from '@/api/article'
+import { formDate } from '@/utils/utils'
 
-export default function NewArticle(props) {
+export default function NewArticle() {
+
+  const [ list, changeList ] = useState([])
   
+  useEffect(() => {
+    getList()
+  }, [])
+
+  const getList = () => {
+    getNewArticle({ limit: 10 }).then(res => {
+      changeList(res.data)
+    })
+  }
+
   return (
     <Card hoverable className="cart">
       <div className="text" style={{fontSize: '20px'}}>
         <ScheduleOutlined style={{color: '#ff7675'}}/> 最新文章
-        <div className={style.item}>
-          <a href="#/center">
-            <img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="" />
-          </a>
-          <div className={style.content}>
-            <a href="#/center">基于Vue Element的后台Element的后台Element的后台Element的后台Element的后台Element的后台Element的后台</a>
-            <span>time</span>
-          </div>
-        </div>
+        {
+          list.map(item => <div className={style.item} key={item.ID}>
+            <a href="#/center">
+              <img src={item.img} alt="" />
+            </a>
+            <div className={style.content}>
+              <a href="#/center">{item.summary}</a>
+              <span>{ formDate(item.CreatedAt, 'YYYY-MM-DD hh:mm:ss') }</span>
+            </div>
+          </div>)
+        }
       </div>
     </Card>
   )

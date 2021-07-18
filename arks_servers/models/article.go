@@ -151,7 +151,7 @@ func (article Article) GetList(page *utils.Pagination, state uint) ([]Article, u
 		break
 	}
 
-	if article.UserId != 1 {
+	if article.UserId > 1 {
 		query = query.Where("`user_id` = ?", article.UserId)
 	}
 
@@ -159,6 +159,13 @@ func (article Article) GetList(page *utils.Pagination, state uint) ([]Article, u
 	total, err := utils.ToPage(page, query, &articleList)
 
 	return articleList, total, err
+}
+
+// 获取最近发布的文章
+func (Article) GetLatest(limit int) (list []Article, err error) {
+	err = db.Db.Order("created_at desc").Limit(limit).
+		Where("is_published = 1 and is_recycled = 0").Find(&list).Error
+	return
 }
 
 // 发布文章

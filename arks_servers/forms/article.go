@@ -24,7 +24,7 @@ type CreateArticleForm struct {
 
 // 查询文章表单分页
 type GetArticlePageForm struct {
-	UserId           uint   `binding:"required" label:"用户id"`
+	UserId           uint   `label:"用户id"`
 	CategoryId       uint   `form:"category_id" label:"分类id"`
 	Title            string `form:"title" label:"文章标题"`
 	State            uint   `form:"state" label:"状态"`
@@ -53,6 +53,10 @@ type MoveAcricleForm struct {
 	OrderId   uint `json:"order_id" bindng:"required" label:"排序ID"`
 	IsTop     bool `json:"is_top" label:"是否置顶"`
 	Direction bool `json:"direction" label:"移动方向"`
+}
+
+type GetNewArticleForm struct {
+	Limit int `form:"limit" binding:"required" label:"文章数量"`
 }
 
 func (create CreateArticleForm) BindToModel() models.Article {
@@ -126,4 +130,8 @@ func (form MoveAcricleForm) BindToModel() models.Article {
 		OrderId: form.OrderId,
 		IsTop:   form.IsTop,
 	}
+}
+
+func (GetNewArticleForm) BindToModel() models.Article {
+	return models.Article{}
 }

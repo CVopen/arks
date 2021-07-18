@@ -47,6 +47,7 @@ const Container = styled.div`
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
+    width: 100%;
   }
   span {
     font-size: 20px;
@@ -61,6 +62,12 @@ const Container = styled.div`
   }
   .tag {
     justify-content: space-between;
+    margin-top: 5px;
+  }
+  .tag_item {
+    display: inline-block;
+    margin-right: 5px;
+    font-size: 14px;
   }
   @media only screen and (max-width: 500px){
     .tag-right {

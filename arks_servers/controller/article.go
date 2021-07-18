@@ -71,7 +71,10 @@ func (ArticleHandler) GetArticle(ctx *gin.Context) {
 	}
 
 	pageForm := forms.GetArticlePageForm{
-		UserId: utils.TypeInterFaceToUint(id),
+		UserId: 0,
+	}
+	if id != nil {
+		pageForm.UserId = utils.TypeInterFaceToUint(id)
 	}
 
 	if err := ctx.ShouldBindQuery(&pageForm); err != nil {
@@ -93,38 +96,120 @@ func (ArticleHandler) GetArticle(ctx *gin.Context) {
 	}
 
 	dataList := make([]map[string]interface{}, len(list))
+	reqType, _ := ctx.Get("type")
+
+	for i, v := range list {
+		if reqType == "blog" {
+			dataList[i] = map[string]interface{}{
+				"ID":            v.ID,
+				"CreatedAt":     v.CreatedAt,
+				"title":         v.Title,
+				"img":           v.Img,
+				"summary":       v.Summary,
+				"category_name": v.Category.Name,
+				"captcha":       false,
+				"tag_list":      0,
+			}
+			if v.Pwd != "" {
+				dataList[i]["captcha"] = true
+			}
+			tag_list := make([]string, len(v.TagList))
+			for it, v := range v.TagList {
+				tag_list[it] = v.Name
+			}
+			dataList[i]["tag_list"] = tag_list
+
+		} else {
+			dataList[i] = map[string]interface{}{
+				"ID":                 v.ID,
+				"CreatedAt":          v.CreatedAt,
+				"title":              v.Title,
+				"visit_count":        v.VisitCount,
+				"comment_count":      v.CommentCount,
+				"img":                v.Img,
+				"summary":            v.Summary,
+				"category_name":      v.Category.Name,
+				"is_allow_commented": v.IsAllowCommented,
+				"is_published":       v.IsPublished,
+				"is_recycled":        v.IsRecycled,
+				"del":                false,
+				"edit":               false,
+				"captcha":            false,
+				"is_top":             v.IsTop,
+				"order_id":           v.OrderId,
+			}
+			if v.UserId == utils.TypeInterFaceToUint(id) {
+				dataList[i]["del"] = true
+				dataList[i]["edit"] = true
+			}
+			if utils.TypeInterFaceToUint(id) == 1 {
+				dataList[i]["del"] = true
+			}
+			if v.Pwd != "" {
+				dataList[i]["captcha"] = true
+			}
+		}
+
+	}
+
+	result.Data = utils.PageData(dataList, total, pageForm.Pagination)
+
+	ctx.JSON(http.StatusOK, result)
+}
+
+// @Summary 获取最新文章列表
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @data name string
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/register [post]
+func (ArticleHandler) GetNewArticle(ctx *gin.Context) {
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+
+	pageForm := forms.GetNewArticleForm{}
+
+	if err := ctx.ShouldBindQuery(&pageForm); err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "error"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	list, err := pageForm.BindToModel().GetLatest(pageForm.Limit)
+
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "查询失败"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	dataList := make([]map[string]interface{}, len(list))
 	for i, v := range list {
 		dataList[i] = map[string]interface{}{
-			"ID":                 v.ID,
-			"CreatedAt":          v.CreatedAt,
-			"title":              v.Title,
-			"visit_count":        v.VisitCount,
-			"comment_count":      v.CommentCount,
-			"img":                v.Img,
-			"summary":            v.Summary,
-			"category_name":      v.Category.Name,
-			"is_allow_commented": v.IsAllowCommented,
-			"is_published":       v.IsPublished,
-			"is_recycled":        v.IsRecycled,
-			"del":                false,
-			"edit":               false,
-			"captcha":            false,
-			"is_top":             v.IsTop,
-			"order_id":           v.OrderId,
-		}
-		if v.UserId == utils.TypeInterFaceToUint(id) {
-			dataList[i]["del"] = true
-			dataList[i]["edit"] = true
-		}
-		if utils.TypeInterFaceToUint(id) == 1 {
-			dataList[i]["del"] = true
+			"ID":            v.ID,
+			"CreatedAt":     v.CreatedAt,
+			"title":         v.Title,
+			"visit_count":   v.VisitCount,
+			"comment_count": v.CommentCount,
+			"img":           v.Img,
+			"summary":       v.Summary,
+			"category_name": v.Category.Name,
+			"captcha":       false,
+			"order_id":      v.OrderId,
 		}
 		if v.Pwd != "" {
 			dataList[i]["captcha"] = true
 		}
 	}
 
-	result.Data = utils.PageData(dataList, total, pageForm.Pagination)
+	result.Data = dataList
 
 	ctx.JSON(http.StatusOK, result)
 }

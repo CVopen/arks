@@ -44,5 +44,12 @@ func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 
 	configBlog := controller.VisitHandler{}
 	// 获取整站配置
-	blog.GET("/config", middlewares.TypeArticle("blog"), configBlog.GetVisit)
+	blog.GET("/config", middlewares.TypeRequest("blog"), configBlog.GetVisit)
+
+	articleBlog := controller.ArticleHandler{}
+	articleRouter := blog.Group("/article")
+	{
+		articleRouter.GET("/new", articleBlog.GetNewArticle)
+		articleRouter.GET("/list", middlewares.TypeRequest("blog"), articleBlog.GetArticle)
+	}
 }
