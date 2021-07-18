@@ -24,6 +24,12 @@ const Container = styled.div`
     width: 80px;
     clip-path: polygon(50% 3%,91% 25%,91% 75%,50% 97%,9% 75%,9% 25%)
   }
+  @media only screen and (max-width: 750px){
+    & {
+      width: 100%;
+      margin-right: 0;
+    }
+  }
 `
 
 export default Container

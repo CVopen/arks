@@ -120,7 +120,7 @@ func (ArticleHandler) GetArticle(ctx *gin.Context) {
 			dataList[i]["del"] = true
 		}
 		if v.Pwd != "" {
-			dataList[i]["pwd"] = true
+			dataList[i]["captcha"] = true
 		}
 	}
 
@@ -198,21 +198,21 @@ func (ArticleHandler) DelArticleHandler(ctx *gin.Context) {
 
 	err := ctx.ShouldBindJSON(&form)
 
-	if err != nil {
+	if err != nil || (form.ID == 0 && len(form.IDS) == 0) {
 		result.Code = utils.RequestError
 		result.Msg = "参数错误"
 		ctx.JSON(http.StatusOK, result)
 		return
 	}
 
-	if err = form.BindToModelDel().DelArticle(); err != nil {
-		result.Code = utils.RequestError
-		result.Msg = "删除失败"
-		ctx.JSON(http.StatusOK, result)
-		return
-	}
-
-	if len(form.IDS) > 0 {
+	if len(form.IDS) == 0 {
+		if err = form.BindToModelDel().DelArticle(); err != nil {
+			result.Code = utils.RequestError
+			result.Msg = "删除失败"
+			ctx.JSON(http.StatusOK, result)
+			return
+		}
+	} else {
 		if err = form.BindToModelDel().DelMult(form.IDS); err != nil {
 			result.Code = utils.RequestError
 			result.Msg = "删除失败"

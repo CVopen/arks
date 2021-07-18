@@ -12,8 +12,8 @@ export const reducersUser = (state = userState, action) => {
 
 export const reducers = (state = appState, action) => {
   switch (action.type) {
-    case 'add':
-      return { num: state.num + action.value}
+    case 'SET_CONFIG':
+      return Object.assign(state, { config: action.value })
     default:
       break;
   }

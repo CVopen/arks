@@ -30,9 +30,8 @@ export default function MaskImg(props) {
       style={{height: props.height ? '65vh' : window.innerHeight}}
     >
       <img 
-        src="http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210505/4bed66f04b0006858803b90eb66dd0a2.jpg" 
+        src={props.src} 
         alt="a" 
-        style={{height: props.height ? '65vh' : window.innerHeight}}
       />
       <div className={style.maskCom} style={{height: props.height ? '65vh' : window.innerHeight}}>
         {

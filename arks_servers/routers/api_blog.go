@@ -41,4 +41,8 @@ func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 		userRouter.POST("/Authorization", userHandler.RefreshToken)
 		// userRouter.POST("/Authorization", userHandler.LoginUser2)
 	}
+
+	configBlog := controller.VisitHandler{}
+	// 获取整站配置
+	blog.GET("/config", middlewares.TypeArticle("blog"), configBlog.GetVisit)
 }

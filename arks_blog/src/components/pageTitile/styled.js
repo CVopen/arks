@@ -9,7 +9,7 @@ const Container = styled.div`
   overflow: hidden;
   align-items: center;
   border: 1px solid #fff !important;
-  box-shadow: 0 1px 5px 0px rgba(0, 0, 0, .2);
+  box-shadow: 0 1px 1px 0px rgba(0, 0, 0, .2);
   img {
     width: 25%;
     object-fit: cover;

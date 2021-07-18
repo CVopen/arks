@@ -1,32 +1,29 @@
 <template>
   <!-- 编辑弹出框 -->
-  <el-dialog title="编辑" v-model="show" width="30%" @close="close">
+  <el-dialog title="密码验证" v-model="show" width="30%" @close="close">
     <el-form ref="form" :model="formData" label-width="70px">
-      <el-form-item label="分类名">
-        <el-input v-model="formData.name"></el-input>
-      </el-form-item>
-      <el-form-item label="简介">
-        <el-input v-model="formData.desc"></el-input>
+      <el-form-item label="密码">
+        <el-input v-model="formData.pwd"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="close">取 消</el-button>
-        <el-button type="primary" @click="saveEdit">确 定</el-button>
+        <el-button type="primary" @click="saveAdd">确 定</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script>
-import { editCategory } from "../../../api/index"
+import { addCategory } from "../../../api/index"
+import { ElMessage } from 'element-plus'
 import { 
   defineComponent, 
   toRefs,
   reactive,
   watch
 } from "vue"
-import { ElMessage } from 'element-plus'
 export default defineComponent({
   name: "edit-catagory",
   props: {
@@ -35,12 +32,10 @@ export default defineComponent({
       type: Boolean,
       default: true
     },
-    form: {
+    id: {
       require: true,
-      type: Object,
-      default() {
-        return {}
-      }
+      type: Number,
+      default: 0
     }
   },
   emits: {
@@ -50,37 +45,29 @@ export default defineComponent({
   setup(props, context) {
     const data = reactive({
       show: props.showModel,
-      formData: {
-        name: props.form.name,
-        desc: props.form.desc
-      }
+      formData: { pwd: '' }
     })
     
     watch(props, (newVal) => {
         data.show = newVal.showModel
-        data.formData = {
-          id: newVal.form.ID,
-          name: newVal.form.name,
-          desc: newVal.form.desc
-        }
+        data.formData = { pwd: '' }
       }
     )
     const close = () => {
       context.emit('close-modal')
     }
-    const saveEdit = () => {
-      editCategory(data.formData).then(() => {
-        ElMessage.success({
-          message: '修改成功',
+    const saveAdd = () => {
+      addCategory(data.formData).then(() => {
+        ElMessage({
+          message: '添加成功',
           type: 'success'
         })
-        context.emit('change')
         close()
       })
     }
     return { 
       ...toRefs(data),
-      saveEdit, 
+      saveAdd,
       close
     }
   }

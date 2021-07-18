@@ -5,40 +5,50 @@ import PageTitle from '@/components/pageTitile'
 import Info from '@/components/info'
 import Notice from '@/components/notice'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 export default function PageCom(props) {
   useEffect(()=> init(), [])
 
-  const [ text, changeText ] = useState('')
-  const [ title, changeTitle ] = useState('')
-  const [ src, changeSrc ] = useState('')
-  const [ spanText, changeSpanText ] = useState('')
-
+  const [ data, changeData ] = useState({})
+  const store = useSelector(({ app }) => app.config)
   const init = () => {
     switch (props.history.location.pathname) {
       case '/category':
-        changeText('分类')
-        changeTitle('当前位置: 全部分类')
-        changeSrc('category')
-        changeSpanText('文章分类')
+        changeData({
+          text: '分类',
+          title: '当前位置: 全部分类',
+          src: 'category',
+          spanText: '文章分类',
+          img: store.category_img
+        })
         return
       case '/tag':
-        changeText('标签')
-        changeTitle('当前位置: 全部标签')
-        changeSrc('tag')
-        changeSpanText('文章标签')
+        changeData({
+          text: '标签',
+          title: '当前位置: 全部标签',
+          src: 'tag',
+          spanText: '文章标签',
+          img: store.tag_img
+        })
         return
       case '/tools':
-        changeText('工具')
-        changeTitle('当前位置: 实用工具')
-        changeSrc('tools')
-        changeSpanText('记录一些常用工具、文档等')
+        changeData({
+          text: '工具',
+          title: '当前位置: 实用工具',
+          src: 'tools',
+          spanText: '记录一些常用工具、文档等',
+          img: store.tools_img
+        })
         return
       case '/friends':
-        changeText('友链')
-        changeTitle('当前位置: 友链')
-        changeSrc('friends')
-        changeSpanText('大佬们的博客链接')
+        changeData({
+          text: '友链',
+          title: '当前位置: 友链',
+          src: 'friends',
+          spanText: '大佬们的博客链接',
+          img: store.friends_img
+        })
         return
       default:
         return
@@ -47,10 +57,10 @@ export default function PageCom(props) {
 
   return (
     <Container>
-      <Mask height text={text} />
+      <Mask height text={data.text} src={data.img} />
       <div className="content">
         <div className="left">
-          { src && <PageTitle title={title} src={src} text={spanText} /> }
+          { data.src && <PageTitle title={data.title} src={data.src} text={data.spanText} /> }
           {
             Array.isArray(props.children) ? 
             props.children[0] :

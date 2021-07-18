@@ -31,6 +31,11 @@ export default {
     if (userInfo) {
       this.$store.commit('user/setInfo', JSON.parse(userInfo))
     }
+    const config = Session('get', 'config')
+    if (config) {
+      console.log(123)
+      this.$store.commit('app/setConfig', JSON.parse(config))
+    }
   },
   computed: {
     collapse() {

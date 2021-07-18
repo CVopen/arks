@@ -8,3 +8,9 @@ func TypeArticle(str string) gin.HandlerFunc {
 		ctx.Set("type", str)
 	}
 }
+
+func VisitType(str string) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		ctx.Set("type", str)
+	}
+}

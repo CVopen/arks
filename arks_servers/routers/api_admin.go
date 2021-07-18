@@ -25,9 +25,6 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 	//登录
 	admin.POST("/login", userHandler.LoginUser)
 
-	visit := controller.VisitHandler{}
-	admin.GET("/visit", middlewares.JwtAuth(), visit.GetVisit)
-
 	categoryRouter := admin.Group("/category", middlewares.JwtAuth())
 	categoryHandler := controller.CategoryHandler{}
 	{
@@ -75,5 +72,12 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 		articleRouter.GET("/detail", articleHandler.GetArticleDetailHandler)
 		// 文章排序
 		articleRouter.PUT("/move", articleHandler.ArticleOrderHandler)
+	}
+
+	configRouter := admin.Group("/config", middlewares.JwtAuth())
+	visit := controller.VisitHandler{}
+	{
+		configRouter.GET("/visit", middlewares.TypeArticle("admin"), visit.GetVisit)
+		configRouter.PUT("/edit", visit.SetConfig)
 	}
 }

@@ -4,6 +4,7 @@ import { DoubleLeftOutlined } from '@ant-design/icons'
 import Storage from '@/utils/localStorage'
 import { useDispatch } from 'react-redux'
 import { refresh } from '@/api/auth'
+import { getConfig } from '../../api'
 
 export default function Typing(props) {
   let timer = useRef()
@@ -11,11 +12,13 @@ export default function Typing(props) {
   const defaultTextTwo = 'hello world'.split('')
   const defaultTextOwn = '您的指尖能够改变世界!'.split('')
   const dispatch = useDispatch('user')
+  const dispatchApp = useDispatch('app')
 
   useEffect(() => {
     showInput(defaultTextOwn)
     initTheme()
     reduxInfo()
+    configSet()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -77,6 +80,12 @@ export default function Typing(props) {
     theme = JSON.parse(theme)
     style.setProperty('--theme-colorbg', theme.colorbg)
     style.setProperty('--theme-fontColor', theme.fontColor)
+  }
+
+  const configSet = () => {
+    getConfig().then(res => {
+      dispatchApp({type: 'SET_CONFIG', value :res.data })
+    })
   }
 
   return (

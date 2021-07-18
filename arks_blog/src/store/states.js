@@ -7,5 +7,5 @@ export const userState = {
 }
 
 export const appState = {
-  num: 0
+  config: {}
 }

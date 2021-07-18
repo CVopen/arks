@@ -2,7 +2,8 @@ export default {
   namespaced: true,
   state: () => ({
     tagsList: [],
-    collapse: false
+    collapse: false,
+    config: {}
   }),
   mutations: {
     delTagsItem(state, data) {
@@ -36,6 +37,9 @@ export default {
     // 侧边栏折叠
     hadndleCollapse(state, data) {
       state.collapse = data;
+    },
+    setConfig(state, data) {
+      state.config = data
     }
   },
   actions: {},

@@ -63,10 +63,20 @@
 <script>
 import Schart from "vue-schart"
 import { getVisit } from '@/api'
-export default {
+import Session from "../../utils/sessionStorage"
+import { 
+  defineComponent,
+  reactive,
+  onMounted,
+  toRefs
+} from 'vue'
+import { useStore } from 'vuex'
+export default defineComponent({
   name: "dashboard",
-  data() {
-    return {
+  components: { Schart },
+  setup() {
+    const store = useStore()
+    const data = reactive({
       visit: {},
       data: [
         {
@@ -141,35 +151,33 @@ export default {
           }
         ]
       }
-    }
-  },
-  components: {
-    Schart
-  },
-  computed: {
-    role() {
-      return this.name === "admin" ? "超级管理员" : "普通用户"
-    }
-  },
-  created() {
-    this.getAll()
-  },
-  methods: {
-    changeDate() {
+    })
+
+    const changeDate = () => {
       const now = new Date().getTime()
-      this.data.forEach((item, index) => {
+      data.data.forEach((item, index) => {
         const date = new Date(now - (6 - index) * 86400000)
         item.name = `${date.getFullYear()}/${date.getMonth() +
           1}/${date.getDate()}`
       })
-    },
-    getAll() {
+    }
+    const getAll = () => {
       getVisit().then(res => {
-        this.visit = res.data
+        data.visit = res.data
+        store.commit('app/setConfig', res.data)
+        Session("set", "config", res.data)
       })
     }
+
+    onMounted(getAll)
+
+    return {
+      changeDate,
+      ...toRefs(data)
+    }
+    
   }
-}
+})
 </script>
 
 <style scoped>

@@ -37,7 +37,7 @@ type GetArticlePageForm struct {
 // 回收文章表单
 // 删除文章表单
 type PuTArticleForm struct {
-	ID    uint   `json:"id" binding:"required" label:"文章ID"`
+	ID    uint   `json:"id" label:"文章ID"`
 	IDS   []uint `json:"ids" label:"文章id组"`
 	State bool   `json:"state" label:"是否发布"`
 }

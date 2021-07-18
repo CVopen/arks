@@ -3,7 +3,7 @@
     <div class="handle-box">
       <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
       <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="$router.push('/arcitle/add')">添加文章</el-button>
-      <el-select v-model="params.ids" class="handle-input mr10" placeholder="请选择分类">
+      <el-select v-model="params.category_id" class="handle-input mr10" placeholder="请选择分类">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -48,7 +48,7 @@
           <el-button 
             type="text"
             icon="el-icon-document"
-            @click="$router.push({path: '/arcitle/add', query: {see: true, id: scope.row.ID}})"
+            @click="seeDetail(scope.row)"
             >查看</el-button
           >
           <el-button
@@ -109,6 +109,11 @@
         @current-change="handlePageChange"
       />
     </div>
+    <Pwd 
+      :showModel="showPwd"
+      :id="id"
+      @close-modal="showPwd = false"
+    />
   </div>
 </template>
 
@@ -131,10 +136,15 @@ import {
   reactive,
   onMounted
 } from "vue"
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import Pwd from "./modal/pwd.vue"
 export default defineComponent({
   name: "arcitle-list",
-  components: { Pop: PopConfirm },
+  components: { Pop: PopConfirm, Pwd },
   setup() {
+    const router = useRouter()
+    const store = useStore()
     const data = reactive({
       params: {
         title: "",
@@ -147,9 +157,10 @@ export default defineComponent({
       pageTotal: 0,
       tableData: [],
       multipleSelection: [],
-      showEdit: false,
       options: [],
-      loading: false
+      loading: false,
+      showPwd: false,
+      id: 0
     })
     const getList = (page) => {
       data.loading = true
@@ -179,7 +190,7 @@ export default defineComponent({
     }
 
     const delAllSelection = () => {
-      delArticle({ id: data.multipleSelection.map(item => item.ID) }).then(() => getList())
+      delArticle({ ids: data.multipleSelection.map(item => item.ID) }).then(() => getList())
     }
 
     // 分页导航
@@ -231,6 +242,15 @@ export default defineComponent({
       }).then(() => getList())
     }
 
+    const seeDetail = row => {
+      if (!row.captcha && store.user.userInfo.userId) {
+        router.push({path: '/arcitle/add', query: {see: true, id: row.ID}})
+      } else {
+        data.id = row.ID
+        data.showPwd = true
+      }
+    }
+
     return { 
       ...toRefs(data),
       getList,
@@ -243,7 +263,8 @@ export default defineComponent({
       top,
       comment,
       del,
-      moveOrderArticle
+      moveOrderArticle,
+      seeDetail
     }
   }
 })

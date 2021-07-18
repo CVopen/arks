@@ -18,7 +18,12 @@ export const login = ({ username, password, captcha_id, captcha_val }) => post({
 
 // 获取整站数据
 export const getVisit = () => get({
-  url: '/visit'
+  url: '/config/visit'
+})
+// 设置整站数据
+export const editVisit = data => put({
+  url: '/config/edit',
+  data
 })
 
 // 添加分类
@@ -108,10 +113,10 @@ export const editRecovery = ({ id ,state }) => put({
   data: { state, id }
 })
 
-// 是否回收
-export const delArticle = ({ id }) => del({
+// 删除文章
+export const delArticle = ({ id, ids }) => del({
   url: '/article/del',
-  data: { id }
+  data: { id, ids }
 })
 
 // 文章详情

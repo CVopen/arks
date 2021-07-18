@@ -7,6 +7,8 @@ import Storage from '@/utils/localStorage'
 export default function Info(props) {
   const store = useSelector((store) => store.user.userInfo)
   const defaultInfo = useSelector((store) => store.user.defaultInfo)
+  const configData = useSelector(({ app }) => app.config)
+
   const dispatch = useDispatch()
   const signOut = () => {
     dispatch({type: 'SET_USERINFO', value: {}})
@@ -28,15 +30,15 @@ export default function Info(props) {
       <div className={style.nums}>
         <div>
           <span>文章</span>
-          <span>7</span>
+          <span>{ configData.ACount }</span>
         </div>
         <div>
           <span>分类</span>
-          <span>7</span>
+          <span>{ configData.CCount }</span>
         </div>
         <div>
           <span>标签</span>
-          <span>7</span>
+          <span>{ configData.TCount }</span>
         </div>
       </div>
       <div className={style.btn} onClick={() => window.open(store.github ? store.github : defaultInfo.github)}>

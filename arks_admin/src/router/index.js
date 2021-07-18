@@ -27,6 +27,24 @@ const routes = [
       ]
     },
     {
+      path: "/",
+      component: Home,
+      meta: { title: '系统设置', icon: 'el-icon-setting', index: "/" },
+      children: [
+        {
+          path: "/system",
+          name: "system",
+          meta: {
+            title: '系统设置',
+            index: "/system",
+          },
+          component: () => import (
+            /* webpackChunkName: "home" */
+            "../views/system/index.vue"),
+        },
+      ]
+    },
+    {
       path: "/category",
       name: "category",
       component: Home,
