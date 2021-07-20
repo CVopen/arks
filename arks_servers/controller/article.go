@@ -351,6 +351,7 @@ func (ArticleHandler) GetArticleDetailHandler(ctx *gin.Context) {
 	data["md_content"] = article.MDContent
 	data["is_published"] = article.IsPublished
 	data["category_id"] = article.CategoryId
+	data["id"] = article.ID
 	if utils.TypeInterFaceToUint(id) == 1 {
 		data["is_top"] = article.IsTop
 	}

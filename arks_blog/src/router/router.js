@@ -1,53 +1,48 @@
-import Nofound from '../pages/NoFound/index.jsx' // 404页面
-import Home from '../pages/home/index.jsx'  // 主页
-import Login from '../pages/user/login/index' // 登录页
-import Register from '../pages/user/register/index' // 注册页
-import Forget from '../pages/user/forget/index' // 忘记密码
-import Center from '../pages/center/index' // 个人中心页面
-import Category from '../pages/category/index' // 文章分类
-import Tag from '../pages/tag/index' // 文章分类
-import Tools from '../pages/tools/index' // 文章分类
-import Friends from '../pages/friends/index' // 文章分类
+
+import { lazy } from 'react'
+
 const routes = [
   {
     path: '/',
-    component: Home
+    // 主页
+    component: lazy(() => import('../pages/home/index.jsx'))
   },
   {
     path: '/404',
-    component: Nofound,
+    // 404
+    component: lazy(() => import('../pages/NoFound/index.jsx'))
   },
   {
     path: '/center',
-    component: Center,
+    component: lazy(() => import('../pages/center/index.jsx')),
   },
   {
     path: '/user/login',
-    component: Login
+    component: lazy(() => import('../pages/user/login/index.jsx'))
   },
   {
     path: '/user/register',
-    component: Register,
+    component: lazy(() => import('../pages/user/register/index.jsx')),
   },
   {
     path: '/user/forget',
-    component: Forget,
+    component: lazy(() => import('../pages/user/forget/index.jsx')),
   },
   {
     path: '/category',
-    component: Category
+    component: lazy(() => import('../pages/category/index.jsx'))
   },
   {
     path: '/tag',
-    component: Tag
+    component: lazy(() => import('../pages/tag/index.jsx'))
   },
   {
     path: '/tools',
-    component: Tools
+    component: lazy(() => import('../pages/tools/index.jsx'))
   },
   {
     path: '/friends',
-    component: Friends
+    component: lazy(() => import('../pages/friends/index.jsx'))
   },
   {
     path: '*',

@@ -22,7 +22,7 @@ type Statistics struct {
 	VisitDayCount uint   `gorm:"type:int;defalut:0;" json:"visit_day_count"`                                                                                                      // 每日浏览数
 }
 
-// 创建用户
+// 创建初始数据
 func InitStatistics() {
 	var statistics Statistics
 	err := db.Db.First(&statistics).Error
@@ -70,4 +70,41 @@ func (Statistics) EditStatistics(data map[string]interface{}, db *gorm.DB) error
 // 更新访问量
 func (Statistics) AddVisit() {
 	db.Db.Exec("update `statistics` set `visit_count` = `visit_count` + 1, `visit_day_count` = `visit_day_count` + 1 where `id` = 1")
+}
+
+// 更新每日访问
+func UpdateDayData() error {
+	// 开始事务
+	tx := db.Db.Begin()
+	defer func() {
+		if err := recover(); err != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	var visit Statistics
+	err := tx.First(&visit).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	err = tx.Exec("update `statistics` set `visit_day_count` = 0").Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	dayVisit := VisitDayCount{VisitDayCount: visit.VisitDayCount}
+	err = tx.Create(&dayVisit).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }

@@ -106,6 +106,7 @@
         :current-page="params.page"
         :page-size="params.pageSize"
         :total="pageTotal"
+        hide-on-single-page
         @current-change="handlePageChange"
       />
     </div>
@@ -243,7 +244,7 @@ export default defineComponent({
     }
 
     const seeDetail = row => {
-      if (!row.captcha && store.user.userInfo.userId) {
+      if (!row.captcha && store.state.user.userInfo.userId) {
         router.push({path: '/arcitle/add', query: {see: true, id: row.ID}})
       } else {
         data.id = row.ID

@@ -46,11 +46,28 @@
           width="55"
           align="center"
         ></el-table-column>
-        <el-table-column prop="name" label="分类名称"></el-table-column>
-        <el-table-column prop="desc" label="介绍"> </el-table-column>
-        <el-table-column prop="count" label="文章总数" align="center">
+        <el-table-column prop="name" label="名称" />
+        <el-table-column prop="desc" label="介绍" />
+        <el-table-column label="图标" width="160" align="center">
+          <template #default="scope">
+            <el-image fit="contain" style="height: 60px" :src="scope.row.icon" :preview-src-list="[scope.row.icon]" />
+          </template>
         </el-table-column>
-        <el-table-column prop="CreatedAt" label="创建时间"></el-table-column>
+        <el-table-column label="链接">
+          <template #default="scope">
+            <a href="https://github.com/CVopen" target="view_window" style="color: #4a90e2">
+              {{ scope.row.url }}sdfsdf
+            </a>
+          </template>
+        </el-table-column>
+        <el-table-column prop="CreatedAt" label="创建时间" />
+        <el-table-column label="状态" align="center">
+          <template #default="scope">
+            <span v-if="scope.row.is_recycled == 1">回收站</span>
+            <span v-else-if="scope.row.is_published == 1">已发布</span>
+            <span v-else>未发布</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center">
           <template #default="scope">
             <el-button
@@ -95,7 +112,7 @@
       :form="form"
       @close-modal="handleEdit"
     />
-    <AddCategory 
+    <AddLinks 
       @change="getList(1)" 
       :showModel="showAdd"
       :form="form"
@@ -108,19 +125,19 @@
 import { getCategoryList, delCategory } from "../../api/index"
 import { formatTime } from "../../utils/index"
 import Edit from "./modal/editCategory.vue"
-import AddCategory from "./modal/addCategory.vue"
+import AddLinks from "./modal/addLinks.vue"
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { 
-  defineComponent, 
+  defineComponent,
   toRefs,
   reactive,
   onMounted
 } from "vue"
 export default defineComponent({
-  name: "category-list",
+  name: "links",
   components: {
     Edit,
-    AddCategory
+    AddLinks
   },
   setup() {
     const data = reactive({

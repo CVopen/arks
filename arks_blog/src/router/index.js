@@ -1,9 +1,11 @@
 // import React from 'react'
 import { Switch, Redirect, Route, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import routes from './router'
 import bus from '../utils/bus'
 import Stroage from '../utils/localStorage'
+import Loading from '../components/loading/index.jsx'
+
 export default function Router() {
   const { pathname } = useLocation()
   useEffect(() => {
@@ -21,11 +23,13 @@ export default function Router() {
 
   return (
     <Switch>
-      {
-        targetRouterConfig ? 
-        <Auth target={targetRouterConfig} /> :
-        <Redirect to={'/404'}/>
-      }
+      <Suspense fallback={Loading()}>
+        {
+          targetRouterConfig ? 
+          <Auth target={targetRouterConfig} /> :
+          <Redirect to={'/404'}/>
+        }
+      </Suspense>
     </Switch>
   )
 }

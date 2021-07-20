@@ -4,7 +4,6 @@ import (
 	"arks_servers/forms"
 	"arks_servers/utils"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -104,7 +103,7 @@ func (ch CategoryHandler) CreateCategory(ctx *gin.Context) {
 	}
 	category := createCategoryForm.BindToModel()
 	category.UserId = utils.TypeInterFaceToUint(id)
-	// category.User = user
+
 	cList, err := category.GetCategoryByName()
 	if err != nil {
 		result.Msg = "error"
@@ -128,6 +127,7 @@ func (ch CategoryHandler) CreateCategory(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, result)
 		return
 	}
+
 	ctx.JSON(http.StatusOK, result)
 }
 
@@ -158,9 +158,9 @@ func (ch CategoryHandler) EditCategory(ctx *gin.Context) {
 
 	category := createCategoryForm.BindToModel()
 	category.UserId = utils.TypeInterFaceToUint(id)
-	fmt.Println(category.Name, category.UserId)
+
 	cList, err := category.GetCategoryByName()
-	fmt.Println(cList)
+
 	if err != nil {
 		result.Msg = "error"
 		result.Code = utils.RequestError

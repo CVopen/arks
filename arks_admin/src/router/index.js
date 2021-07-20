@@ -24,13 +24,6 @@ const routes = [
             /* webpackChunkName: "home" */
             "../views/home/index.vue"),
         },
-      ]
-    },
-    {
-      path: "/",
-      component: Home,
-      meta: { title: '系统设置', icon: 'el-icon-setting', index: "/" },
-      children: [
         {
           path: "/system",
           name: "system",
@@ -39,9 +32,29 @@ const routes = [
             index: "/system",
           },
           component: () => import (
-            /* webpackChunkName: "home" */
+            /* webpackChunkName: "system" */
             "../views/system/index.vue"),
         },
+        {
+          path: 'journal',
+          name: 'journal',
+          meta: {
+            index: '/journal',
+          },
+          component: () => import (
+            /* webpackChunkName: "journal" */
+            "../views/tag/index.vue")
+        },
+        {
+          path: 'opinion',
+          name: 'opinion',
+          meta: {
+            index: '/opinion',
+          },
+          component: () => import (
+            /* webpackChunkName: "opinion" */
+            "../views/tag/index.vue")
+        }
       ]
     },
     {
@@ -58,7 +71,7 @@ const routes = [
             index: "/category/list",
           },
           component: () => import (
-            /* webpackChunkName: "category" */
+            /* webpackChunkName: "category-list" */
             "../views/category/index.vue")
         },
         {
@@ -69,7 +82,7 @@ const routes = [
             title: '文章标签'
           },
           component: () => import (
-            /* webpackChunkName: "category" */
+            /* webpackChunkName: "category-tag" */
             "../views/tag/index.vue")
         }
       ],
@@ -105,6 +118,36 @@ const routes = [
       ],
     },
     {
+      path: "/links",
+      name: "links",
+      component: Home,
+      meta: { title: '外链', icon: 'el-icon-paperclip', index: "/links" },
+      children: [
+        {
+          path: 'friends',
+          name: 'friends',
+          meta: {
+            title: '友链',
+            index: '/links/friends',
+          },
+          component: () => import (
+            /* webpackChunkName: "friends" */
+            "../views/links/index.vue")
+        },
+        {
+          path: 'tools',
+          name: 'tools',
+          meta: {
+            title: '工具',
+            index: '/links/tools',
+          },
+          component: () => import (
+            /* webpackChunkName: "tools" */
+            "../views/links/index.vue")
+        }
+      ],
+    },
+    {
       path: '/404',
       name: '404',
       hidden: true,
@@ -134,6 +177,21 @@ const routes = [
       component: () => import (
       /* webpackChunkName: "login" */
       "../views/login/index.vue")
+    },
+    {
+      path: '/',
+      redirect: '/system',
+      meta: { title: '系统设置', icon: 'el-icon-setting', index: "/system" },
+    },
+    {
+      path: '/',
+      redirect: '/journal',
+      meta: { title: '系统日志', icon: 'el-icon-s-order', index: "/journal" }
+    },
+    {
+      path: '/',
+      redirect: 'opinion',
+      meta: { title: '意见', icon: 'el-icon-s-comment', index: "/opinion" }
     }
 ];
 
@@ -145,17 +203,14 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title ? to.meta.title : 'login'} | ark_admin`
     const token = Session('get', 'token')
-    if (token) {
-        if (to.path === '/login') {
-            next('/')
-        }
-        next()
+    if (to.path === '/login') {
+      if (token) next('/')
+      next()
     } else {
-        if (to.path === '/login') {
-            next()
-        }
-        next('/login')
+      if (!token) next('/login')
+      next()
     }
+
 });
 
 export default router;

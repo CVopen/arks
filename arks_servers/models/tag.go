@@ -86,6 +86,9 @@ func (t Tag) Create() error {
 		return err
 	}
 
+	// 日志更新
+	go CreateFunc(t.UserId, "新增标签", t.Name)
+
 	return tx.Commit().Error
 }
 
@@ -126,6 +129,9 @@ func (t Tag) DelTagOne() error {
 	if err := tx.Error; err != nil {
 		return err
 	}
+
+	// 获取对应标签数据
+	db.Db.First(&t)
 
 	// 找到所有要删除的文章id
 	var list []uint
@@ -179,6 +185,9 @@ func (t Tag) DelTagOne() error {
 		tx.Rollback()
 		return err
 	}
+
+	// 日志更新
+	go CreateFunc(t.UserId, "删除标签", t.Name)
 
 	return tx.Commit().Error
 }

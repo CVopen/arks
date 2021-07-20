@@ -67,6 +67,8 @@ func (c Category) Create() error {
 		tx.Rollback()
 		return err
 	}
+	// 日志更新
+	go CreateFunc(c.UserId, "新增分类", c.Name)
 
 	return tx.Commit().Error
 }
@@ -108,6 +110,9 @@ func (c Category) RemoveCategory() error {
 		tx.Rollback()
 		return err
 	}
+
+	// 获取分类对应用户id
+	db.Db.First(&c)
 
 	idList := make([]uint, len(list))
 
@@ -166,6 +171,9 @@ func (c Category) RemoveCategory() error {
 		return err
 	}
 
+	// 日志更新
+	go CreateFunc(c.UserId, "删除分类", c.Name)
+
 	return tx.Commit().Error
 }
 
@@ -182,6 +190,9 @@ func (c Category) RemoveBatchCategory(list []uint) error {
 	if err := tx.Error; err != nil {
 		return err
 	}
+
+	var categoryList []Category
+	db.Db.Model(&Category{}).Where("id in (?)", list).Find(&categoryList)
 
 	// 获取分类下所有标签id
 	var listTag []Tag
@@ -247,6 +258,13 @@ func (c Category) RemoveBatchCategory(list []uint) error {
 		tx.Rollback()
 		return err
 	}
+
+	go func() {
+		for _, v := range categoryList {
+			// 日志更新
+			go CreateFunc(v.UserId, "批量删除分类", v.Name)
+		}
+	}()
 
 	return tx.Commit().Error
 }

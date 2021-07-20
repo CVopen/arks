@@ -35,8 +35,10 @@
         <div id="addEditor"></div>
       </el-form-item>
       <el-form-item>
-        <el-button v-if="see" type="primary" @click="createArcitle">提交</el-button>
-        <el-button @click="reset">重置</el-button>
+        <template v-if="see">
+          <el-button type="primary" @click="createArcitle">提交</el-button>
+          <el-button @click="reset">重置</el-button>
+        </template>
       </el-form-item>
     </el-form>
   </div>
@@ -139,6 +141,7 @@ export default defineComponent({
             getArticleDetail({ id: route.query.id }).then(res => {
               data.formData = res.data
               data.contentEditor.setValue(res.data.content)
+              getTag(res.data.category_id)
             })
           }
         }
@@ -146,6 +149,10 @@ export default defineComponent({
     }
     const changeCategory = (id) => {
       data.formData.tagList = []
+      getTag(id)
+    }
+
+    const getTag = id => {
       getTagList({pageSize: 1000, id}).then(res => {
         data.tagList = res.data.data
       })

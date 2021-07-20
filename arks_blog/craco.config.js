@@ -1,6 +1,7 @@
 const sassResourcesLoader = require('craco-sass-resources-loader');
 const path = require('path')
 const resolve = pathUrl => path.join(__dirname, pathUrl)
+
 module.exports = {
   webpack: {
     alias: {
@@ -8,6 +9,15 @@ module.exports = {
       '@assets': resolve('src/assets'),
       '@utils': resolve('src/utils')
     },
+    configure: (webpackConfig, {env, paths}) => {
+      paths.appBuild = 'dist'
+      webpackConfig.output = {
+        ...webpackConfig.output,
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: env === 'production' ? '/blog' : '',
+      }
+      return webpackConfig
+    }
   },
   plugins: [
     {
@@ -18,5 +28,16 @@ module.exports = {
           ],
         },
     }
-  ]
+  ],
+  devServer:{
+    proxy: {
+      "/blog": {
+        target: 'http://localhost:8888',
+        changeOrigin: true,
+        pathRewrite: {
+          "^/blog": "/blog"
+        }
+      },
+    } 
+  }
 }

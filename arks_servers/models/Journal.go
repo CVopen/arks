@@ -16,8 +16,14 @@ type Journal struct {
 }
 
 // 新增日志
-func (journal Journal) Create() error {
-	return db.Db.Create(&journal).Error 
+func CreateFunc(id uint, action, name string) {
+	var user User
+	user, _ = user.FindUser(utils.TypeInterFaceToUint(id))
+
+	db.Db.Create(&Journal{
+		UserId:  id,
+		Content: "用户" + user.Nickname + action + name,
+	})
 }
 
 // 根据id查询日志

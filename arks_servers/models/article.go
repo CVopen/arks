@@ -118,6 +118,9 @@ func (article Article) Create(tagIds []int) error {
 		return err
 	}
 
+	// 日志更新
+	go CreateFunc(article.UserId, "新增文章", article.Title)
+
 	return tx.Commit().Error
 }
 
@@ -234,6 +237,9 @@ func (article Article) DelArticle() error {
 		return err
 	}
 
+	// 获取文章对应用户id
+	db.Db.First(&article)
+
 	// 删除文章
 	err = tx.Unscoped().Delete(&article).Error
 	if err != nil {
@@ -253,6 +259,9 @@ func (article Article) DelArticle() error {
 		return err
 	}
 
+	// 日志更新
+	go CreateFunc(article.UserId, "删除文章", article.Title)
+
 	return tx.Commit().Error
 }
 
@@ -268,6 +277,10 @@ func (Article) DelMult(list []uint) error {
 	if err := tx.Error; err != nil {
 		return err
 	}
+
+	// 获取删除文章列表
+	var articleList []Article
+	db.Db.Model(&Article{}).Where("id in (?)", list).Find(&articleList)
 
 	// 更新分类对应文章数量
 	err := tx.Exec("update `categories` set `count` = `count` - 1 where (`id` in (select `category_id` from `articles` where `id` in (?)) and `count` > 0)", list).Error
@@ -308,6 +321,13 @@ func (Article) DelMult(list []uint) error {
 		tx.Rollback()
 		return err
 	}
+
+	go func() {
+		for _, v := range articleList {
+			// 日志更新
+			go CreateFunc(v.UserId, "批量删除文章", v.Title)
+		}
+	}()
 
 	return tx.Commit().Error
 }

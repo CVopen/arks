@@ -130,3 +130,9 @@ export const moveOrder = ({ id, order_id, is_top, direction }) => put({
   url: '/article/move',
   data: { id, order_id, is_top, direction }
 })
+
+// 文章移动
+export const addLink = (data) => post({
+  url: '/links/add',
+  data
+})

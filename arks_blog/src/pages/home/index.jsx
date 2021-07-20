@@ -1,5 +1,5 @@
 import style from './index.module.scss'
-import './index.scss'
+
 import Mask from '@/components/maskImg'
 import PageTitle from '@/components/pageTitile'
 import Info from '@/components/info'

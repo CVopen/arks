@@ -68,6 +68,7 @@
         :current-page="params.page"
         :page-size="params.pageSize"
         :total="pageTotal"
+        hide-on-single-page
         @current-change="handlePageChange"
       ></el-pagination>
     </div>

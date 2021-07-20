@@ -11,7 +11,7 @@ const Container = styled.div`
   border: 1px solid #fff !important;
   box-shadow: 0 1px 1px 0px rgba(0, 0, 0, .2);
   img {
-    width: 25%;
+    width: 25% !important;
     object-fit: cover;
   }
   .info {

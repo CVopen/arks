@@ -80,4 +80,14 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 		configRouter.GET("/visit", middlewares.TypeRequest("admin"), visit.GetVisit)
 		configRouter.PUT("/edit", visit.SetConfig)
 	}
+
+	linkRouter := admin.Group("/links", middlewares.JwtAuth())
+	link := controller.LinkHandler{}
+	{
+		linkRouter.GET("/tools/list", middlewares.TypeRequest("tools"), link.GetLink)
+		linkRouter.GET("/friends/list", middlewares.TypeRequest("friends"), link.GetLink)
+		linkRouter.PUT("/edit", link.EditLink)
+		linkRouter.DELETE("/del", link.DelLink)
+		linkRouter.POST("/add", link.CreatedLink)
+	}
 }

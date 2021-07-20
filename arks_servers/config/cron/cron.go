@@ -3,7 +3,6 @@ package cron
 import (
 	"arks_servers/models"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/robfig/cron"
@@ -14,19 +13,22 @@ func CreateCorn() {
 
 	fmt.Println(strings.Repeat("START ", 15))
 	models.InitStatistics()
-	CronTest()
+	cronTest()
 	fmt.Println(strings.Repeat("END ", 15))
 
 }
 
-func CronTask() {
-	log.Println("********  *******  *******")
+func cronTask() {
+	if err := models.UpdateDayData(); err != nil {
+		fmt.Println("UpdateDayData error")
+	}
+
 }
 
-func CronTest() {
+func cronTest() {
 
 	c := cron.New()
-	c.AddFunc("@daily", CronTask) //2 * * * * *, 2 表示每分钟的第2s执行一次
+	c.AddFunc("@daily", cronTask) //2 * * * * *, 2 表示每分钟的第2s执行一次
 	c.Start()
 
 	defer c.Stop()
