@@ -33,7 +33,6 @@ export default {
     }
     const config = Session('get', 'config')
     if (config) {
-      console.log(123)
       this.$store.commit('app/setConfig', JSON.parse(config))
     }
   },

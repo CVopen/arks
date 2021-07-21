@@ -13,14 +13,20 @@
           type="primary"
           icon="el-icon-plus"
           class="handle-del mr10"
-          @click="() => showAdd = true"
+          @click="() => handleEdit(false)"
           >新增分类</el-button
         >
         <el-input
           v-model="params.name"
-          placeholder="分类名"
+          :placeholder="$route.path.indexOf('tools') > 0 ? '工具名称' : '友链名称'"
           class="handle-input mr10"
         />
+        <el-select v-model="params.state" class="handle-input mr10" placeholder="请选择状态">
+          <el-option label="请选择" value="0" />
+          <el-option label="已发布" value="1" />
+          <el-option label="未发布" value="2" />
+          <el-option label="回收站" value="3" />
+        </el-select>
         <el-button type="primary" icon="el-icon-search" @click="getList(1)"
           >搜索</el-button
         >
@@ -71,26 +77,21 @@
         <el-table-column label="操作" align="center">
           <template #default="scope">
             <el-button
-              type="text"
-              icon="el-icon-document"
-              @click="$router.push({path: '/category/tag', query: {id: scope.row.ID}})"
-              >查看</el-button
-            >
-            <el-button
-              v-if="scope.row.edit"
+              v-if="scope.row.change"
               type="text"
               icon="el-icon-edit"
-              @click="handleEdit(scope)"
+              @click="handleEdit(scope.row)"
               >编辑</el-button
             >
             <el-button
-              v-if="scope.row.del"
+              v-if="scope.row.change"
               type="text"
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.row.ID)"
               >删除</el-button
             >
+            <span v-if="!scope.row.change">无</span>
           </template>
         </el-table-column>
       </el-table>
@@ -106,12 +107,6 @@
         ></el-pagination>
       </div>
     </div>
-    <Edit 
-      @change="getList" 
-      :showModel="showEdit"
-      :form="form"
-      @close-modal="handleEdit"
-    />
     <AddLinks 
       @change="getList(1)" 
       :showModel="showAdd"
@@ -122,10 +117,9 @@
 </template>
 
 <script>
-import { getCategoryList, delCategory } from "../../api/index"
+import { delLink, getFriendsList, getToolsList } from "../../api/index"
 import { formatTime } from "../../utils/index"
-import Edit from "./modal/editCategory.vue"
-import AddLinks from "./modal/addLinks.vue"
+import AddLinks from "./modal/addLink.vue"
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { 
   defineComponent,
@@ -133,35 +127,38 @@ import {
   reactive,
   onMounted
 } from "vue"
+import { useRoute } from 'vue-router'
 export default defineComponent({
   name: "links",
-  components: {
-    Edit,
-    AddLinks
-  },
+  components: { AddLinks },
   setup() {
     const data = reactive({
       params: {
         name: "",
+        state: '',
         page: 1,
         pageSize: 10
       },
       pageTotal: 0,
       tableData: [],
       multipleSelection: [],
-      showEdit: false,
       showAdd: false,
       form: {},
       loading: false
     })
+
+    const route = useRoute()
+
+    const getMethod = () => {
+      if (route.path.indexOf('tools') > 1) return getToolsList
+      return getFriendsList
+    }
+
     const getList = (page) => {
       data.loading = true
-      if (page) {
-        data.params.page = 1
-      }
-      getCategoryList(data.params).then((res) => {
-        console.log(res)
-        res.data.data.forEach((item) => {
+      if (page) data.params.page = 1
+      getMethod()(data.params).then(res => {
+        res.data.data.forEach(item => {
           item.CreatedAt = formatTime(item.CreatedAt)
         })
         data.tableData = res.data.data
@@ -171,7 +168,13 @@ export default defineComponent({
     }
 
     const delList = (id) => {
-      delCategory({ id }).then(() => {
+      const params = {}
+      if (typeof id === 'number') {
+        params.id = id
+      } else {
+        params.ids = id
+      }
+      delLink(params).then(() => {
         ElMessage.success({
           message: '删除成功',
           type: 'success'
@@ -192,9 +195,13 @@ export default defineComponent({
     }
     // 编辑操作
     const handleEdit = (scoped) => {
-      if (!scoped) return data.showEdit = false
-      data.form = scoped.row
-      data.showEdit = true
+      if (!scoped) {
+        data.showAdd = true
+        data.form = {}
+        return
+      }
+      data.form = scoped
+      data.showAdd = true
     }
     const delAllSelection = () => {
       handleDelete(data.multipleSelection.map(item => item.ID))
@@ -205,7 +212,7 @@ export default defineComponent({
       getList()
     }
 
-    const isSelect = (row) => row.del
+    const isSelect = (row) => row.change
 
     onMounted(() => {
       getList(1)

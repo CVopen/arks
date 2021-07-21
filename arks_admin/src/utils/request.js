@@ -6,7 +6,7 @@ import { ElMessage } from 'element-plus'
 // import store from '../store/index'
 
 const instance = axios.create({
-  baseURL: '/admin/v2',
+  baseURL: '/admin/v1',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'

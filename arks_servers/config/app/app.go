@@ -34,7 +34,7 @@ func InitApp() *gin.Engine {
 	router.LoadHTMLGlob("template/**/*")
 
 	apiadmin := routers.ApiAdmin{}
-	apiadmin.InitAdminApi("/admin/v2", router)
+	apiadmin.InitAdminApi("/admin/v1", router)
 	go cron.CreateCorn()
 
 	return router

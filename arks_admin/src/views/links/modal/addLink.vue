@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { addLink } from "../../../api/index"
+import { addLinkList, editLinkList } from '../../../api/index'
 import { ElMessage } from 'element-plus'
 import { 
   defineComponent, 
@@ -34,6 +34,7 @@ import {
   watch,
   ref
 } from "vue"
+import { useRoute } from 'vue-router'
 export default defineComponent({
   name: "add-links",
   props: {
@@ -83,26 +84,36 @@ export default defineComponent({
     watch(props, (newVal) => {
         data.show = newVal.showModel
         data.formData = {
-          name: '',
-          desc: ''
+          name: newVal.form.name,
+          desc: newVal.form.desc,
+          url: newVal.form.url,
+          icon: newVal.form.icon,
+          id: newVal.form.ID
         }
       }
     )
     const close = () => {
       context.emit('close-modal')
     }
+
+    const getMethod = () => {
+      if (data.formData.id) return editLinkList
+      return addLinkList
+    }
+
+    const route = useRoute()
+
     const saveAdd = () => {
-      formLink.value.validate((valid) => {
-        if (valid) {
-          addLink({...data.formData, type: 1}).then(() => {
-            ElMessage({
-              message: '添加成功',
-              type: 'success'
-            })
-            context.emit('change')
-            close()
+      formLink.value.validate(valid => {
+        if (!valid) return
+        getMethod()({...data.formData, type: route.path.indexOf('tools') > 0 ? 2 : 1}).then(() => {
+          ElMessage({
+            message: '操作成功',
+            type: 'success'
           })
-        }
+          context.emit('change')
+          close()
+        })
       })
     }
 

@@ -21,7 +21,7 @@ type LinkForm struct {
 
 type LinkDelForm struct {
 	UserId uint   `json:"user_id" label:"用户id"`
-	Id     uint   `json:"id" binding:"required" label:"链接id"`
+	Id     uint   `json:"id" label:"链接id"`
 	Ids    []uint `json:"ids" label:"链接id组"`
 }
 
@@ -43,6 +43,7 @@ func (form LinkForm) BindToModel() models.Link {
 		Type:        form.Type,
 		IsRecycled:  form.IsRecycled,
 		IsPublished: form.IsPublished,
+		Model:       gorm.Model{ID: form.Id},
 	}
 }
 

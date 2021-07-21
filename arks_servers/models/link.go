@@ -3,6 +3,7 @@ package models
 import (
 	"arks_servers/config/db"
 	"arks_servers/utils"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -59,11 +60,11 @@ func (link Link) GetLinks(page *utils.Pagination, state uint, typeLink uint) (li
 		// 已发布
 		query = query.Where("is_published = 1 and is_recycled = 0")
 	case 2:
-		// 回收站
-		query = query.Where("is_recycled = 1")
-	case 3:
 		// 未发布
 		query = query.Where("is_published = 0 and is_recycled = 0")
+	case 3:
+		// 回收站
+		query = query.Where("is_recycled = 1")
 	default:
 		break
 	}
@@ -86,7 +87,7 @@ func (link Link) GetLinks(page *utils.Pagination, state uint, typeLink uint) (li
 // 删除单个链接
 func (link Link) DelLink() (err error) {
 	db.Db.First(&link)
-	err = db.Db.Unscoped().Delete(&Link{}).Where("id = ?", link.ID).Error
+	err = db.Db.Unscoped().Delete(&link).Error
 	if err == nil {
 		// 日志更新
 		str := "删除友链"
@@ -102,7 +103,7 @@ func (link Link) DelLink() (err error) {
 func (Link) DelLinkList(ids []uint) (err error) {
 	var list []Link
 	db.Db.Where("id in (?)", ids).Find(&list)
-	err = db.Db.Unscoped().Delete(&Link{}).Where("id in (?)", ids).Error
+	err = db.Db.Unscoped().Where("id in (?)", ids).Delete(&Link{}).Error
 	if err == nil {
 		// 日志更新
 		str := "删除友链"
@@ -119,6 +120,7 @@ func (Link) DelLinkList(ids []uint) (err error) {
 
 // 更新链接
 func (link Link) UpdateLink() (err error) {
+	fmt.Println(link)
 	err = db.Db.Model(&link).Updates(map[string]interface{}{
 		"name":         link.Name,
 		"url":          link.Url,

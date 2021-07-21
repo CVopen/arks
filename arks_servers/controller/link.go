@@ -191,6 +191,23 @@ func (LinkHandler) GetLink(ctx *gin.Context) {
 	}
 
 	dataList := make([]map[string]interface{}, len(list))
+	for i, v := range list {
+		dataList[i] = map[string]interface{}{
+			"ID":           v.ID,
+			"CreatedAt":    v.CreatedAt,
+			"name":         v.Name,
+			"url":          v.Url,
+			"desc":         v.Desc,
+			"icon":         v.Icon,
+			"is_recycled":  v.IsRecycled,
+			"is_published": v.IsPublished,
+			"change":       false,
+		}
+
+		if utils.TypeInterFaceToUint(id) == 1 || utils.TypeInterFaceToUint(id) == v.UserId {
+			dataList[i]["change"] = true
+		}
+	}
 
 	result.Data = utils.PageData(dataList, total, pageForm.Pagination)
 

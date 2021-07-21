@@ -132,7 +132,7 @@ const routes = [
           },
           component: () => import (
             /* webpackChunkName: "friends" */
-            "../views/links/index.vue")
+            "../views/links/friends.vue")
         },
         {
           path: 'tools',
@@ -143,7 +143,7 @@ const routes = [
           },
           component: () => import (
             /* webpackChunkName: "tools" */
-            "../views/links/index.vue")
+            "../views/links/tools.vue")
         }
       ],
     },
