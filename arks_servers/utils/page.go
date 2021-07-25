@@ -13,11 +13,13 @@ var (
 
 // 分页结构体
 type Pagination struct {
-	Size     uint        `form:"pageSize"` // 每页条数
-	Page     uint        `form:"page"`     // 页码
-	Data     interface{} // 分页数据
-	Total    uint        // 总数
-	lastMore bool        // 总页数
+	Size      uint        `form:"pageSize"`   // 每页条数
+	Page      uint        `form:"page"`       // 页码
+	StartTime string      `form:"start_time"` // 开始时间
+	EndTime   string      `form:"end_time"`   // 开始时间
+	Data      interface{} // 分页数据
+	Total     uint        // 总数
+	lastMore  bool        // 总页数
 }
 
 // 分页
@@ -36,8 +38,13 @@ func ToPage(p *Pagination, db *gorm.DB, list interface{}) (uint, error) {
 	if err != nil {
 		return 0, err
 	}
-	offset := p.Size * (p.Page - 1)
 	// 获取偏移量数据
+	offset := p.Size * (p.Page - 1)
+
+	if p.StartTime != "" {
+		db.Where("`created_at` between ? and ?", p.StartTime, p.EndTime)
+	}
+
 	err = db.Limit(int(p.Size)).Offset(int(offset)).Order("created_at desc").Find(list).Error
 
 	if err != nil {

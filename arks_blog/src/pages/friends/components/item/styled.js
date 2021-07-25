@@ -16,9 +16,13 @@ const Container = styled.div`
   &:nth-child(2n) {
     margin-right: 0;
   }
-  background-image: linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%);
   &:hover {
     transform: translateY(-6px);
+  }
+  .friend-content {
+    h2 {
+      font-size: 24px;
+    }
   }
   img {
     width: 80px;

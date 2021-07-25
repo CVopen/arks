@@ -29,10 +29,10 @@ func CreateFunc(id uint, action, name string) {
 // 根据id查询日志
 func (journal Journal) GetJournalList(page *utils.Pagination) ([]Journal, uint, error) {
 	var list []Journal
-	query := db.Db.Model(&Journal{})
+	query := db.Db.Model(&Journal{}).Preload("User")
 
 	var err error
-	if journal.UserId > 0 {
+	if journal.UserId > 1 {
 		query = query.Where("`user_id` = ?", journal.UserId)
 	}
 

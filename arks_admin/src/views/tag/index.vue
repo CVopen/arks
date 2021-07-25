@@ -13,9 +13,7 @@
         placeholder="标签名"
         class="handle-input mr10"
       />
-      <el-button type="primary" icon="el-icon-search" @click="params.id=0;getList(1)"
-        >搜索</el-button
-      >
+      <el-button type="primary" icon="el-icon-search" @click="params.id=0;getList(1)">搜索</el-button>
     </div>
     <el-table
       v-loading="loading"
@@ -24,7 +22,6 @@
       class="table"
       ref="multipleTable"
       header-cell-class-name="table-header"
-      @selection-change="handleSelectionChange"
     >
       <el-table-column
         type="selection"

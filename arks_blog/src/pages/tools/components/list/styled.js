@@ -13,6 +13,7 @@ const Container = styled.div`
       padding: 10px 5px;
       img {
         width: 50px;
+        border-radius: 10px;
       }
       &:nth-child(2n) {
         margin-right: 0;
@@ -26,6 +27,7 @@ const Container = styled.div`
       padding: 10px;
       img {
         width: 60px;
+        border-radius: 12px;
       }
       &:nth-child(3n) {
         margin-right: 0;

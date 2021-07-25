@@ -14,7 +14,7 @@ const routes = [
       meta: { title: '系统首页', icon: 'el-icon-lx-home', index: "/" },
       children: [
         {
-          path: "/home",
+          path: "home",
           name: "home",
           meta: {
             title: '系统首页',
@@ -23,37 +23,47 @@ const routes = [
           component: () => import (
             /* webpackChunkName: "home" */
             "../views/home/index.vue"),
-        },
+        }
+      ]
+    },
+    {
+      path: '/system',
+      name: 'system',
+      component: Home,
+      meta: { title: '系统', icon: 'el-icon-setting', index: "/system" },
+      children: [
         {
-          path: "/system",
-          name: "system",
+          path: "set",
+          name: "system-set",
           meta: {
             title: '系统设置',
-            index: "/system",
+            index: "/system/set",
           },
           component: () => import (
-            /* webpackChunkName: "system" */
+            /* webpackChunkName: "system-set" */
             "../views/system/index.vue"),
         },
         {
           path: 'journal',
           name: 'journal',
           meta: {
-            index: '/journal',
+            index: '/system/journal',
+            title: '系统日志'
           },
           component: () => import (
-            /* webpackChunkName: "journal" */
-            "../views/tag/index.vue")
+            /* webpackChunkName: "system-journal" */
+            "../views/journal/index.vue")
         },
         {
           path: 'opinion',
           name: 'opinion',
           meta: {
-            index: '/opinion',
+            index: '/system/opinion',
+            title: '系统代办'
           },
           component: () => import (
-            /* webpackChunkName: "opinion" */
-            "../views/tag/index.vue")
+            /* webpackChunkName: "system-opinion" */
+            "../views/opinion/index.vue")
         }
       ]
     },
@@ -178,21 +188,21 @@ const routes = [
       /* webpackChunkName: "login" */
       "../views/login/index.vue")
     },
-    {
-      path: '/',
-      redirect: '/system',
-      meta: { title: '系统设置', icon: 'el-icon-setting', index: "/system" },
-    },
-    {
-      path: '/',
-      redirect: '/journal',
-      meta: { title: '系统日志', icon: 'el-icon-s-order', index: "/journal" }
-    },
-    {
-      path: '/',
-      redirect: 'opinion',
-      meta: { title: '意见', icon: 'el-icon-s-comment', index: "/opinion" }
-    }
+    // {
+    //   path: '/',
+    //   redirect: '/system',
+    //   meta: { title: '系统设置', icon: 'el-icon-setting', index: "/system" },
+    // },
+    // {
+    //   path: '/',
+    //   redirect: '/journal',
+    //   meta: { title: '系统日志', icon: 'el-icon-s-order', index: "/journal" }
+    // },
+    // {
+    //   path: '/',
+    //   redirect: 'opinion',
+    //   meta: { title: '待办', icon: 'el-icon-s-comment', index: "/opinion" }
+    // }
 ];
 
 const router = createRouter({

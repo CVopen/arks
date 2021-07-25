@@ -14,7 +14,6 @@ func Migrate() {
 		&models.Tag{},
 		&models.Journal{},
 		&models.Opinion{},
-		&models.UserStatistics{},
 		&models.History{},
 		&models.Comment{},
 		&models.Link{},

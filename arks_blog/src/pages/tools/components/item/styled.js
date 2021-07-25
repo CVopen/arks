@@ -6,14 +6,22 @@ const Container = styled.div`
   transition: all .8s;
   border-radius: 10px;
   overflow: hidden;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   border: 1px solid #fff !important;
   box-shadow: 0 1px 5px 0px rgba(0, 0, 0, .2);
   margin-bottom: 20px;
-  padding: 10px;
+  padding: 5px;
   cursor: pointer;
+  height: 120px;
   &:hover {
     transform: translateY(-6px);
+    .tools-content{
+      width: 100%;
+    }
+    .tools-item-title {
+      height: 0;
+    }
   }
   p {
     margin: 0;
@@ -46,11 +54,24 @@ const Container = styled.div`
     }
   }
   .tools-content {
+    width: 0;
     padding-left: 5px;
     height: 50px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: all .6s;
+  }
+  .tools-item-content {
+    display: flex;
+    justify-content: center;
+  }
+  .tools-item-title {
+    text-align: center;
+    height: 35px;
+    line-height: 35px;
+    transition: all .6s;
+    overflow: hidden;
   }
 `
 

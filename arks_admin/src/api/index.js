@@ -98,3 +98,12 @@ export const delLink = ({ id, ids = []}) => del({ url: '/links/del', data: { id,
 
 // 修改链接
 export const editLinkList = data => put({ url: '/links/edit', data })
+
+// 日志列表
+export const getJournalList = params => get({ url: '/journal/list', params })
+
+// 待办列表
+export const getOpinionList = () => get({ url: '/opinion/list' })
+
+// 修改待办状态
+export const putOpinion = data => put({ url: '/opinion/edit', data })

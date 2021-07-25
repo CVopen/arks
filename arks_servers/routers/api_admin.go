@@ -90,4 +90,17 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 		linkRouter.DELETE("/del", link.DelLink)
 		linkRouter.POST("/add", link.CreatedLink)
 	}
+
+	journalRouter := admin.Group("/journal", middlewares.JwtAuth())
+	journal := controller.Journal{}
+	{
+		journalRouter.GET("list", journal.GetJournalList)
+	}
+
+	opinionRouter := admin.Group("/opinion", middlewares.JwtAuth())
+	opinion := controller.OpinionController{}
+	{
+		opinionRouter.GET("list", opinion.GetOpinionList)
+		opinionRouter.PUT("edit", opinion.PutState)
+	}
 }
