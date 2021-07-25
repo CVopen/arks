@@ -18,6 +18,7 @@ type Statistics struct {
 	ToolsImg      string `gorm:"type:varchar(255);default:'http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210505/4bed66f04b0006858803b90eb66dd0a2.jpg';" json:"tools_img"`    // 工具背景图
 	FriendsImg    string `gorm:"type:varchar(255);default:'http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210505/4bed66f04b0006858803b90eb66dd0a2.jpg';" json:"friends_img"`  // 友链背景图
 	ClientImg     string `gorm:"type:varchar(255);default:'http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210505/4bed66f04b0006858803b90eb66dd0a2.jpg';" json:"client_img"`   // 客户端背景图
+	ArticleImg    string `gorm:"type:varchar(255);default:'http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210505/4bed66f04b0006858803b90eb66dd0a2.jpg';" json:"article_img"`  // 文章列表背景图
 	VisitCount    uint   `gorm:"type:int;defalut:0;" json:"visit_count"`                                                                                                          // 本站访问量
 	VisitDayCount uint   `gorm:"type:int;defalut:0;" json:"visit_day_count"`                                                                                                      // 每日浏览数
 }

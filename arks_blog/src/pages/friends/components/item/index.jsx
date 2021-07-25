@@ -1,13 +1,14 @@
 import Container from './styled'
 export default function FriendItem(props) {
+  console.log(props.item);
   return (
-    <Container className="friend-item" onClick={() => window.open('https://cn.vuejs.org/')}>
-      { props.index % 2 === 1 && <img src="http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210511/f472a827fcfb5bf808ec12d08026ce24.png" alt="" />}
+    <Container className="friend-item" onClick={() => window.open(props.item.url)}>
+      { props.index % 2 === 1 && <img src={props.item.icon} alt="" />}
       <div className="friend-content">
-        <h2>vue.js</h2>
-        <p>文档文档文档文档文档文档文档文档文档文档文档文档文档文档文档</p>
+        <h2>{props.item.name}</h2>
+        <p>{props.item.desc}</p>
       </div>
-      { props.index % 2 === 0 && <img src="http://zhizi-public.oss-cn-hangzhou.aliyuncs.com/20210511/f472a827fcfb5bf808ec12d08026ce24.png" alt="" />}
+      { props.index % 2 === 0 && <img src={props.item.icon} alt="" />}
     </Container>
   )
 }

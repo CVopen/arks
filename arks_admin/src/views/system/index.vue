@@ -58,6 +58,15 @@
           :preview-src-list="imgList">
         </el-image>
       </el-form-item>
+      <el-form-item label="文章列表背景图" prop="client_img">
+        <el-input v-model="formData.client_img" placeholder="请输入文章列表背景图url" />
+        <el-image
+          style="width: 100px; height: 100px;"
+          :src="imgList[6]"
+          fit="contain"
+          :preview-src-list="imgList">
+        </el-image>
+      </el-form-item>
       <el-form-item>
         <el-button v-if="$store.state.user.userInfo.userId == 1" type="primary" @click="delConfig">提交</el-button>
       </el-form-item>

@@ -19,7 +19,7 @@ type CategoryHandler struct{}
 // @Success 100 object utils.Result 成功
 // @Failure 103/104 object utils.Result 失败
 // @Router /admin/register [post]
-func (ch CategoryHandler) GetAllCategory(ctx *gin.Context) {
+func (ch CategoryHandler) GetCategoryList(ctx *gin.Context) {
 	id, _ := ctx.Get("id")
 
 	result := utils.Result{
@@ -74,6 +74,58 @@ func (ch CategoryHandler) GetAllCategory(ctx *gin.Context) {
 	}
 
 	result.Data = utils.PageData(dataList, total, pageForm.Pagination)
+	ctx.JSON(http.StatusOK, result)
+
+}
+
+// @Summary 获取全部分类
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @data name string
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/register [post]
+func (ch CategoryHandler) GetCategoryListAll(ctx *gin.Context) {
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+
+	pageForm := forms.CategoryPageForm{}
+
+	if err := ctx.ShouldBindQuery(&pageForm); err != nil {
+		ctx.JSON(http.StatusOK, utils.Result{
+			Code: utils.RequestError,
+			Msg:  "error",
+			Data: nil,
+		})
+		return
+	}
+	category := pageForm.BindToModel()
+
+	list, _, err := category.GetAllList(&pageForm.Pagination)
+	if err != nil {
+		result.Msg = "error"
+		result.Code = utils.RequestError
+		result.Data = err
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	dataList := make([]map[string]interface{}, len(list))
+	for i, v := range list {
+		dataList[i] = map[string]interface{}{
+			"ID":        v.ID,
+			"CreatedAt": v.CreatedAt,
+			"name":      v.Name,
+			"desc":      v.Desc,
+			"count":     v.Count,
+		}
+	}
+
+	result.Data = dataList
 	ctx.JSON(http.StatusOK, result)
 
 }

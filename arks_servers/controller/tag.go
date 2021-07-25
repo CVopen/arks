@@ -140,6 +140,55 @@ func (th TagHandler) GetList(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
+// @Summary 获取全部标签列表
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @data name string
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/v2/tag/list [post]
+func (th TagHandler) GetListAll(ctx *gin.Context) {
+
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+
+	pageForm := forms.TagPageForm{}
+
+	if err := ctx.ShouldBindQuery(&pageForm); err != nil {
+		ctx.JSON(http.StatusOK, utils.Result{
+			Code: utils.RequestError,
+			Msg:  "error",
+			Data: nil,
+		})
+		return
+	}
+
+	tag := pageForm.BindToModel()
+
+	list, _, err := tag.GetAllList(&pageForm.Pagination)
+
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Data = err
+		ctx.JSON(http.StatusOK, result)
+	}
+
+	dataList := make([]map[string]interface{}, len(list))
+	for i, v := range list {
+		dataList[i] = make(map[string]interface{}, 6)
+		dataList[i]["ID"] = v.ID
+		dataList[i]["CreatedAt"] = v.CreatedAt
+		dataList[i]["name"] = v.Name
+	}
+
+	result.Data = dataList
+	ctx.JSON(http.StatusOK, result)
+}
+
 // @Summary 修改标签
 // @Tags 授权
 // @version 1.0

@@ -1,0 +1,6 @@
+.home {
+  @include changeColor();
+  img {
+    width: 100%;
+  }
+}

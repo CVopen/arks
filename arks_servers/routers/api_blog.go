@@ -52,4 +52,23 @@ func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 		articleRouter.GET("/new", articleBlog.GetNewArticle)
 		articleRouter.GET("/list", middlewares.TypeRequest("blog"), articleBlog.GetArticle)
 	}
+
+	categoryRouter := blog.Group("/category")
+	categoryHandler := controller.CategoryHandler{}
+	{
+		categoryRouter.GET("/list", categoryHandler.GetCategoryListAll)
+	}
+
+	tagRouter := blog.Group("/tag")
+	tagHandler := controller.TagHandler{}
+	{
+		tagRouter.GET("/list", tagHandler.GetListAll)
+	}
+
+	linksRouter := blog.Group("link")
+	linkHandler := controller.LinkHandler{}
+	{
+		linksRouter.GET("/tools", middlewares.TypeRequest("tools"), linkHandler.GetLinkAll)
+		linksRouter.GET("/friends", middlewares.TypeRequest("friends"), linkHandler.GetLinkAll)
+	}
 }

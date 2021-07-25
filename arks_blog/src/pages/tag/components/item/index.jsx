@@ -10,7 +10,6 @@ export default function TagItem(props) {
   }
 
   const over = (e) => {
-    console.log(e);
     e.target.style.color = '#ff7675'
   }
 
@@ -30,7 +29,7 @@ export default function TagItem(props) {
       onMouseOver={over}
       onMouseOut={out}
     >
-      123123
+      {props.item.name}
     </Container>
   )
 }

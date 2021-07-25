@@ -13,12 +13,14 @@ import {
   ToolOutlined,
   LinkOutlined,
   SendOutlined
- } from '@ant-design/icons'
+} from '@ant-design/icons'
+import Tmerminal from '../terminal/index.jsx'
 
 function Header(props) {
   const [ isRotate, setRotate ] = useState(false)
   const [ isSearch, setSearch ] = useState(false)
   const [ color, setColor ] = useState(false)
+  const [ isShow, setShow ] = useState(false)
   const [ width, setWidth ] = useState(document.body.offsetWidth > 1400)
   const { pathname } = useLocation()
   const store = useSelector((store) => store.user.userInfo)
@@ -40,37 +42,18 @@ function Header(props) {
   }
   
   const path = [
-    {
-      path: '/',
-      name: '首页',
-      icon: <HomeOutlined /> 
-    },
-    {
-      path: '/category',
-      name: '分类',
-      icon: <FolderOutlined />
-    },
-    {
-      path: '/tag',
-      name: '标签',
-      icon: <TagsOutlined />
-    },
-    {
-      path: '/tools',
-      name: '工具',
-      icon: <ToolOutlined />
-    },
-    {
-      path: '/friends',
-      name: '友链',
-      icon: <LinkOutlined />
-    },
-    {
-      path: '/',
-      name: '客户端',
-      icon: <SendOutlined />
-    }
+    { path: '/', name: '首页', icon: <HomeOutlined /> },
+    { path: '/category', name: '分类', icon: <FolderOutlined /> },
+    { path: '/tag', name: '标签', icon: <TagsOutlined /> },
+    { path: '/tools', name: '工具', icon: <ToolOutlined /> },
+    { path: '/friends', name: '友链', icon: <LinkOutlined /> },
+    { path: '/', name: '客户端', icon: <SendOutlined /> }
   ]
+
+  const changeTmerinal = () => {
+    if (isShow) return toPath()
+    setShow(!isShow)
+  }
 
   return (
     <div className={[style.header, color ? style['header-open'] : ''].join(' ')}>
@@ -100,8 +83,11 @@ function Header(props) {
         className={[style.logo, isRotate ? style['logo-open'] : ''].join(' ')} 
         src={store.userImg ? store.userImg : defaultInfo.userImg} 
         alt="logo"
-        onClick={toPath}
+        onClick={changeTmerinal}
       />
+      {
+        isShow && <Tmerminal change={setShow} />
+      }
       <Search show={isSearch} style={{color: '#fff'}} changeStata={() => setSearch(false)} />
     </div>
   )

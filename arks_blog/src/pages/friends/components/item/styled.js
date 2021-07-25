@@ -24,6 +24,18 @@ const Container = styled.div`
       font-size: 24px;
     }
   }
+  p {
+    margin: 0;
+    word-wrap:break-word; 
+    word-break:break-all; 
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    overflow : hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    line-height: 16px;
+  }
   img {
     width: 80px;
     clip-path: polygon(50% 3%,91% 25%,91% 75%,50% 97%,9% 75%,9% 25%)

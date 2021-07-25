@@ -29,7 +29,7 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 	categoryHandler := controller.CategoryHandler{}
 	{
 		// 获取全部分类
-		categoryRouter.GET("/list", categoryHandler.GetAllCategory)
+		categoryRouter.GET("/list", categoryHandler.GetCategoryList)
 		// 新增分类
 		categoryRouter.POST("/add", categoryHandler.CreateCategory)
 		// 修改分类
