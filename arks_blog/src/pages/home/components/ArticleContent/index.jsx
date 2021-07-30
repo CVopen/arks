@@ -52,7 +52,7 @@ export default function Article() {
     <Card hoverable className="cart">
       {
         list.data.map((item, index) => 
-          <Item key={index} item={item} key={item.ID} border={index === list.data.length - 1 ? false : true} direction={randomDirection()} />
+          <Item key={item.ID} item={item} key={item.ID} border={index === list.data.length - 1 ? false : true} direction={randomDirection()} />
         )
       }
       { 

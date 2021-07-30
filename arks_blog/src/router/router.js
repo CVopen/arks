@@ -49,6 +49,10 @@ const routes = [
     component: lazy(() => import('../pages/articleList/index.jsx'))
   },
   {
+    path: '/article/details',
+    component: lazy(() => import('../pages/detail/index.jsx'))
+  },
+  {
     path: '*',
     redirect: '/404'
   }

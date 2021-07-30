@@ -6,18 +6,16 @@ const Container = styled.div`
     height: 50px;
     z-index: 99;
     position: fixed;
-    bottom: 90px;
+    bottom: 20px;
     right: -90px;
     border-radius: 50%;
     box-shadow: 0px 11px 12px -6px #ccc;
-    background-color: #fff;
     display: flex;
     align-content: center;
     justify-content: center;
     font-size: 30px;
     transition: all 1.4s;
     span {
-      color: #000;
       line-height: 50px;
     }
   }
@@ -43,7 +41,7 @@ const Container = styled.div`
   .terminal {
     width: 50%;
     height: 50%;
-    background-color: #000;
+    background-color: rgba(0 , 0, 0, .6);
     margin: 0 auto;
     margin-top: 10%;
     border-radius: 10px;
@@ -62,10 +60,10 @@ const Container = styled.div`
         transform: rotateX(0) rotateY(0);
       }
     }
-    .header {
+    .terminal-header {
       height: 35px;
       width: 100%;
-      background-color: #fff;
+      background-color: rgba(255 ,255 ,255 , .6);
       flex-direction: row-reverse;
       align-items: center;
       display: flex;
@@ -104,12 +102,28 @@ const Container = styled.div`
     margin-top: 5%;
   }
   .terminal-content {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding-bottom: 40px;
+    ::-webkit-scrollbar {
+      width: 10px;
+    }/*滚动条宽度设置：宽度为0 ，当有滚动条出现的时候则不显示滚动条*/
+
+    ::-webkit-scrollbar-track{background-color:rgba(255 ,255 ,255 , .6);}/*滚动条槽背景设置*/
+
+    ::-webkit-scrollbar-thumb{background-color:#ccc; border-radius: 5px;}/*滚动条滑块颜色设置*/
+
+    ::-webkit-scrollbar-thumb:hover {background-color: #aaa}/*滚动条滑块鼠标移上去颜色设置*/
+
+    ::-webkit-scrollbar-thumb:active {background-color: #999}/*滚动条鼠标点击颜色设置*/
     .help {
       width: 400px;
       margin: 10px auto;
       border: 1px solid #ccc;
       padding: 10px;
       transform: rotate(1deg);
+      margin-bottom: 30px;
       h1 {
         color: #00c800;
         font-size: 20px;

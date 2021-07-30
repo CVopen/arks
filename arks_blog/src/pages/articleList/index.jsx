@@ -15,7 +15,7 @@ export default function Home (props) {
       <Mask src={store.article_img} height text="123" />
       <div className="content">
         <div className="left">
-          <PageTitle title="文章列表" src='home' text="记录学习过程中的一些笔记" />
+          <PageTitle title="文章列表" src='article' text="记录学习过程中的一些笔记" />
           <p>1231254</p>
         </div>
         <div className="right">

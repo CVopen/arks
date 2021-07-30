@@ -5,11 +5,17 @@ import {
   AppstoreOutlined
 } from "@ant-design/icons"
 import { formDate } from '@/utils/utils'
+import { withRouter } from 'react-router-dom'
+import { encodeQuery } from '@utils/RouterQuery'
 
-export default function ArticleItem(props) {
+function ArticleItem(props) {
+
+  const toDetails = () => {
+    props.history.push({pathname:'/article/details', search: encodeQuery({ id: props.item.ID })});
+  }
 
   return (
-    <Container style={{"borderBottom": props.border ? '1px solid #eee' : 'none'}}>
+    <Container style={{"borderBottom": props.border ? '1px solid #eee' : 'none'}} onClick={toDetails}>
       <div className="header" style={{flexDirection: props.direction}}>
         <div className="img">
           <img src={ props.item.img } alt="" />
@@ -40,3 +46,5 @@ export default function ArticleItem(props) {
     </Container>
   )
 }
+
+export default withRouter(ArticleItem)

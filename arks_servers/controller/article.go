@@ -411,3 +411,40 @@ func (ArticleHandler) ArticleOrderHandler(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, result)
 }
+
+// @Summary 文章详情博客
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @data name string
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/register [put]
+func (ArticleHandler) GetArticleDetailHandlerBlog(ctx *gin.Context) {
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+
+	form := forms.GetArticleDetailForm{}
+
+	err := ctx.ShouldBindQuery(&form)
+
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "参数错误"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+	article, err := form.BindToModelDetail().GetDetail()
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "查询失败"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	result.Data = article
+	ctx.JSON(http.StatusOK, result)
+}

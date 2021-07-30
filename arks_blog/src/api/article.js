@@ -11,3 +11,9 @@ export const getArticleList = params => get({
   url: '/article/list',
   params
 })
+
+// 获取文章详情
+export const getArticleDetail = ({ id }) => get({
+  url: 'article/detail',
+  params: { id }
+})

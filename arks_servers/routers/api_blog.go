@@ -50,6 +50,7 @@ func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 	articleRouter := blog.Group("/article")
 	{
 		articleRouter.GET("/new", articleBlog.GetNewArticle)
+		articleRouter.GET("/detail", articleBlog.GetArticleDetailHandlerBlog)
 		articleRouter.GET("/list", middlewares.TypeRequest("blog"), articleBlog.GetArticle)
 	}
 

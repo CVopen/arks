@@ -29,3 +29,12 @@ $varFontColor: var(--theme-fontColor);
   color: $varFontColor;
   transition: all .8s;
 }
+.circularTerminal {
+  @include changeColor();
+  span {
+    color: $varFontColor;
+    &:hover {
+      color: $varFontColor;
+    }
+  }
+}

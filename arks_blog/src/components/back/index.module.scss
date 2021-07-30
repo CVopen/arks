@@ -12,7 +12,7 @@
 .back {
   z-index: 99;
   position: fixed;
-  bottom: 20px;
+  bottom: 90px;
   right: 20px;
   div {
     cursor: pointer;
@@ -38,7 +38,7 @@
   }
   .left {
     top: 80px;
-    left: 80px;
+    left: 100px;
     transform: translateX(-50%);
     @include circular()
   }
@@ -48,7 +48,7 @@
   }
   .bottom {
     @include circular();
-    top: 200%;
+    top: 320%;
     left: -70px;
     transform: translateY(-50%);
   }

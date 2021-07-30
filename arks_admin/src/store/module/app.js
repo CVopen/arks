@@ -40,6 +40,14 @@ export default {
     },
     setConfig(state, data) {
       state.config = data
+    },
+    changeArcitleItem(state, route) {
+      for (let i = 0; i < state.tagsList.length; i++) {
+        if (state.tagsList[i].path.indexOf('/arcitle/add') != -1) {
+          state.tagsList[i].path = route.fullPath
+          break
+        }
+      }
     }
   },
   actions: {},

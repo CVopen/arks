@@ -27,9 +27,9 @@ export default function Back() {
       setRotate(!isRotate)
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
       if (scrollTop - speed > 0) {
-        window.scrollTo(0, scrollTop - speed)
+        document.body.scrollTop = scrollTop - speed
       } else {
-        window.scrollTo(0, 0)
+        document.body.scrollTop = 0
         clearInterval(timer.current)
       }
     }, 20)
@@ -42,9 +42,9 @@ export default function Back() {
       setRotate(!isRotate)
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
       if (scrollTop + speed < scrollTopAll) {
-        window.scrollTo(0, scrollTop + speed)
+        document.body.scrollTop = scrollTop + speed
       } else {
-        window.scrollTo(0, scrollheight)
+        document.body.scrollTop = scrollheight
         clearInterval(timer.current)
       }
     }, 20)

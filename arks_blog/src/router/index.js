@@ -1,4 +1,3 @@
-// import React from 'react'
 import { Switch, Redirect, Route, useLocation } from 'react-router-dom'
 import { useEffect, Suspense } from 'react'
 import routes from './router'
@@ -14,7 +13,7 @@ export default function Router() {
 
   // path变化
   const changePath = () => {
-    window.scrollTo(0, 0)
+    document.body.scrollTop = 0
     bus.emit('scrollTop', pathname === '/404')
   }
   const targetRouterConfig = routes.find((item) => {
@@ -37,6 +36,7 @@ export default function Router() {
 function Auth(props) {
   const { target } = props
   const token = Stroage('get' ,'token')
+  
   if (target.path.indexOf('/user') >= 0 && token) {
     return <Redirect to={'/'} />
   }
@@ -45,7 +45,7 @@ function Auth(props) {
   }
   return (
     <Route 
-      exact 
+      exact
       path={target.path} 
       component={target.component} 
     />

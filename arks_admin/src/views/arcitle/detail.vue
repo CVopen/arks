@@ -172,7 +172,7 @@ export default defineComponent({
           data.formData.md_content = data.contentEditor.getHTML()
           addArcitle(data.formData).then(() => {
             ElMessage.success({
-              message: '修改成功',
+              message: '操作成功',
               type: 'success'
             })
             router.push('/arcitle/list')

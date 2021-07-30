@@ -338,6 +338,16 @@ func (article Article) GetDetail() (Article, error) {
 	return article, err
 }
 
+// 更新访问
+func (article Article) UpdateVisitCount() {
+	db.Db.Exec("UPDATE `articles` set `visit_count` = `visit_count` + 1 where `id` = ?", article.ID)
+}
+
+// 更新访问
+func (article Article) UpdateCommentCount() {
+	db.Db.Exec("UPDATE `articles` set `comment_count` = `comment_count` + 1 where `id` = ?", article.ID)
+}
+
 // 文章排序
 func (a Article) MoveOrderId(direction bool) (err error) {
 	// 开始事务

@@ -72,19 +72,23 @@ export default {
         },
         // 设置标签
         setTags(route) {
-            const isExist = this.tagsList.some(item => {
-                return item.path === route.fullPath;
-            });
-            if (!isExist) {
-                if (this.tagsList.length >= 8) {
-                    this.$store.commit("app/delTagsItem", { index: 0 });
-                }
-                this.$store.commit("app/setTagsItem", {
-                    name: route.name,
-                    title: route.meta.title,
-                    path: route.fullPath
-                });
+          const isExist = this.tagsList.some(item => {
+            if (item.path.indexOf('/arcitle/add') != -1 && route.path == '/arcitle/add') {
+              this.$store.commit('app/changeArcitleItem', route)
+              return true
             }
+              return item.path === route.fullPath;
+          });
+          if (!isExist) {
+            if (this.tagsList.length >= 8) {
+              this.$store.commit("app/delTagsItem", { index: 0 });
+            }
+            this.$store.commit("app/setTagsItem", {
+              name: route.name,
+              title: route.meta.title,
+              path: route.fullPath
+            });
+          }
         },
         handleTags(command) {
             command === "other" ? this.closeOther() : this.closeAll();

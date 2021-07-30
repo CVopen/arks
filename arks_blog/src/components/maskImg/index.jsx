@@ -17,9 +17,9 @@ export default function MaskImg(props) {
     timer.current = setInterval(() => {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
       if (scrollTop + speed < result - 60) {
-        window.scrollTo(0, scrollTop + speed)
+        document.body.scrollTop = scrollTop + speed
       } else {
-        window.scrollTo(0, result - 60)
+        document.body.scrollTop = result - 60
         clearInterval(timer.current)
       }
     }, 20)
