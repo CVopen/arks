@@ -15,7 +15,7 @@ function CategoryItem(props) {
   }
 
   const toPath = () => {
-    props.history.push({pathname:'/article/list',search: encodeQuery({ id: props.item.ID })});
+    props.history.push({pathname:'/article_list', search: encodeQuery({ cid: props.item.ID })});
   }
 
   return (

@@ -26,6 +26,7 @@ type CreateArticleForm struct {
 type GetArticlePageForm struct {
 	UserId           uint   `label:"用户id"`
 	CategoryId       uint   `form:"category_id" label:"分类id"`
+	TagId            uint   `form:"tag_id" label:"标签id"`
 	Title            string `form:"title" label:"文章标题"`
 	State            uint   `form:"state" label:"状态"`
 	utils.Pagination        // 分页结构

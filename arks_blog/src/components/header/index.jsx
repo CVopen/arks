@@ -12,7 +12,7 @@ import {
   TagsOutlined,
   ToolOutlined,
   LinkOutlined,
-  SendOutlined
+  // SendOutlined
 } from '@ant-design/icons'
 import Tmerminal from '../terminal/index.jsx'
 
@@ -47,7 +47,7 @@ function Header(props) {
     { path: '/tag', name: '标签', icon: <TagsOutlined /> },
     { path: '/tools', name: '工具', icon: <ToolOutlined /> },
     { path: '/friends', name: '友链', icon: <LinkOutlined /> },
-    { path: '/', name: '客户端', icon: <SendOutlined /> }
+    // { path: '/', name: '客户端', icon: <SendOutlined /> }
   ]
 
   const changeTmerinal = () => {

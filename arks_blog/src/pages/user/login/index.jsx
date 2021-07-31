@@ -73,8 +73,8 @@ export default function LoginCom(props) {
       <div className={style.tip}>{ tip }</div>
       <Btn onClick={userLogin} text='登录' />
       <Row justify="end">
-        <span className={style.span} onClick={()=>history.push('/user/register')}>没有账号?</span>
-        <span className={style.span} onClick={()=>history.push('/user/forget')}>忘记密码</span>
+        <span className={style.span} onClick={()=>history.push('/register')}>没有账号?</span>
+        <span className={style.span} onClick={()=>history.push('/forget')}>忘记密码</span>
       </Row>
     </From>
   )

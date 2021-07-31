@@ -1,6 +1,5 @@
 import Container from './styled'
 export default function FriendItem(props) {
-  console.log(props.item);
   return (
     <Container className="friend-item" onClick={() => window.open(props.item.url)}>
       { props.index % 2 === 1 && <img src={props.item.icon} alt="" />}

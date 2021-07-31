@@ -1,7 +1,9 @@
 import Container from './styled'
 import { random } from '@utils/utils'
+import { encodeQuery } from '@utils/RouterQuery'
+import { withRouter } from 'react-router-dom'
 
-export default function TagItem(props) {
+function TagItem(props) {
 
   const styles = {
     color: '#' + parseInt(random(0xffffff)).toString(16),
@@ -17,6 +19,10 @@ export default function TagItem(props) {
     e.target.style.color = styles.color
   }
 
+  const toPath = () => {
+    props.history.push({pathname:'/article_list', search: encodeQuery({ tid: props.item.ID })});
+  }
+
   return (
     <Container
       style={{
@@ -29,7 +35,9 @@ export default function TagItem(props) {
       onMouseOver={over}
       onMouseOut={out}
     >
-      {props.item.name}
+      <span onClick={toPath}>{props.item.name}</span>
     </Container>
   )
 }
+
+export default withRouter(TagItem)

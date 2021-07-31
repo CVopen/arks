@@ -17,15 +17,15 @@ const routes = [
     component: lazy(() => import('../pages/center/index.jsx')),
   },
   {
-    path: '/user/login',
+    path: '/login',
     component: lazy(() => import('../pages/user/login/index.jsx'))
   },
   {
-    path: '/user/register',
+    path: '/register',
     component: lazy(() => import('../pages/user/register/index.jsx')),
   },
   {
-    path: '/user/forget',
+    path: '/forget',
     component: lazy(() => import('../pages/user/forget/index.jsx')),
   },
   {
@@ -45,11 +45,11 @@ const routes = [
     component: lazy(() => import('../pages/friends/index.jsx'))
   },
   {
-    path: '/article/list',
+    path: '/article_list',
     component: lazy(() => import('../pages/articleList/index.jsx'))
   },
   {
-    path: '/article/details',
+    path: '/article_details',
     component: lazy(() => import('../pages/detail/index.jsx'))
   },
   {

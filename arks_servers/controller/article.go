@@ -2,6 +2,7 @@ package controller
 
 import (
 	"arks_servers/forms"
+	"arks_servers/models"
 	"arks_servers/utils"
 	"net/http"
 
@@ -421,6 +422,7 @@ func (ArticleHandler) ArticleOrderHandler(ctx *gin.Context) {
 // @Failure 103/104 object utils.Result 失败
 // @Router /admin/register [put]
 func (ArticleHandler) GetArticleDetailHandlerBlog(ctx *gin.Context) {
+
 	result := utils.Result{
 		Code: utils.Success,
 		Msg:  "success",
@@ -445,6 +447,221 @@ func (ArticleHandler) GetArticleDetailHandlerBlog(ctx *gin.Context) {
 		return
 	}
 
-	result.Data = article
+	data := map[string]interface{}{
+		"title":       article.Title,
+		"summary":     article.Summary,
+		"img":         article.Img,
+		"content":     article.Content,
+		"category_id": article.CategoryId,
+		"category":    article.Category.Name,
+		"id":          article.ID,
+		"user_name":   article.User.Nickname,
+		"visit_count": article.VisitCount + 1,
+		"tag_list":    nil,
+		"CreatedAt":   article.CreatedAt,
+		"UpdatedAt":   article.UpdatedAt,
+		"user_id":     article.User.ID,
+		"pre":         nil,
+		"next":        nil,
+	}
+	tag_list := make([]map[string]interface{}, len(article.TagList))
+	for i, v := range article.TagList {
+		tag_list[i] = map[string]interface{}{
+			"ID":   v.ID,
+			"name": v.Name,
+		}
+	}
+	data["tag_list"] = tag_list
+
+	pre, err := form.BindToModelDetail().GetPrevious(article.OrderId, article.IsTop)
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "查询失败"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+	data["pre"] = map[string]interface{}{
+		"ID":    pre.ID,
+		"title": pre.Title,
+	}
+	next, err := form.BindToModelDetail().GetNext(article.OrderId, article.IsTop)
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "查询失败"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+	data["next"] = map[string]interface{}{
+		"ID":    next.ID,
+		"title": next.Title,
+	}
+
+	go form.BindToModelDetail().UpdateVisitCount()
+	result.Data = data
 	ctx.JSON(http.StatusOK, result)
+}
+
+// @Summary 获取文章列表博客
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @data name string
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/register [post]
+func (ArticleHandler) GetArticleBlog(ctx *gin.Context) {
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+
+	pageForm := forms.GetArticlePageForm{}
+
+	if err := ctx.ShouldBindQuery(&pageForm); err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "error"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	article := pageForm.BindToModel()
+
+	list, total, err := article.GetList(&pageForm.Pagination, pageForm.State)
+
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "查询失败"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	dataList := make([]map[string]interface{}, len(list))
+	reqType, _ := ctx.Get("type")
+
+	for i, v := range list {
+		if reqType == "blog" {
+			dataList[i] = map[string]interface{}{
+				"ID":            v.ID,
+				"CreatedAt":     v.CreatedAt,
+				"title":         v.Title,
+				"img":           v.Img,
+				"summary":       v.Summary,
+				"category_name": v.Category.Name,
+				"captcha":       false,
+				"tag_list":      0,
+			}
+			if v.Pwd != "" {
+				dataList[i]["captcha"] = true
+			}
+			tag_list := make([]string, len(v.TagList))
+			for it, v := range v.TagList {
+				tag_list[it] = v.Name
+			}
+			dataList[i]["tag_list"] = tag_list
+
+		} else {
+			dataList[i] = map[string]interface{}{
+				"ID":                 v.ID,
+				"CreatedAt":          v.CreatedAt,
+				"title":              v.Title,
+				"visit_count":        v.VisitCount,
+				"comment_count":      v.CommentCount,
+				"img":                v.Img,
+				"summary":            v.Summary,
+				"category_name":      v.Category.Name,
+				"is_allow_commented": v.IsAllowCommented,
+				"is_published":       v.IsPublished,
+				"is_recycled":        v.IsRecycled,
+				"del":                false,
+				"edit":               false,
+				"captcha":            false,
+				"is_top":             v.IsTop,
+				"order_id":           v.OrderId,
+			}
+			if v.Pwd != "" {
+				dataList[i]["captcha"] = true
+			}
+		}
+
+	}
+
+	result.Data = utils.PageData(dataList, total, pageForm.Pagination)
+
+	ctx.JSON(http.StatusOK, result)
+}
+
+// @Summary 获取分类文章列表博客
+// @Tags 授权
+// @version 1.0
+// @Accept application/json
+// @data name string
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/register [post]
+func (ArticleHandler) GetArticleBlogCategory(ctx *gin.Context) {
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+
+	pageForm := forms.GetArticlePageForm{}
+
+	if err := ctx.ShouldBindQuery(&pageForm); err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "error"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	article := pageForm.BindToModel()
+
+	var (
+		list  []models.Article
+		total uint
+		err   error
+	)
+	if pageForm.TagId != 0 {
+		list, err = article.GetTagAll(pageForm.TagId)
+	} else {
+		list, total, err = article.GetList(&pageForm.Pagination, pageForm.State)
+	}
+
+	if err != nil {
+		result.Code = utils.RequestError
+		result.Msg = "查询失败"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	dataList := make([]map[string]interface{}, len(list))
+
+	for i, v := range list {
+		dataList[i] = map[string]interface{}{
+			"ID":            v.ID,
+			"CreatedAt":     v.CreatedAt,
+			"title":         v.Title,
+			"img":           v.Img,
+			"summary":       v.Summary,
+			"category_name": v.Category.Name,
+			"tag_list":      0,
+		}
+
+		tag_list := make([]string, len(v.TagList))
+		for it, v := range v.TagList {
+			tag_list[it] = v.Name
+		}
+		dataList[i]["tag_list"] = tag_list
+
+	}
+
+	if pageForm.TagId != 0 {
+		result.Data = dataList
+		ctx.JSON(http.StatusOK, result)
+	} else {
+		result.Data = utils.PageData(dataList, total, pageForm.Pagination)
+		ctx.JSON(http.StatusOK, result)
+	}
+
 }

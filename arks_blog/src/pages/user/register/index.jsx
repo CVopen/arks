@@ -58,7 +58,7 @@ export default function RegisterCom(props) {
     }
     return true
   }
-  const toLogin = () => history.push('/user/login')
+  const toLogin = () => history.push('/login')
 
   const userRegister = () => {
     if (!validate()) return

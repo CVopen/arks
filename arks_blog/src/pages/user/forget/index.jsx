@@ -62,7 +62,7 @@ export default function ForgetCom(props) {
     }
     return true
   }
-  const toLogin = () => history.push('/user/login')
+  const toLogin = () => history.push('/login')
 
   const forgetUser = () => {
     if (!validate()) return

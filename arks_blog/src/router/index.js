@@ -16,7 +16,7 @@ export default function Router() {
     document.body.scrollTop = 0
     bus.emit('scrollTop', pathname === '/404')
   }
-  const targetRouterConfig = routes.find((item) => {
+  const targetRouterConfig = routes.find(item => {
     return item.path === pathname
   })
 
@@ -36,12 +36,11 @@ export default function Router() {
 function Auth(props) {
   const { target } = props
   const token = Stroage('get' ,'token')
-  
-  if (target.path.indexOf('/user') >= 0 && token) {
+  if (target.path === ('/login' || '/register' || '/forget') && token) {
     return <Redirect to={'/'} />
   }
   if (!token && target.path === '/center') {
-    return <Redirect to={'/user/login'} />
+    return <Redirect to={'/login'} />
   }
   return (
     <Route 

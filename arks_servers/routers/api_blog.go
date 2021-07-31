@@ -52,6 +52,8 @@ func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 		articleRouter.GET("/new", articleBlog.GetNewArticle)
 		articleRouter.GET("/detail", articleBlog.GetArticleDetailHandlerBlog)
 		articleRouter.GET("/list", middlewares.TypeRequest("blog"), articleBlog.GetArticle)
+		articleRouter.GET("/category", articleBlog.GetArticleBlogCategory)
+		articleRouter.GET("/tag", articleBlog.GetArticleBlogCategory)
 	}
 
 	categoryRouter := blog.Group("/category")

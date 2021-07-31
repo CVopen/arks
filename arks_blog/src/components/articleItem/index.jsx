@@ -11,7 +11,7 @@ import { encodeQuery } from '@utils/RouterQuery'
 function ArticleItem(props) {
 
   const toDetails = () => {
-    props.history.push({pathname:'/article/details', search: encodeQuery({ id: props.item.ID })});
+    props.history.push({pathname:'/article_details', search: encodeQuery({ id: props.item.ID })});
   }
 
   return (

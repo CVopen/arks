@@ -9,9 +9,9 @@ export const formDate = (time, type = 'YYYY-MM-DD') =>{
     Y: date.getFullYear(),
     M: date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1,
     D: date.getDate() < 10 ? `0${date.getDate()}` : date.getDate(),
-    H: date.getHours(),
-    Mi: date.getMinutes(),
-    S: date.getSeconds()
+    H: date.getHours() < 10 ? `0${date.getHours()}` : date.getHours(),
+    Mi: date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes(),
+    S: date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
   }
   switch (type) {
     case 'YYYY-MM-DD':

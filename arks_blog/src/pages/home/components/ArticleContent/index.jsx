@@ -21,7 +21,7 @@ export default function Article() {
   const [ params, changeparams ] = useState({
     page: 1,
     pageSize: 10,
-    state: 1
+    state: 5
   })
   
   useEffect(() => {

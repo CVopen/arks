@@ -4,7 +4,6 @@ import (
 	"arks_servers/config/db"
 	"arks_servers/utils"
 	"errors"
-	"fmt"
 	"time"
 
 	"gorm.io/gorm"
@@ -90,7 +89,6 @@ func (article Article) Create(tagIds []int) error {
 	}
 
 	// 创建文章和标签关联，更新标签对应文章数量
-	fmt.Println(tagIds)
 	for _, tagId := range tagIds {
 		err = tx.Exec("insert into `tag_article` (`article_id`,`tag_id`) values (?,?)",
 			article.ID, tagId).Error
@@ -150,6 +148,9 @@ func (article Article) GetList(page *utils.Pagination, state uint) ([]Article, u
 	case 4:
 		// 未发布
 		query = query.Where("is_published = 0 and is_recycled = 0")
+	case 5:
+		// 已经发布未加密
+		query = query.Where("is_published = 1 and is_recycled = 0 and pwd = ''")
 	default:
 		break
 	}
@@ -167,7 +168,7 @@ func (article Article) GetList(page *utils.Pagination, state uint) ([]Article, u
 // 获取最近发布的文章
 func (Article) GetLatest(limit int) (list []Article, err error) {
 	err = db.Db.Order("created_at desc").Limit(limit).
-		Where("is_published = 1 and is_recycled = 0").Find(&list).Error
+		Where("is_published = 1 and is_recycled = 0 and pwd = ''").Find(&list).Error
 	return
 }
 
@@ -180,7 +181,6 @@ func (article Article) PublishedArticle() error {
 
 // 文章置顶
 func (article Article) TopArticle() error {
-	fmt.Println("IsTop", article.IsTop)
 	return db.Db.Model(&article).Updates(map[string]interface{}{
 		"is_top": article.IsTop,
 	}).Error
@@ -334,7 +334,7 @@ func (Article) DelMult(list []uint) error {
 
 // 根据id查询文章
 func (article Article) GetDetail() (Article, error) {
-	err := db.Db.Preload("Category").Preload("TagList").Where("`id` = ?", article.ID).First(&article).Error
+	err := db.Db.Preload("Category").Preload("TagList").Preload("User").Where("`id` = ?", article.ID).First(&article).Error
 	return article, err
 }
 
@@ -386,4 +386,68 @@ func (a Article) MoveOrderId(direction bool) (err error) {
 	}
 
 	return tx.Commit().Error
+}
+
+// 获取上一篇文章
+func (Article) GetPrevious(orderId uint, isTop bool) (article Article, err error) {
+	if isTop {
+		err = db.Db.Raw("select * from `articles` "+
+			" where is_published = 1 and is_recycled = 0 and `order_id` < ? and is_top = 1"+
+			" order by `order_id` desc limit 1", orderId).Scan(&article).Error
+	} else {
+		err = db.Db.Raw("select * from `articles`"+
+			" where is_published = 1 and is_recycled = 0 and `order_id` < ? and is_top = 0"+
+			" order by `order_id` desc limit 1", orderId).Scan(&article).Error
+	}
+
+	return
+}
+
+// 获取下一篇文章
+func (Article) GetNext(orderId uint, isTop bool) (article Article, err error) {
+	if isTop {
+		err = db.Db.Raw("select * from `articles`"+
+			" where is_published = 1 and is_recycled = 0 and `order_id` > ? and is_top = 1"+
+			" order by `order_id` asc limit 1", orderId).Scan(&article).Error
+	} else {
+		err = db.Db.Raw("select * from `articles`"+
+			" where is_published = 1 and is_recycled = 0 and `order_id` > ? and is_top = 0"+
+			" order by `order_id` asc limit 1", orderId).Scan(&article).Error
+	}
+	return
+}
+
+// 获取分类下所有文章
+func (article Article) GetCategoryAll(page *utils.Pagination) ([]Article, uint, error) {
+	var articleList []Article
+	query := db.Db.Model(&Article{}).Preload("Category").Preload("TagList").Where("is_published = 1 and is_recycled = 0 and pwd = ''").Order("is_top desc,order_id desc")
+
+	if article.Title != "" {
+		query = query.Where("`title` like concat('%',?,'%')", article.Title)
+	}
+
+	if article.CategoryId > 0 {
+		query = query.Where("`category_id` = ?", article.CategoryId)
+	}
+
+	if article.UserId > 1 {
+		query = query.Where("`user_id` = ?", article.UserId)
+	}
+
+	// 分页
+	total, err := utils.ToPage(page, query, &articleList)
+
+	return articleList, total, err
+}
+
+// 获取标签下所有文章
+func (Article) GetTagAll(id uint) (list []Article, err error) {
+	var listId []uint
+	err = db.Db.Raw("select article_id from `tag_article` where `tag_id` = ?", id).Scan(&listId).Error
+	if err != nil {
+		return
+	}
+	db.Db.Model(&Article{}).Preload("Category").Preload("TagList").Where("is_published = 1 and is_recycled = 0 and pwd = '' and id in (?)", listId).Order("is_top desc,order_id desc").Find(&list)
+
+	return
 }

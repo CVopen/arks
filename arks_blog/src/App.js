@@ -16,7 +16,7 @@ import './lib/hearts'
 import zhCN from 'antd/lib/locale/zh_CN'
 import moment from 'moment'
 import { ConfigProvider } from 'antd'
-import { HashRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 moment.locale('zh-cn')
 
 export default function App() {
@@ -26,12 +26,12 @@ export default function App() {
       <Provider store={store}>
       {
         show ? 
-        <HashRouter>
+        <BrowserRouter>
           <Header/>
           <Router />
           <Back />
           <Footer />
-        </HashRouter> :
+        </BrowserRouter> :
         <Typing setShow={setShow} />
       }
       </Provider>

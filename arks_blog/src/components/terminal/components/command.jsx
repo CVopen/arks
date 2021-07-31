@@ -69,12 +69,12 @@ function Command(props) {
         return Help
       case 'login': 
         if (nickName) return () => <span>您已登录</span>
-        history.push('/user/login')
+        history.push('/login')
         set(true)
         return () => <span>success</span>
       case 'register': 
         if (nickName) return () => <span>您已登录</span>
-        history.push('/user/register')
+        history.push('/register')
         set(true)
         return () => <span>success</span>
       case 'logout': 

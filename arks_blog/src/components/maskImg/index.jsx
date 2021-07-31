@@ -6,7 +6,9 @@ export default function MaskImg(props) {
   let timer = useRef()
   const [ width, setWidth ] = useState(document.body.offsetWidth > 1000)
   useEffect(() => {
+    console.log(bus);
     bus.on('offsetWidth', (flag) => setWidth(flag > 1000))
+    return componentWillUnmount
   }, [])
   const handleClickToBottom = () => {
     clearInterval(timer.current)
@@ -24,6 +26,11 @@ export default function MaskImg(props) {
       }
     }, 20)
   }
+
+  const componentWillUnmount = () => {
+    bus._events.offsetWidth.pop()
+  }
+
   return (
     <div 
       className={style.mask}
