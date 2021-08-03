@@ -26,7 +26,7 @@ export default function App() {
       <Provider store={store}>
       {
         show ? 
-        <BrowserRouter>
+        <BrowserRouter basename={ process.env.NODE_ENV === 'production' ? '/ark' : '/'}>
           <Header/>
           <Router />
           <Back />

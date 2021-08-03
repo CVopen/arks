@@ -13,15 +13,36 @@ const Container = styled.div`
       height: 100px;
       overflow: hidden;
       border-radius: 5px;
+      display: block;
       img {
-        width: 100%;
-        height: 100%;
+        width: 100px;
+        height: 100px;
         display: block;
         object-fit: cover;
-        transform: scale(1);
+        transform: translateY(-10%);
         transition: all .4s;
-        &:hover {
-          transform:scale(1.1);
+      }
+      .time-visit {
+        width: 100%;
+        height: 100%;
+        background-color: #eae8e842;
+        flex-direction: column;
+        position: relative;
+        padding: 10px;
+        span {
+          padding: 0;
+          &:first-child {
+            font-size: 36px;
+            font-weight: bold;
+          }
+          &:last-child {
+            font-size: 14px;
+          }
+        }
+      }
+      &:hover {
+        img {
+          transform: translateY(-100%);
         }
       }
     }

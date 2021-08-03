@@ -14,7 +14,7 @@ module.exports = {
       webpackConfig.output = {
         ...webpackConfig.output,
         path: path.resolve(__dirname, 'dist'),
-        publicPath: env === 'production' ? '/blog' : '',
+        publicPath: env === 'production' ? '/static/blog/' : '',
       }
       return webpackConfig
     }
@@ -32,7 +32,7 @@ module.exports = {
   devServer:{
     proxy: {
       "/blog": {
-        target: 'http://localhost:8888',
+        target: 'http://localhost:8000',
         changeOrigin: true,
         pathRewrite: {
           "^/blog": "/blog"

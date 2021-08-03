@@ -64,7 +64,7 @@ function Command(props) {
   const commandType = key => {
     switch (key) {
       case '':
-        return empty
+        return
       case 'help':
         return Help
       case 'login': 
@@ -89,7 +89,7 @@ function Command(props) {
         set(true)
         return () => <span>success</span>
       default:
-        break;
+        return () => errorTip(key)
     }
   }
   
@@ -152,4 +152,4 @@ const Help = () => {
   )
 }
 
-const empty = () => <div>Please enter the command</div>
+const errorTip = (code) => <div style={{color: 'red'}}>'{code}' is not recognized as a command</div>

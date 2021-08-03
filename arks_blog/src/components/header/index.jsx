@@ -86,7 +86,7 @@ function Header(props) {
         onClick={changeTmerinal}
       />
       {
-        isShow && <Tmerminal change={setShow} />
+        isShow && document.body.clientWidth > 1400 && <Tmerminal change={setShow} />
       }
       <Search show={isSearch} style={{color: '#fff'}} changeStata={() => setSearch(false)} />
     </div>

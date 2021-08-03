@@ -18,6 +18,10 @@ function ArticleItem(props) {
     <Container style={{"borderBottom": props.border ? '1px solid #eee' : 'none'}} onClick={toDetails}>
       <div className="header" style={{flexDirection: props.direction}}>
         <div className="img">
+          <div className="time-visit">
+            <span>23</span>
+            <span>2021年06月</span>
+          </div>
           <img src={ props.item.img } alt="" />
         </div>
         <div className="header-content" style={{alignItems: props.direction === 'row' ? 'flex-end' : 'flex-start'}}>

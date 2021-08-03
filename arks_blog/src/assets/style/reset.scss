@@ -43,11 +43,8 @@ h6 {
 }
 
 #root {
-  height: 100vh;
 }
 html, body {
-  min-height: 100vh;
-  overflow-x: hidden;
   &::-webkit-scrollbar {
     width: 2px;    
   }

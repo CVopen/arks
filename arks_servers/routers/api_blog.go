@@ -21,7 +21,11 @@ func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 	userHandler := controller.UserHandler{}
 
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "blog/index.html", nil)
+		c.Redirect(http.StatusMovedPermanently, "/ark")
+	})
+
+	router.GET("/ark", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "ark/index.html", nil)
 	})
 	// 签名验证
 	blog := router.Group(path, middlewares.Sign())
