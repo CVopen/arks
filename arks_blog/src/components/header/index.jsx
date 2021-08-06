@@ -31,7 +31,14 @@ function Header(props) {
       setWidth(flag > 1400)
       setSearch(flag <= 1400 ? false : isSearch)
     })
-    bus.on('scrollTop', (top) => setColor(top > 0))
+    bus.on('scrollTop', (top) => {
+      if (pathname !== '/404' && pathname !== '/center') {
+        setColor(top > 0)
+      }
+      if (pathname === '/404' || pathname === '/center') {
+        setColor(true)
+      }
+    })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

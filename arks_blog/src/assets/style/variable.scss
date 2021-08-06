@@ -38,3 +38,7 @@ $varFontColor: var(--theme-fontColor);
     }
   }
 }
+
+.ant-tabs-tab-btn {
+  color: $varFontColor;
+}

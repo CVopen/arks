@@ -7,15 +7,16 @@
           icon="el-icon-delete"
           class="handle-del mr10"
           @click="delAllSelection"
-          >批量删除</el-button
         >
+          批量删除
+        </el-button>
         <el-button
           type="primary"
           icon="el-icon-plus"
           class="handle-del mr10"
-          @click="() => handleEdit(false)"
-          >新增分类</el-button
-        >
+          @click="() => handleEdit(false)">
+          新增
+        </el-button>
         <el-input
           v-model="params.name"
           :placeholder="$route.path.indexOf('tools') > 0 ? '工具名称' : '友链名称'"
@@ -27,9 +28,7 @@
           <el-option label="未发布" value="2" />
           <el-option label="回收站" value="3" />
         </el-select>
-        <el-button type="primary" icon="el-icon-search" @click="getList(1)"
-          >搜索</el-button
-        >
+        <el-button type="primary" icon="el-icon-search" @click="getList(1)">搜索</el-button>
       </div>
       <el-table
         v-loading="loading"
@@ -45,13 +44,13 @@
           :selectable="isSelect"
           width="55"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column
           prop="ID"
           label="ID"
           width="55"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column prop="name" label="名称" />
         <el-table-column prop="desc" label="介绍" />
         <el-table-column label="图标" width="160" align="center">
@@ -76,6 +75,19 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template #default="scope">
+            <Pop
+              v-if="!scope.row.is_recycled && $store.state.user.userInfo.userId == 1"
+              :text="scope.row.is_published ? '下架' : '发布'"
+              :title="'确定要' + (scope.row.is_published ? '下架' : '发布') + '吗？'"
+              :buttonIcon="scope.row.is_published ? 'el-icon-close-notification' : 'el-icon-bell'"
+              @confirm="published(scope.row.is_published ? false : true, scope.row.ID)"
+            />
+            <Pop
+              :text="scope.row.is_recycled ? '恢复' : '回收'"
+              :title="'确定要' + (scope.row.is_recycled ? '恢复' : '回收') + '吗？'"
+              buttonIcon="el-icon-takeaway-box"
+              @confirm="recycled(scope.row.is_recycled ? false : true, scope.row.ID)"
+            />
             <el-button
               v-if="scope.row.change"
               type="text"
@@ -117,7 +129,8 @@
 </template>
 
 <script>
-import { delLink, getFriendsList, getToolsList } from "../../api/index"
+import { delLink, getFriendsList, getToolsList, linkPublished, linkRecycled } from "../../api/index"
+import PopConfirm from "../../components/popconfirm.vue"
 import { formatTime } from "../../utils/index"
 import AddLinks from "./modal/addLink.vue"
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -130,7 +143,7 @@ import {
 import { useRoute } from 'vue-router'
 export default defineComponent({
   name: "links",
-  components: { AddLinks },
+  components: { AddLinks, Pop: PopConfirm },
   setup() {
     const data = reactive({
       params: {
@@ -212,6 +225,16 @@ export default defineComponent({
       getList()
     }
 
+    // 是否回收
+    const recycled = (state, id) => {
+      linkRecycled({ state, id }).then(() => getList())
+    }
+
+    // 是否发布
+    const published = (state, id) => {
+      linkPublished({ state, id }).then(() => getList())
+    }
+
     const isSelect = (row) => row.change
 
     onMounted(() => {
@@ -226,7 +249,9 @@ export default defineComponent({
       handleEdit,
       delAllSelection,
       handlePageChange,
-      isSelect
+      isSelect,
+      recycled,
+      published
     }
   }
 })

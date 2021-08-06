@@ -30,13 +30,19 @@
           <el-table-column width="120">
             <template #default="scope">
               <el-button v-if="activeName === 'first'" size="small" @click="handleClick(scope.row.ID, 2)">处理</el-button>
-              <el-button v-else-if="activeName === 'second'" size="small" @click="handleClick(scope.row.ID, 3)">完成</el-button>
+              <el-button v-else-if="activeName === 'second'" size="small" @click="putHandle(scope.row.ID)">完成</el-button>
               <el-button v-else size="small" @click="handleClick(scope.row.ID, 2)">重新处理</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
+    <Modal 
+      @change="getList" 
+      :showModel="show"
+      :id="id"
+      @close-modal="() => show = false"
+    />
   </div>
 </template>
 
@@ -49,8 +55,10 @@ import {
 } from 'vue'
 import { getOpinionList, putOpinion } from '@/api'
 import { formatTime } from "../../utils/index"
+import Modal from "./modal/index.vue"
 export default defineComponent({
   name: "opinion",
+  components: { Modal },
   setup() {
     const data = reactive({
       activeName: 'first',
@@ -63,11 +71,18 @@ export default defineComponent({
         firstList: [],
         secondList: [],
         thirdList: []
-      }
+      },
+      show: false,
+      id: 0
     })
 
     const handleClick = (id, state) => {
       putOpinion({ id, state }).then(getList)
+    }
+
+    const putHandle = id => {
+      data.id = id
+      data.show = true
     }
 
     const getList = () => {
@@ -87,7 +102,11 @@ export default defineComponent({
               thirdList.push(element)
               break;
           }
-          element.images = element.images.split(';')
+          if (element.images) {
+            element.images = element.images.split(';')
+          } else {
+            element.images = []
+          }
           element.CreatedAt = formatTime(element.CreatedAt)
         })
         data.dataList.firstList = firstList
@@ -100,7 +119,9 @@ export default defineComponent({
 
     return {
       ...toRefs(data),
-      handleClick
+      handleClick,
+      putHandle,
+      getList
     }
   }
 })

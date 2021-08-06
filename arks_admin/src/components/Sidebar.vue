@@ -37,6 +37,7 @@
 
 <script>
 // import bus from "../common/bus";
+import { authSide } from '../utils/authRouter'
 export default {
   computed: {
     onRoutes() {
@@ -46,7 +47,7 @@ export default {
       return this.$store.state.app.collapse
     },
     router() {
-      return this.$router.options.routes
+      return authSide(this.$router.options.routes)
     }
   }
 }

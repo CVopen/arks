@@ -14,13 +14,14 @@ function ArticleItem(props) {
     props.history.push({pathname:'/article_details', search: encodeQuery({ id: props.item.ID })});
   }
 
+  const date = new Date(props.item.CreatedAt)
   return (
     <Container style={{"borderBottom": props.border ? '1px solid #eee' : 'none'}} onClick={toDetails}>
       <div className="header" style={{flexDirection: props.direction}}>
         <div className="img">
           <div className="time-visit">
-            <span>23</span>
-            <span>2021年06月</span>
+            <span>{ date.getDate() < 10 ? `0${date.getDate()}` : date.getDate() }</span>
+            <span>{date.getFullYear()}年{date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1}月</span>
           </div>
           <img src={ props.item.img } alt="" />
         </div>

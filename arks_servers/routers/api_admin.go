@@ -77,30 +77,44 @@ func (a *ApiAdmin) InitAdminApi(path string, router *gin.Engine) {
 	configRouter := admin.Group("/config", middlewares.JwtAuth())
 	visit := controller.VisitHandler{}
 	{
+		// 获取整站数据
 		configRouter.GET("/visit", middlewares.TypeRequest("admin"), visit.GetVisit)
+		// 修改
 		configRouter.PUT("/edit", visit.SetConfig)
 	}
 
 	linkRouter := admin.Group("/links", middlewares.JwtAuth())
 	link := controller.LinkHandler{}
 	{
+		// 工具列表
 		linkRouter.GET("/tools/list", middlewares.TypeRequest("tools"), link.GetLink)
+		// 友链列表
 		linkRouter.GET("/friends/list", middlewares.TypeRequest("friends"), link.GetLink)
+		// 修改
 		linkRouter.PUT("/edit", link.EditLink)
+		// 删除
 		linkRouter.DELETE("/del", link.DelLink)
+		// 添加
 		linkRouter.POST("/add", link.CreatedLink)
+		// 发布
+		linkRouter.PUT("/published", middlewares.TypeRequest("IsPublished"), link.PutLinks)
+		// 回收
+		linkRouter.PUT("/recycled", middlewares.TypeRequest(""), link.PutLinks)
 	}
 
 	journalRouter := admin.Group("/journal", middlewares.JwtAuth())
 	journal := controller.Journal{}
 	{
+		// 列表
 		journalRouter.GET("list", journal.GetJournalList)
 	}
 
 	opinionRouter := admin.Group("/opinion", middlewares.JwtAuth())
 	opinion := controller.OpinionController{}
 	{
+		// 列表
 		opinionRouter.GET("list", opinion.GetOpinionList)
+		// 修改状态
 		opinionRouter.PUT("edit", opinion.PutState)
 	}
 }

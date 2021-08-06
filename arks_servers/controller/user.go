@@ -4,7 +4,7 @@ import (
 	"arks_servers/forms"
 	"arks_servers/utils"
 	"net/http"
-	"strings"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -143,12 +143,66 @@ func (uh *UserHandler) LoginUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
-func (u *UserHandler) LoginUser2(ctx *gin.Context) {
-	authHeader := ctx.Request.Header.Get("Authorization")
-	tokens := strings.Split(authHeader, " ")
+func (uh *UserHandler) LoginUser2(ctx *gin.Context) {
+	loginForm := forms.LoginForm{}
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
 
-	token, _ := utils.ParseToken(tokens[1])
-	ctx.JSON(http.StatusOK, token.Id)
+	if err := ctx.ShouldBindJSON(&loginForm); err != nil {
+		// 表单校验失败
+		result.Code = utils.RequestError
+		result.Msg = "参数错误"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	captchaConfig := &utils.CaptchaConfig{
+		Id:          loginForm.CaptchaId,
+		VerifyValue: loginForm.CaptchaVal,
+	}
+
+	if !utils.CaptchaVerify(captchaConfig) {
+		// 检验失败
+		result.Code = utils.RequestError
+		result.Msg = "验证码错误"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	user := loginForm.BindToModel()
+	u, _ := user.GetByUserName()
+	if u.Username == "" {
+		// 用户不存在
+		result.Code = utils.RequestError
+		result.Msg = "用户不存在"
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	if !utils.CheckPwd(user.Password, u.Password) { // 密码错误
+		result.Code = utils.RequestError
+		result.Msg = "密码错误"
+		ctx.JSON(http.StatusOK, result) // 返回 json
+		return
+	}
+
+	token := utils.EncryptDES_CBC(strconv.Itoa(int(u.ID)))
+	result.Code = utils.Success
+	result.Msg = "登录成功"
+	data := gin.H{
+		"userId":   u.ID,
+		"username": u.Username,
+		"userImg":  u.UserImg,
+		"token":    token,
+		"nickName": u.Nickname,
+		"sign":     u.Signature,
+		"github":   u.Github,
+	}
+	result.Data = data
+	ctx.JSON(http.StatusOK, result)
 }
 
 // @Summary 创建验证码

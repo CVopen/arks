@@ -21,6 +21,7 @@ const Container = styled.div`
   }
   .friend-content {
     h2 {
+      color: var(--theme-fontColor);
       font-size: 24px;
     }
   }

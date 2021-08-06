@@ -28,7 +28,6 @@ const Container = styled.div`
         background-color: #eae8e842;
         flex-direction: column;
         position: relative;
-        padding: 10px;
         span {
           padding: 0;
           &:first-child {

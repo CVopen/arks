@@ -32,6 +32,13 @@ type LinkGetList struct {
 	utils.Pagination        // 分页结构
 }
 
+// 发布文章表单
+// 回收文章表单
+type PuTLinkForm struct {
+	ID    uint `json:"id" label:"链接ID"`
+	State bool `json:"state" label:"是否发布"`
+}
+
 // 绑定表单到实体结构
 func (form LinkForm) BindToModel() models.Link {
 	return models.Link{
@@ -60,5 +67,20 @@ func (form LinkGetList) BindToModel() models.Link {
 	return models.Link{
 		UserId: form.UserId,
 		Name:   form.Name,
+	}
+}
+
+// 绑定表单到实体结构
+func (form PuTLinkForm) BindToModelPublished() models.Link {
+	return models.Link{
+		Model:       gorm.Model{ID: form.ID},
+		IsPublished: form.State,
+	}
+}
+
+func (form PuTLinkForm) BindToModelRecycled() models.Link {
+	return models.Link{
+		Model:      gorm.Model{ID: form.ID},
+		IsRecycled: form.State,
 	}
 }

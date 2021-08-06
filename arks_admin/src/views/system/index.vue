@@ -85,11 +85,12 @@ import {
 import { editVisit } from "../../api/index"
 import 'vditor/src/assets/scss/index.scss'
 import { ElMessage } from 'element-plus'
-
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 export default defineComponent({
   setup() {
+    const router = useRouter()
     const store = useStore()
     const form = ref(null)
     const data = reactive({
@@ -129,7 +130,8 @@ export default defineComponent({
           store.state.app.config.tag_img,
           store.state.app.config.tools_img,
           store.state.app.config.friends_img,
-          store.state.app.config.client_img
+          store.state.app.config.client_img,
+          store.state.app.config.article_img
         ]
       })
     }
@@ -145,7 +147,7 @@ export default defineComponent({
               type: 'success'
             })
             store.commit('app/setConfig', data.formData)
-            initConfig()
+            router.push('/')
           })
         }
       });

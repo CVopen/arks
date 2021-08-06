@@ -37,7 +37,8 @@ export default class Details extends Component {
       this.setState({
         data: res.data
       })
-      document.body.scrollTop = 0
+      // document.body.scrollTop = 0
+      window.scrollTo(0, 0)
     })
   }
 

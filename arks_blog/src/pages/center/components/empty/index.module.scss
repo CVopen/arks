@@ -1,0 +1,15 @@
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 200px;
+  color: #ccc;
+  span {
+    font-size: 80px;
+  }
+  p {
+    margin-top: 10px;
+    font-size: 18px;
+  }
+}

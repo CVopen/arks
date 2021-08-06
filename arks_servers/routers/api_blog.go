@@ -34,12 +34,12 @@ func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 	//注册
 	blog.POST("/register", userHandler.CreateUser)
 	//登录
-	blog.POST("/login", userHandler.LoginUser)
+	blog.POST("/login", userHandler.LoginUser2)
 	//修改密码验证
 	blog.POST("/forget_pwd", userHandler.ForgetPws)
 	//修改密码
 	blog.PUT("/edit_pwd", userHandler.EditPwd)
-	userRouter := blog.Group("/user", middlewares.JwtAuth())
+	userRouter := blog.Group("/user", middlewares.CBCAuth())
 	{
 		// 刷新token
 		userRouter.POST("/Authorization", userHandler.RefreshToken)
@@ -77,5 +77,14 @@ func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 	{
 		linksRouter.GET("/tools", middlewares.TypeRequest("tools"), linkHandler.GetLinkAll)
 		linksRouter.GET("/friends", middlewares.TypeRequest("friends"), linkHandler.GetLinkAll)
+	}
+
+	opinionRouter := blog.Group("/opinion", middlewares.CBCAuth())
+	opinion := controller.OpinionController{}
+	{
+		// 列表
+		opinionRouter.GET("list", opinion.GetOpinionList)
+		// 添加
+		opinionRouter.POST("add", opinion.CreateOpinion)
 	}
 }

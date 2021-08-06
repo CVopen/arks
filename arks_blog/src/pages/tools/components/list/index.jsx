@@ -8,7 +8,7 @@ export default function ToolsList() {
   useEffect(() => getList(), [])
 
   const getList = () => {
-    getToolsList({ pageSize: 10000}).then(res => {
+    getToolsList({ pageSize: 10000, state: 1 }).then(res => {
       changeList(res.data)
     })
   }

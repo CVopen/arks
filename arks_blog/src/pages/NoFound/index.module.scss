@@ -1,38 +1,16 @@
 .no-found{
   width: 100%;
   display: flex;
-  min-height: calc(100% - 100px);
+  min-height: calc(100vh - 164px);
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   @include changeColor();
-  .content {
-    width: 100%;
-    margin: auto;
-    padding-top: 10vh;
-    position: relative;
-    max-width: 1200px;
-    .tip {
-      position: absolute;
-      top: 10%;
-      left: 5%;
-      display: flex;
-      flex-direction: column;
-      span:nth-child(1) {
-        color: #348eed;
-        font-size: .6rem;
-      }
-      span:nth-child(2) {
-        font-size: .3rem;
-      }
-    }
-    .btn {
-      display: flex;
-      flex-direction: row-reverse;
-      padding-bottom: .3rem;
-      padding-right: .3rem;
-    }
-  }
   img {
-    width: 100%;
+    height: 300px;
+  }
+  span {
+    font-size: 1rem;
+    color: $varTheme;;
   }
 }

@@ -13,15 +13,16 @@ export default function Terminal(props) {
 
   const [full, setFull] = useState(false)
   const [fullContainer, setFullContainerl] = useState(false)
+  const [showHeader, changeShow] = useState(true)
   const changeFull = () => setFull(!full)
 
   useEffect(() => {
 
-  }, [full, fullContainer])
+  }, [full, fullContainer, showHeader])
 
   return (
     <Container>
-      <div className={['container', fullContainer && 'container-full'].join(' ')}>
+      <div className={['container-terminal', fullContainer && 'container-full'].join(' ')}>
         <div className={['terminal', full && 'full'].join(' ')}>
           <div className='terminal-header'>
             <CloseOutlined onClick={() => props.change(false)} />
@@ -29,12 +30,16 @@ export default function Terminal(props) {
             <MinusOutlined onClick={() => setFullContainerl(true)} />
           </div>
           <div className="terminal-content">
-            <div className="help">
-              <h1>· Welcome to Ark ·</h1>
-              <h2>· explain</h2>
-              <p>This is the ark terminal. You can type 'help' to know more. Enter a maximum length of 10.</p>
-            </div>
-            <Command full={fullContainer} set={setFullContainerl} />
+            {
+              showHeader && (
+              <div className="help">
+                <h1>· Welcome to Ark ·</h1>
+                <h2>· explain</h2>
+                <p>This is the ark terminal. You can type 'help' to know more. Enter a maximum length of 10.</p>
+              </div>
+              )
+            }
+            <Command full={fullContainer} set={setFullContainerl} showHeader={changeShow} close={props.change} />
           </div>
         </div>
       </div>

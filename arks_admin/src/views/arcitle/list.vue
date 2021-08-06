@@ -70,6 +70,7 @@
           </template>
           <template v-if="!scope.row.is_recycled">
             <Pop
+              v-if="$store.state.user.userInfo.userId == 1"
               :text="scope.row.is_published ? '下架' : '发布'"
               :title="'确定要' + (scope.row.is_published ? '下架' : '发布') + '吗？'"
               :buttonIcon="scope.row.is_published ? 'el-icon-close-notification' : 'el-icon-bell'"

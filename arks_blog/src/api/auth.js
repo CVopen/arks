@@ -52,8 +52,3 @@ export const editPwd = ({ password, email, second_pwd, captcha_id, captcha_val }
     captcha_val // 验证码
   }
 })
-
-// 刷新登录 
-export const refresh = () => post({
-  url: '/user/Authorization'
-})

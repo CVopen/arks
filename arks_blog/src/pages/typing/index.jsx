@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react'
 import { DoubleLeftOutlined } from '@ant-design/icons'
 import Storage from '@/utils/localStorage'
 import { useDispatch } from 'react-redux'
-import { refresh } from '@/api/auth'
 import { getConfig } from '../../api'
 
 export default function Typing(props) {
@@ -25,13 +24,7 @@ export default function Typing(props) {
   const reduxInfo =() => {
     const info = Storage('get', 'userInfo')
     if (info) {
-      refresh().then(res => {
-        const value = JSON.parse(info)
-        value.token = res.data.token
-        Storage('set', 'userInfo', value)
-        Storage('set', 'token', res.data.token)
-        dispatch({type: 'SET_USERINFO', value })
-      })
+      dispatch({type: 'SET_USERINFO', value: JSON.parse(info) })
     }
   }
 

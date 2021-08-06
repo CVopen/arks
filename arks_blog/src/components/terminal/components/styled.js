@@ -7,6 +7,7 @@ const Container = styled.div`
   }
   .command {
     display: flex;
+    padding: 2px 0;
     .row-item {
       padding-left: 20px;
       padding-right: 5px;
@@ -62,6 +63,9 @@ const Container = styled.div`
       white-space: nowrap;
       box-sizing: border-box;
       padding-left: 5px;
+      font-size: 16px;
+      border: none;
+      padding: 0;
       &:hover {
         color: #fff;
       }
@@ -93,6 +97,13 @@ const Container = styled.div`
     }
     .help-value {
       color: #0058b9
+    }
+  }
+  .result {
+    span {
+      font-size: 16px;
+      border: none;
+      padding: 0;
     }
   }
 `

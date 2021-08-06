@@ -14,7 +14,7 @@ type Opinion struct {
 	Content string `gorm:"type:varchar(255);not null;" json:"content"` // 内容
 	Message string `gorm:"type:varchar(255);not null;" json:"message"` // 处理意见
 	Images  string `gorm:"type:MediumText;" json:"images"`             // 内容图片
-	State   uint   `gorm:"type:int;defalut:1;" json:"state"`           // 处理状态 待处理 1 处理中 2 处理完成 3
+	State   uint   `gorm:"type:int;default:1;" json:"state"`           // 处理状态 待处理 1 处理中 2 处理完成 3
 }
 
 // 新增意见

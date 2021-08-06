@@ -99,6 +99,12 @@ export const delLink = ({ id, ids = []}) => del({ url: '/links/del', data: { id,
 // 修改链接
 export const editLinkList = data => put({ url: '/links/edit', data })
 
+// 链接发布
+export const linkPublished = data => put({ url: '/links/published', data })
+
+// 链接回收
+export const linkRecycled = data => put({ url: '/links/recycled', data })
+
 // 日志列表
 export const getJournalList = params => get({ url: '/journal/list', params })
 

@@ -1,0 +1,30 @@
+.opinion {
+  @include changeColor();
+  .btn {
+    span {
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 10px;
+      transition: all .4s;
+      &:hover {
+        color: #ff7675;
+      }
+    }
+  }
+  .item {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  form {
+    margin: 0 auto;
+    margin-top: 40px;
+    max-width: 600px;
+    label {
+      @include changeColor();
+    }
+  }
+}

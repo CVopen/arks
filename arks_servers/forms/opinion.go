@@ -8,14 +8,14 @@ import (
 
 // 创建意见表单
 type OpinionCreateForm struct {
-	UserId  uint   `json:"user_id" binding:"require" label:"用户id"`
-	Content string `json:"content" binding:"require" label:"内容"`
+	UserId  uint   `label:"用户id"`
+	Content string `json:"content" binding:"required" label:"内容"`
 	Images  string `json:"images" label:"问题图片"`
 }
 
 // 查询意见表单
 type OpinionGetForm struct {
-	UserId uint `form:"user_id" binding:"require" label:"用户id"`
+	UserId uint `form:"user_id" binding:"required" label:"用户id"`
 }
 
 // 修改和删除表单

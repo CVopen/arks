@@ -16,7 +16,7 @@ type User struct {
 	Nickname  string `gorm:"type:varchar(30);not null;" json:"nickname"`     // 昵称
 	UserImg   string `gorm:"type:varchar(255);default:'https://p2.music.126.net/l_XBEHvcopQEwI-25VD5SQ==/109951163804161188.jpg?param=60y60';" json:"user_img"`
 	Signature string `gorm:"type:varchar(255);default:'你好啊，秃头工程师。';" json:"signature"` // 签名
-	Github    string `gorm:"type:varchar(255);" json:"github"`                         // 签名
+	Github    string `gorm:"type:varchar(255);" json:"github"`                         // github地址
 }
 
 // 创建用户

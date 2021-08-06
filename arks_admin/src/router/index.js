@@ -1,6 +1,7 @@
 import {createRouter, createWebHashHistory } from "vue-router"
 import Home from "../views/index.vue"
 import Session from '../utils/sessionStorage'
+import { auth } from '../utils/authRouter'
 const routes = [
     {
       path: '/',
@@ -30,7 +31,7 @@ const routes = [
       path: '/system',
       name: 'system',
       component: Home,
-      meta: { title: '系统', icon: 'el-icon-setting', index: "/system" },
+      meta: { title: '系统', icon: 'el-icon-setting', index: "/system", auth: true },
       children: [
         {
           path: "set",
@@ -38,6 +39,7 @@ const routes = [
           meta: {
             title: '系统设置',
             index: "/system/set",
+            auth: true
           },
           component: () => import (
             /* webpackChunkName: "system-set" */
@@ -48,7 +50,8 @@ const routes = [
           name: 'journal',
           meta: {
             index: '/system/journal',
-            title: '系统日志'
+            title: '系统日志',
+            auth: true
           },
           component: () => import (
             /* webpackChunkName: "system-journal" */
@@ -59,7 +62,8 @@ const routes = [
           name: 'opinion',
           meta: {
             index: '/system/opinion',
-            title: '系统代办'
+            title: '系统代办',
+            auth: true
           },
           component: () => import (
             /* webpackChunkName: "system-opinion" */
@@ -188,21 +192,6 @@ const routes = [
       /* webpackChunkName: "login" */
       "../views/login/index.vue")
     },
-    // {
-    //   path: '/',
-    //   redirect: '/system',
-    //   meta: { title: '系统设置', icon: 'el-icon-setting', index: "/system" },
-    // },
-    // {
-    //   path: '/',
-    //   redirect: '/journal',
-    //   meta: { title: '系统日志', icon: 'el-icon-s-order', index: "/journal" }
-    // },
-    // {
-    //   path: '/',
-    //   redirect: 'opinion',
-    //   meta: { title: '待办', icon: 'el-icon-s-comment', index: "/opinion" }
-    // }
 ];
 
 const router = createRouter({
@@ -211,15 +200,19 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title ? to.meta.title : 'login'} | ark_admin`
-    const token = Session('get', 'token')
-    if (to.path === '/login') {
-      if (token) next('/')
+  document.title = `${to.meta.title ? to.meta.title : 'login'} | ark_admin`
+  const token = Session('get', 'token')
+  if (to.path === '/login') {
+    if (token) next('/')
+    next()
+  } else {
+    if (!token) next('/login')
+    if (auth(to)) {
       next()
     } else {
-      if (!token) next('/login')
-      next()
+      next('/404')
     }
+  }
 
 });
 

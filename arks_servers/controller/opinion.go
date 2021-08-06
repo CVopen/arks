@@ -94,3 +94,40 @@ func (OpinionController) PutState(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, result)
 }
+
+// @Summary 创建意见
+// @Tags 授权
+// @version 1.0
+// @data name string desc string
+// @Accept application/json
+// @Success 100 object utils.Result 成功
+// @Failure 103/104 object utils.Result 失败
+// @Router /admin/register [post]
+func (ch OpinionController) CreateOpinion(ctx *gin.Context) {
+	id, _ := ctx.Get("id")
+	opinionCreateForm := forms.OpinionCreateForm{
+		UserId: utils.TypeInterFaceToUint(id),
+	}
+	result := utils.Result{
+		Code: utils.Success,
+		Msg:  "success",
+		Data: nil,
+	}
+	if err := ctx.ShouldBindJSON(&opinionCreateForm); err != nil {
+		result.Msg = "参数错误"
+		result.Data = err
+		result.Code = utils.RequestError
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	if err := opinionCreateForm.BindToModel().CreateFunc(); err != nil {
+		result.Msg = "添加失败"
+		result.Code = utils.RequestError
+		result.Data = err
+		ctx.JSON(http.StatusOK, result)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, result)
+}

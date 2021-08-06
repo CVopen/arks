@@ -1,6 +1,12 @@
 package utils
 
 import (
+	"bytes"
+	"crypto/cipher"
+	"crypto/des"
+	"encoding/hex"
+	"fmt"
+
 	"github.com/mojocn/base64Captcha"
 )
 
@@ -15,6 +21,8 @@ type CaptchaConfig struct {
 	DriverMath    *base64Captcha.DriverMath    `json:"driver_math"`
 	DriverDigit   *base64Captcha.DriverDigit   `json:"driver_digit"`
 }
+
+var key = "openopen"
 
 var store = base64Captcha.DefaultMemStore
 
@@ -54,4 +62,56 @@ func GenerateCaptcha(captcha *CaptchaConfig) (string, error) {
 // 校验验证码
 func CaptchaVerify(captcha *CaptchaConfig) bool {
 	return store.Verify(captcha.Id, captcha.VerifyValue, false)
+}
+
+//CBC加密
+func EncryptDES_CBC(src string) string {
+	fmt.Println("EncryptDES_CBC", src)
+	data := []byte(src)
+	keyByte := []byte(key)
+	block, err := des.NewCipher(keyByte)
+	if err != nil {
+		panic(err)
+	}
+	data = PKCS5Padding(data, block.BlockSize())
+	//获取CBC加密模式
+	iv := keyByte //用密钥作为向量(不建议这样使用)
+	mode := cipher.NewCBCEncrypter(block, iv)
+	out := make([]byte, len(data))
+	mode.CryptBlocks(out, data)
+	return fmt.Sprintf("%X", out)
+}
+
+//CBC解密
+func DecryptDES_CBC(src string) string {
+	keyByte := []byte(key)
+	data, err := hex.DecodeString(src)
+	if err != nil {
+		fmt.Println(err.Error())
+		panic(err)
+	}
+	block, err := des.NewCipher(keyByte)
+	if err != nil {
+		panic(err)
+	}
+	iv := keyByte //用密钥作为向量(不建议这样使用)
+	mode := cipher.NewCBCDecrypter(block, iv)
+	plaintext := make([]byte, len(data))
+	mode.CryptBlocks(plaintext, data)
+	plaintext = PKCS5UnPadding(plaintext)
+	return string(plaintext)
+}
+
+//明文补码算法
+func PKCS5Padding(ciphertext []byte, blockSize int) []byte {
+	padding := blockSize - len(ciphertext)%blockSize
+	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(ciphertext, padtext...)
+}
+
+//明文减码算法
+func PKCS5UnPadding(origData []byte) []byte {
+	length := len(origData)
+	unpadding := int(origData[length-1])
+	return origData[:(length - unpadding)]
 }

@@ -8,7 +8,7 @@ export default function FriendList() {
   useEffect(() => getList(), [])
 
   const getList = () => {
-    getFriendsList({ pageSize: 10000}).then(res => {
+    getFriendsList({ pageSize: 10000, state: 1 }).then(res => {
       changeList(res.data)
     })
   }

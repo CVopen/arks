@@ -36,12 +36,13 @@ function Command(props) {
     if (e.keyCode === 13) {
       if (key === 'cls') {
         changeList([{date: getDate(), time: getTime(), key: '', cb: null}])
+        props.showHeader(false)
         return
       }
       commandList[commandList.length - 1].cb = commandType(commandList[commandList.length - 1].key)
       commandList.push({date: getDate(), time: getTime(), key: '', cb: null})
       changeList([...commandList])
-      document.querySelector('.terminal-content').scrollTop = commandList.length * 1000
+      document.querySelector('.terminal-content') && (document.querySelector('.terminal-content').scrollTop = commandList.length * 1000)
     }
     if (e.keyCode === 8) {
       commandList[commandList.length - 1].key = key.slice(0, key.length - 1)
@@ -88,6 +89,13 @@ function Command(props) {
         history.push('/center')
         set(true)
         return () => <span>success</span>
+      case 'commit':
+        return () => <span>success</span>
+      case 'hide':
+        set(true)
+        return () => <span>success</span>
+      case 'exit':
+        return props.close(false)
       default:
         return () => errorTip(key)
     }
@@ -134,7 +142,10 @@ const Help = () => {
     { key: 'register', value: '注册'},
     { key: 'center', value: '个人中心'},
     { key: 'logout', value: '退出'},
-    { key: 'cls', value: '清空'}
+    { key: 'commit', value: '意见反馈'},
+    { key: 'cls', value: '清空内容'},
+    { key: 'hide', value: '隐藏终端'},
+    { key: 'exit', value: '退出终端'}
   ]
   return (
     <>

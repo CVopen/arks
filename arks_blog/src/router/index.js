@@ -13,8 +13,9 @@ export default function Router() {
 
   // path变化
   const changePath = () => {
-    document.body.scrollTop = 0
-    bus.emit('scrollTop', pathname === '/404')
+    // document.body.scrollTop = 0
+    window.scrollTo(0, 0)
+    bus.emit('scrollTop', pathname === '/404' || pathname === '/center')
   }
   const targetRouterConfig = routes.find(item => {
     return item.path === pathname

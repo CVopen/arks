@@ -49,6 +49,7 @@ const Container = styled.div`
     font-weight: bold;
     font-size: 20px;
     line-height: 20px;
+    color: var(--theme-fontColor);
     &:hover {
       color: #ff7675;
     }

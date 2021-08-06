@@ -6,7 +6,6 @@ export default function MaskImg(props) {
   let timer = useRef()
   const [ width, setWidth ] = useState(document.body.offsetWidth > 1000)
   useEffect(() => {
-    console.log(bus);
     bus.on('offsetWidth', (flag) => setWidth(flag > 1000))
     return componentWillUnmount
   }, [])
@@ -19,9 +18,11 @@ export default function MaskImg(props) {
     timer.current = setInterval(() => {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop // 滚动高度
       if (scrollTop + speed < result - 60) {
-        document.body.scrollTop = scrollTop + speed
+        // document.body.scrollTop = scrollTop + speed
+        window.scrollTo(0, scrollTop + speed)
       } else {
-        document.body.scrollTop = result - 60
+        // document.body.scrollTop = result - 60
+        window.scrollTo(0, result - 60)
         clearInterval(timer.current)
       }
     }, 20)

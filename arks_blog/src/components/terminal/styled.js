@@ -22,7 +22,7 @@ const Container = styled.div`
   .circular-full {
     right: 20px;
   }
-  .container {
+  .container-terminal {
     width: 100vw;
     height: 100vh;
     background-color: rgba(0 , 0, 0, .6);
@@ -31,6 +31,8 @@ const Container = styled.div`
     right: 0;
     transition: all .8s;
     overflow: hidden;
+    display: flex;
+    align-items: center;
   }
   .container-full {
     width: 0;
@@ -43,7 +45,7 @@ const Container = styled.div`
     height: 50%;
     background-color: rgba(0 , 0, 0, .6);
     margin: 0 auto;
-    margin-top: 10%;
+    /* margin-top: 10%; */
     border-radius: 10px;
     color: #fff;
     overflow: hidden;
@@ -73,6 +75,9 @@ const Container = styled.div`
         width: 25px;
         height: 25px;
         border-radius: 50%;
+        font-size: 16px;
+        border: none;
+        padding: 0;
         &:nth-child(3) {
           background-color: #0984e3;
           color: #0984e3;
@@ -99,7 +104,6 @@ const Container = styled.div`
   .full {
     width: 80%;
     height: 80%;
-    margin-top: 5%;
   }
   .terminal-content {
     width: 100%;

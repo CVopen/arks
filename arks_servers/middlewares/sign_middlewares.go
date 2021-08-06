@@ -68,6 +68,16 @@ func Sign() gin.HandlerFunc {
 			})
 			ctx.Abort()
 		}
+
+		if agent := ctx.Request.Header.Get("User-Agent"); agent == "" {
+			ctx.JSON(http.StatusOK, utils.Result{
+				Code: utils.Forbidden,
+				Msg:  "签名错误",
+				Data: nil,
+			})
+			ctx.Abort()
+		}
+
 		ctx.Set("token", token)
 		ctx.Next()
 	}

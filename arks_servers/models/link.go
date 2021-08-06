@@ -29,6 +29,20 @@ func (link Link) FindLink() (Link, error) {
 	return l, err
 }
 
+// 发布
+func (link Link) Published() error {
+	return db.Db.Model(&link).Updates(map[string]interface{}{
+		"is_published": link.IsPublished,
+	}).Error
+}
+
+// 回收站
+func (link Link) Recycled() error {
+	return db.Db.Model(&link).Updates(map[string]interface{}{
+		"is_recycled": link.IsRecycled,
+	}).Error
+}
+
 // 创建链接
 func (link Link) Create() (err error) {
 	if err = db.Db.Create(&link).Error; err == nil {
