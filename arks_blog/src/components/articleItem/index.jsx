@@ -14,6 +14,18 @@ function ArticleItem(props) {
     props.history.push({pathname:'/article_details', search: encodeQuery({ id: props.item.ID })});
   }
 
+  const toPath = id => {
+    return () => {
+      const obj = {}
+      if (id) {
+        obj.tid = props.item.category_id
+      } else {
+        // obj.cid = data.category_id
+      }
+      props.history.push({pathname:'/article_list', search: encodeQuery(obj)})
+    }
+  }
+
   const date = new Date(props.item.CreatedAt)
   return (
     <Container style={{"borderBottom": props.border ? '1px solid #eee' : 'none'}} onClick={toDetails}>
@@ -34,18 +46,18 @@ function ArticleItem(props) {
         <div className="tag-left">
           <div className="item">
             <FieldTimeOutlined style={{color: '#ff7675'}}/>
-            { formDate(props.item.CreatedAt, 'YYYY-MM-DD hh:mm:ss') }
+            <span className="tag_item">{ formDate(props.item.CreatedAt, 'YYYY-MM-DD hh:mm:ss') }</span>
           </div>
           <div className="item">
             <TagsOutlined style={{color: '#f39c12'}}/>
             {
-              props.item.tag_list.map((item, index) => <span className="tag_item" key={index}>{ item} </span>)
+              props.item.tag_list.map(item => <span className="tag_item" onClick={toPath(item.id)} key={item.id}>{item.name} </span>)
             }
           </div>
         </div>
         <div className="tag-right">
           <AppstoreOutlined style={{color: '#39A2DB'}}/>
-          分类: { props.item.category_name }
+          分类: <span className="tag_item" onClick={toPath()}>{ props.item.category_name }</span>
         </div>
       </div>
     </Container>

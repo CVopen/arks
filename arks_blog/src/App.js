@@ -9,7 +9,6 @@ import Typing from './pages/typing'
 
 import './utils'
 import './assets/style/app.scss'
-import 'antd/dist/antd.css'
 import 'moment/locale/zh-cn'
 import './lib/hearts'
 

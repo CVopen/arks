@@ -4,6 +4,7 @@ import (
 	"arks_servers/forms"
 	"arks_servers/models"
 	"arks_servers/utils"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -40,18 +41,35 @@ func (ArticleHandler) CreatedArticle(ctx *gin.Context) {
 	}
 
 	acricle := articleForm.BindToModel()
-	err := acricle.Create(articleForm.TagList)
-	if err != nil {
-		result.Msg = "error"
-		if err.Error() == "文章名已经存在" {
-			result.Msg = err.Error()
+	if acricle.ID != 0 {
+		// 更新的逻辑
+		err := acricle.UpdateArticle(articleForm.TagList)
+		// fmt.Println("err", err.Error())
+		if err != nil {
+			result.Msg = "error"
+			if err.Error() == "文章名已经存在" {
+				result.Msg = err.Error()
+			}
+			result.Code = utils.RequestError
+			result.Data = err
+			ctx.JSON(http.StatusOK, result)
+			return
 		}
-		result.Code = utils.RequestError
-		result.Data = err
-		ctx.JSON(http.StatusOK, result)
-		return
+	} else {
+		// 新增逻辑
+		err := acricle.Create(articleForm.TagList)
+		if err != nil {
+			result.Msg = "error"
+			if err.Error() == "文章名已经存在" {
+				result.Msg = err.Error()
+			}
+			result.Code = utils.RequestError
+			result.Data = err
+			ctx.JSON(http.StatusOK, result)
+			return
+		}
 	}
-
+	fmt.Println("请求结束")
 	ctx.JSON(http.StatusOK, result)
 }
 
@@ -108,15 +126,19 @@ func (ArticleHandler) GetArticle(ctx *gin.Context) {
 				"img":           v.Img,
 				"summary":       v.Summary,
 				"category_name": v.Category.Name,
+				"category_id":   v.Category.ID,
 				"captcha":       false,
 				"tag_list":      0,
 			}
 			if v.Pwd != "" {
 				dataList[i]["captcha"] = true
 			}
-			tag_list := make([]string, len(v.TagList))
+			tag_list := make([]map[string]interface{}, len(v.TagList))
 			for it, v := range v.TagList {
-				tag_list[it] = v.Name
+				tag_list[it] = map[string]interface{}{
+					"name": v.Name,
+					"id":   v.ID,
+				}
 			}
 			dataList[i]["tag_list"] = tag_list
 

@@ -9,6 +9,7 @@ import (
 
 // 新增文章表单
 type CreateArticleForm struct {
+	ID               uint   `json:"id" label:"文章id"`
 	UserId           uint   `binding:"required" label:"用户id"`
 	CategoryId       uint   `json:"category_id" binding:"required" label:"分类id"`
 	TagList          []int  `json:"tagList" label:"标签"`
@@ -62,6 +63,7 @@ type GetNewArticleForm struct {
 
 func (create CreateArticleForm) BindToModel() models.Article {
 	return models.Article{
+		Model:            gorm.Model{ID: create.ID},
 		UserId:           create.UserId,
 		CategoryId:       create.CategoryId,
 		IsTop:            create.IsTop,

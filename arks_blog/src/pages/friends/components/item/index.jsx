@@ -2,12 +2,11 @@ import Container from './styled'
 export default function FriendItem(props) {
   return (
     <Container className="friend-item" onClick={() => window.open(props.item.url)}>
-      { props.index % 2 === 1 && <img src={props.item.icon} alt="" />}
+      <img src={props.item.icon} alt="" />
       <div className="friend-content">
-        <h2 style={{textAlign: 'right'}}>{props.item.name}</h2>
+        <h2>{props.item.name}</h2>
         <p>{props.item.desc}</p>
       </div>
-      { props.index % 2 === 0 && <img src={props.item.icon} alt="" />}
     </Container>
   )
 }

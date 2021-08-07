@@ -28,7 +28,15 @@ export default function Comicwidget () {
     canvas.height = size.height
     const ctx = canvas.getContext('2d')
     const arr = []
-    for (let index = 0; index < 20; index++) {
+    console.log(document.body.offsetWidth);
+    let len = 20
+    if (document.body.offsetWidth < 700) {
+      len = 8
+    } else if (document.body.offsetWidth < 1200) {
+      len = 16
+    }
+    console.log(len);
+    for (let index = 0; index < len; index++) {
       arr.push(new Ball(ctx))
     }
     animation(ctx, arr)

@@ -21,6 +21,13 @@ const Container = styled.div`
         margin-right: 0;
       }
     }
+    .detail-tag {
+      cursor: pointer;
+      transition: all .4s;
+      &:hover {
+        color: #ff7675;
+      }
+    }
   }
   .summary {
     color: var(--theme-fontColor);

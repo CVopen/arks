@@ -16,7 +16,7 @@ export default function FriendList() {
     <Container>
       {
         list.map((item, index) => 
-          <Item key={index} index={index} item={item} />
+          <Item key={index} item={item} />
         )
       }
     </Container>

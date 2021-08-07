@@ -38,10 +38,7 @@ export default defineComponent({
       default: 0
     }
   },
-  emits: {
-    'close-modal': null,
-    'change': null
-  },
+  emits: ['close-modal', 'change'],
   setup(props, context) {
     const data = reactive({
       show: props.showModel,

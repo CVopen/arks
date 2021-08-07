@@ -57,6 +57,18 @@ export default class Details extends Component {
     }
   }
 
+  toPath = id => {
+    return () => {
+      const obj = {}
+      if (id) {
+        obj.tid = id
+      } else {
+        obj.cid = this.state.data.category_id
+      }
+      this.props.history.push({pathname:'/article_list', search: encodeQuery(obj)})
+    }
+  }
+
   render() {
     const { data } = this.state
     return (
@@ -65,10 +77,10 @@ export default class Details extends Component {
         <div style={{flexDirection: 'column'}} className="content">
           <div className="detials-header">
             <div>
-              <FolderOutlined /> 所属分类:{data.category}
+              <FolderOutlined /> 所属分类: <span className="detail-tag" onClick={this.toPath()}>{data.category} </span>
             </div>
             <div>
-              <FolderOpenOutlined /> 所属标签: {data.tag_list && data.tag_list.map(item => <span key={item.ID}>{item.name}</span>)}
+              <FolderOpenOutlined /> 所属标签: {data.tag_list && data.tag_list.map(item => <span className="detail-tag" key={item.ID} onClick={this.toPath(item.ID)}>{item.name} </span>)}
             </div>
             <div>
               <UserOutlined /> {data.user_name}
@@ -84,7 +96,7 @@ export default class Details extends Component {
             {
               data.UpdatedAt && <div><ReconciliationOutlined /> 最后更新于: {formDate(data.UpdatedAt, 'YYYY-MM-DD hh:mm:ss')}</div>
             }
-            <div>
+            <div className="detail-tag">
               <LinkOutlined /> 复制文章链接
             </div>
           </div>

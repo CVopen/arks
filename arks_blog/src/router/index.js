@@ -23,7 +23,7 @@ export default function Router() {
 
   return (
     <Switch>
-      <Suspense fallback={Loading()}>
+      <Suspense fallback={<Loading />}>
         {
           targetRouterConfig ? 
           <Auth target={targetRouterConfig} /> :

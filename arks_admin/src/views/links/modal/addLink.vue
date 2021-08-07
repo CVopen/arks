@@ -1,6 +1,6 @@
 <template>
   <!-- 编辑弹出框 -->
-  <el-dialog title="编辑" v-model="show" width="30%" @close="close">
+  <el-dialog title="新增" v-model="show" width="30%" @close="close">
     <el-form ref="formLink" :model="formData" :rules="rules" label-width="70px">
       <el-form-item label="名称" prop="name">
         <el-input v-model="formData.name" />
@@ -51,10 +51,7 @@ export default defineComponent({
       }
     }
   },
-  emits: {
-    'close-modal': null,
-    'change': null
-  },
+  emits: ['close-modal', 'change'],
   setup(props, context) {
     const data = reactive({
       show: props.showModel,

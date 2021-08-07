@@ -83,11 +83,19 @@ const Container = styled.div`
   .tag {
     justify-content: space-between;
     margin-top: 5px;
+    
+    span {
+      padding: 0;
+    }
   }
   .tag_item {
     display: inline-block;
-    margin-right: 5px;
+    margin-left: 5px;
     font-size: 14px;
+    transition: all .4s;
+    &:hover {
+      color: #ff7675;
+    }
   }
   @media only screen and (max-width: 500px){
     .tag-right {

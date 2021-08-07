@@ -4,6 +4,7 @@ import (
 	"arks_servers/config/db"
 	"arks_servers/utils"
 	"errors"
+	"fmt"
 	"time"
 
 	"gorm.io/gorm"
@@ -85,7 +86,7 @@ func (article Article) Create(tagIds []int) error {
 	err = tx.Where("title = ?", article.Title).First(&article).Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return errors.New("文章名已经存在")
 	}
 
 	// 创建文章和标签关联，更新标签对应文章数量
@@ -94,7 +95,7 @@ func (article Article) Create(tagIds []int) error {
 			article.ID, tagId).Error
 		if err != nil {
 			tx.Rollback()
-			return errors.New("文章名已经存在")
+			return err
 		}
 
 		err = tx.Exec("update `tags` set `count` = `count` + 1 where `id` = ?", tagId).Error
@@ -118,6 +119,114 @@ func (article Article) Create(tagIds []int) error {
 
 	// 日志更新
 	go CreateFunc(article.UserId, "新增文章", article.Title)
+
+	return tx.Commit().Error
+}
+
+// 修改文章
+func (article Article) UpdateArticle(tagIds []int) error {
+	// 开始事务
+	tx := db.Db.Begin()
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("出错了", err)
+			tx.Rollback()
+		}
+		fmt.Println("正常退出")
+	}()
+
+	fmt.Println("进入了修改")
+	var ar Article
+	// 根据标题获取文章
+	err := tx.Model(&Article{}).Where("title = ?", article.Title).First(&ar).Error
+
+	if err != nil && err.Error() != "record not found" {
+		tx.Rollback()
+	}
+	if ar.ID != 0 && ar.ID != article.ID {
+		tx.Rollback()
+		return errors.New("文章名已经存在")
+	}
+	fmt.Println("根据标题获取文章", ar.ID, ar.Title)
+
+	// 获取文章详情
+	err = tx.Model(&Article{}).Preload("TagList").Where("id = ?", article.ID).First(&ar).Error
+	if err != nil {
+		fmt.Println("获取文章详情")
+		tx.Rollback()
+		return err
+	}
+	fmt.Println("获取文章详情", ar.ID, ar.Title)
+
+	if article.CategoryId != ar.CategoryId {
+		fmt.Println("该更新分类了", article.CategoryId, ar.CategoryId)
+		// 更新分类对应文章数量
+		err = tx.Exec("update `categories` set `count` = `count` - 1 where `id` = ?", ar.CategoryId).Error
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		err = tx.Exec("update `categories` set `count` = `count` + 1 where `id` = ?", article.CategoryId).Error
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+	// 需要更改的标签文章数量
+	newTagListReduce := make([]uint, len(ar.TagList))
+	for i, v := range ar.TagList {
+		newTagListReduce[i] = v.ID
+	}
+	fmt.Println("newTagListReduce", newTagListReduce)
+
+	// 更新标签中对应文章数量
+	err = tx.Exec("update `tags` set `count` = `count` - 1 where `id` in (?)", newTagListReduce).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	err = tx.Exec("update `tags` set `count` = `count` + 1 where `id` in (?)", tagIds).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 删除标签文章表中的记录
+	err = tx.Exec("delete from `tag_article` where `tag_id` in (?) and `article_id` = ?", newTagListReduce, ar.ID).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 创建文章和标签关联，更新标签对应文章数量
+	for _, tagId := range tagIds {
+		err = tx.Exec("insert into `tag_article` (`article_id`,`tag_id`) values (?,?)",
+			article.ID, tagId).Error
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	// 更新文章
+	err = tx.Model(&article).Updates(map[string]interface{}{
+		"is_published":       article.IsPublished,
+		"category_id":        article.CategoryId,
+		"is_top":             article.IsTop,
+		"is_allow_commented": article.IsAllowCommented,
+		"pwd":                article.Pwd,
+		"title":              article.Title,
+		"summary":            article.Summary,
+		"img":                article.Img,
+		"content":            article.Content,
+		"md_content":         article.MDContent,
+		"updated_at":         time.Now(),
+	}).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
 
 	return tx.Commit().Error
 }

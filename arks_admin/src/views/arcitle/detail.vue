@@ -138,6 +138,7 @@ export default defineComponent({
         after: () => {
           if (route.query.see) data.see = false
           if (route.query.id) {
+            data.formData = route.query.id
             getArticleDetail({ id: route.query.id }).then(res => {
               data.formData = res.data
               data.contentEditor.setValue(res.data.content)
