@@ -69,6 +69,15 @@ export default class Details extends Component {
     }
   }
 
+  copyPath = () => {
+    var inputCopy = document.createElement('input')
+    inputCopy.value = window.location.origin + window.location.pathname + window.location.search
+    document.body.appendChild(inputCopy)
+    inputCopy.select()
+    document.execCommand('Copy')
+    document.body.removeChild(inputCopy)
+  }
+
   render() {
     const { data } = this.state
     return (
@@ -80,7 +89,7 @@ export default class Details extends Component {
               <FolderOutlined /> 所属分类: <span className="detail-tag" onClick={this.toPath()}>{data.category} </span>
             </div>
             <div>
-              <FolderOpenOutlined /> 所属标签: {data.tag_list && data.tag_list.map(item => <span className="detail-tag" key={item.ID} onClick={this.toPath(item.ID)}>{item.name} </span>)}
+              <FolderOpenOutlined /> 所属标签: {data.tag_list && data.tag_list.map(item => <span className="detail-tag" key={item.id} onClick={this.toPath(item.id)}>{item.name} </span>)}
             </div>
             <div>
               <UserOutlined /> {data.user_name}
@@ -96,7 +105,7 @@ export default class Details extends Component {
             {
               data.UpdatedAt && <div><ReconciliationOutlined /> 最后更新于: {formDate(data.UpdatedAt, 'YYYY-MM-DD hh:mm:ss')}</div>
             }
-            <div className="detail-tag">
+            <div className="detail-tag" onClick={this.copyPath}>
               <LinkOutlined /> 复制文章链接
             </div>
           </div>
