@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 export default function Btn(props) {
   const [ captchaData, setData ] = useState({})
   useEffect(() => {
+    
     if (!props.value) captcha()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.value])

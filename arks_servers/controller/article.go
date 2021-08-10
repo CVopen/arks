@@ -6,6 +6,8 @@ import (
 	"arks_servers/utils"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -92,6 +94,7 @@ func (ArticleHandler) GetArticle(ctx *gin.Context) {
 	pageForm := forms.GetArticlePageForm{
 		UserId: 0,
 	}
+	fmt.Println(id)
 	if id != nil {
 		pageForm.UserId = utils.TypeInterFaceToUint(id)
 	}
@@ -469,6 +472,18 @@ func (ArticleHandler) GetArticleDetailHandlerBlog(ctx *gin.Context) {
 		return
 	}
 
+	// 创建记录
+	tokenH, _ := ctx.Get("token")
+	if tokenH != "" {
+		tokenHeader := tokenH.(string)
+		id, _ := strconv.ParseUint(utils.DecryptDES_CBC(strings.Split(tokenHeader, " ")[1]), 10, 64)
+		history := forms.HistoryForm{
+			UserId: uint(id),
+			AId:    form.ID,
+		}
+		_ = history.BindToModel().Create()
+	}
+
 	data := map[string]interface{}{
 		"title":       article.Title,
 		"summary":     article.Summary,
@@ -489,7 +504,7 @@ func (ArticleHandler) GetArticleDetailHandlerBlog(ctx *gin.Context) {
 	tag_list := make([]map[string]interface{}, len(article.TagList))
 	for i, v := range article.TagList {
 		tag_list[i] = map[string]interface{}{
-			"ID":   v.ID,
+			"id":   v.ID,
 			"name": v.Name,
 		}
 	}
@@ -570,6 +585,7 @@ func (ArticleHandler) GetArticleBlog(ctx *gin.Context) {
 				"img":           v.Img,
 				"summary":       v.Summary,
 				"category_name": v.Category.Name,
+				"category_id":   v.Category.ID,
 				"captcha":       false,
 				"tag_list":      0,
 			}
@@ -647,7 +663,7 @@ func (ArticleHandler) GetArticleBlogCategory(ctx *gin.Context) {
 	if pageForm.TagId != 0 {
 		list, err = article.GetTagAll(pageForm.TagId)
 	} else {
-		list, total, err = article.GetList(&pageForm.Pagination, pageForm.State)
+		list, total, err = article.GetCategoryAll(&pageForm.Pagination)
 	}
 
 	if err != nil {
@@ -667,12 +683,16 @@ func (ArticleHandler) GetArticleBlogCategory(ctx *gin.Context) {
 			"img":           v.Img,
 			"summary":       v.Summary,
 			"category_name": v.Category.Name,
+			"category_id":   v.Category.ID,
 			"tag_list":      0,
 		}
 
-		tag_list := make([]string, len(v.TagList))
+		tag_list := make([]map[string]interface{}, len(v.TagList))
 		for it, v := range v.TagList {
-			tag_list[it] = v.Name
+			tag_list[it] = map[string]interface{}{
+				"id":   v.ID,
+				"name": v.Name,
+			}
 		}
 		dataList[i]["tag_list"] = tag_list
 

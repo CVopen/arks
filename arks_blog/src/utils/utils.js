@@ -18,6 +18,8 @@ export const formDate = (time, type = 'YYYY-MM-DD') =>{
       return`${d.Y}-${d.M}-${d.D}`
     case 'YYYY-MM-DD hh:mm:ss':
       return`${d.Y}-${d.M}-${d.D} ${d.H}:${d.Mi}:${d.S}`
+    case 'hh:mm':
+      return`${d.H}:${d.Mi}`
     default:
       return `${d.Y}-${d.M}-${d.D}`
   }

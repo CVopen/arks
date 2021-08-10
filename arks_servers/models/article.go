@@ -4,7 +4,6 @@ import (
 	"arks_servers/config/db"
 	"arks_servers/utils"
 	"errors"
-	"fmt"
 	"time"
 
 	"gorm.io/gorm"
@@ -129,13 +128,10 @@ func (article Article) UpdateArticle(tagIds []int) error {
 	tx := db.Db.Begin()
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println("出错了", err)
 			tx.Rollback()
 		}
-		fmt.Println("正常退出")
 	}()
 
-	fmt.Println("进入了修改")
 	var ar Article
 	// 根据标题获取文章
 	err := tx.Model(&Article{}).Where("title = ?", article.Title).First(&ar).Error
@@ -147,19 +143,15 @@ func (article Article) UpdateArticle(tagIds []int) error {
 		tx.Rollback()
 		return errors.New("文章名已经存在")
 	}
-	fmt.Println("根据标题获取文章", ar.ID, ar.Title)
 
 	// 获取文章详情
 	err = tx.Model(&Article{}).Preload("TagList").Where("id = ?", article.ID).First(&ar).Error
 	if err != nil {
-		fmt.Println("获取文章详情")
 		tx.Rollback()
 		return err
 	}
-	fmt.Println("获取文章详情", ar.ID, ar.Title)
 
 	if article.CategoryId != ar.CategoryId {
-		fmt.Println("该更新分类了", article.CategoryId, ar.CategoryId)
 		// 更新分类对应文章数量
 		err = tx.Exec("update `categories` set `count` = `count` - 1 where `id` = ?", ar.CategoryId).Error
 		if err != nil {
@@ -177,7 +169,6 @@ func (article Article) UpdateArticle(tagIds []int) error {
 	for i, v := range ar.TagList {
 		newTagListReduce[i] = v.ID
 	}
-	fmt.Println("newTagListReduce", newTagListReduce)
 
 	// 更新标签中对应文章数量
 	err = tx.Exec("update `tags` set `count` = `count` - 1 where `id` in (?)", newTagListReduce).Error
@@ -227,6 +218,8 @@ func (article Article) UpdateArticle(tagIds []int) error {
 		tx.Rollback()
 		return err
 	}
+	// 日志更新
+	go CreateFunc(article.UserId, "修改文章", article.Title)
 
 	return tx.Commit().Error
 }

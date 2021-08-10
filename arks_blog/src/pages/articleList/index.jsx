@@ -11,40 +11,44 @@ import { useEffect, useState } from 'react'
 import { decodeQuery } from '@utils/RouterQuery'
 import { Pagination } from 'antd'
 import Item from '@/components/articleItem'
+import { useLocation } from 'react-router-dom'
 
 export default function Home (props) {
   const store = useSelector(({ app }) => app.config)
+  const { search } = useLocation()
   
   const [ list, changeList ] = useState({ total: 0, data: []})
   const [ listTag, changeListTag ] = useState([])
-  const [ title, changeListTitle ] = useState({
-    PageTitle: '',
-    title: ''
-  })
-  const [ params, changeparams ] = useState({
-    page: 1,
-    pageSize: 10
-  })
+  const [ title, changeListTitle ] = useState({ PageTitle: '', title: '' })
+  const [ params, changeparams ] = useState({ page: 1, pageSize: 10 })
   const idObj = decodeQuery(props.location.search)
 
   useEffect(() => {
-    getDetail()
+    changeListTag([])
+    changeList({ total: 0, data: []})
+    getDetail(1)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [search])
 
   const getDetail = (page = 1) => {
     if (idObj.tid) {
       getArticleTagList({ tag_id: idObj.tid }).then(res => {
         changeListTag(res.data)
+        let title
+        for (let index = 0; index < res.data[0].tag_list.length; index++) {
+          if (res.data[0].tag_list[index].id === parseInt(idObj.tid)) {
+            title = res.data[0].tag_list[index].name
+          }
+        }
         changeListTitle({
           PageTitle: '标签下文章列表',
-          title: res.data.length > 0 ? res.data[0].category_name : '暂无文章'
+          title: res.data.length > 0 ? title : '暂无文章'
         })
       })
     } else {
       getArticleCategoryList({ ...params, page, category_id: idObj.cid}).then(res => {
         changeList({
-          data: res.data.data,
+          data: page === 1 ? res.data.data : [...list.data, ...res.data.data],
           total: res.data.total
         })
         changeListTitle({

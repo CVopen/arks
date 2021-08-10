@@ -9,7 +9,6 @@ import { withRouter } from 'react-router-dom'
 import { encodeQuery } from '@utils/RouterQuery'
 
 function ArticleItem(props) {
-
   const toDetails = () => {
     props.history.push({pathname:'/article_details', search: encodeQuery({ id: props.item.ID })});
   }
@@ -18,9 +17,9 @@ function ArticleItem(props) {
     return () => {
       const obj = {}
       if (id) {
-        obj.tid = props.item.category_id
+        obj.tid = id
       } else {
-        // obj.cid = data.category_id
+        obj.cid = props.item.category_id
       }
       props.history.push({pathname:'/article_list', search: encodeQuery(obj)})
     }
@@ -28,18 +27,18 @@ function ArticleItem(props) {
 
   const date = new Date(props.item.CreatedAt)
   return (
-    <Container style={{"borderBottom": props.border ? '1px solid #eee' : 'none'}} onClick={toDetails}>
+    <Container style={{"borderBottom": props.border ? '1px solid #eee' : 'none'}}>
       <div className="header" style={{flexDirection: props.direction}}>
         <div className="img">
           <div className="time-visit">
             <span>{ date.getDate() < 10 ? `0${date.getDate()}` : date.getDate() }</span>
             <span>{date.getFullYear()}年{date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1}月</span>
           </div>
-          <img src={ props.item.img } alt="" />
+          <img src={ props.item.img } onClick={toDetails} alt="" />
         </div>
         <div className="header-content" style={{alignItems: props.direction === 'row' ? 'flex-end' : 'flex-start'}}>
-          <h2>{ props.item.title }</h2>
-          <p>{ props.item.summary }</p>
+          <h2 onClick={toDetails}>{ props.item.title }</h2>
+          <p onClick={toDetails}>{ props.item.summary }</p>
         </div>
       </div>
       <div className="tag">
@@ -51,7 +50,7 @@ function ArticleItem(props) {
           <div className="item">
             <TagsOutlined style={{color: '#f39c12'}}/>
             {
-              props.item.tag_list.map(item => <span className="tag_item" onClick={toPath(item.id)} key={item.id}>{item.name} </span>)
+              props.item.tag_list.map(el => <span className="tag_item" onClick={toPath(el.id)} key={el.id}>{el.name} </span>)
             }
           </div>
         </div>

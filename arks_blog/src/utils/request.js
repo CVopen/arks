@@ -47,7 +47,7 @@ instance.interceptors.response.use(
     }
     if (response.data.code !== 10000) {
       message.error(response.data.msg)
-      return Promise.reject("请求失败")
+      return Promise.reject("error")
     }
     return response.data
   },

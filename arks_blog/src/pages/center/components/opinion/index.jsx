@@ -10,7 +10,6 @@ export default function Opinion(props) {
   const [state, changeState] = useState(1)
   
   useEffect(() => {
-    console.log(props);
   }, [props.list, state])
 
   const change = (key) => {

@@ -57,6 +57,7 @@ func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 		articleRouter.GET("/detail", articleBlog.GetArticleDetailHandlerBlog)
 		articleRouter.GET("/list", middlewares.TypeRequest("blog"), articleBlog.GetArticle)
 		articleRouter.GET("/category", articleBlog.GetArticleBlogCategory)
+		articleRouter.GET("/auth", middlewares.TypeRequest("blog"), middlewares.CBCAuth(), articleBlog.GetArticle)
 		articleRouter.GET("/tag", articleBlog.GetArticleBlogCategory)
 	}
 
@@ -86,5 +87,14 @@ func (a *ApiBlog) InitBlogApi(path string, router *gin.Engine) {
 		opinionRouter.GET("list", opinion.GetOpinionList)
 		// 添加
 		opinionRouter.POST("add", opinion.CreateOpinion)
+	}
+
+	historyRouter := blog.Group("/history", middlewares.CBCAuth())
+	history := controller.HistoryHandler{}
+	{
+		// 列表
+		historyRouter.GET("list", history.GetListBlog)
+		// 删除
+		historyRouter.DELETE("del", history.Remove)
 	}
 }

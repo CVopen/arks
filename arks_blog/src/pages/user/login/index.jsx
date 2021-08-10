@@ -24,9 +24,8 @@ export default function LoginCom(props) {
       Storage('set', 'token', res.data.token)
       dispatch({type: 'SET_USERINFO', value: res.data})
       history.replace('/')
-    }).catch(err => {
-      captcha()
-      throw err
+    }).catch(() => {
+      inputChange('captcha_val')('')
     })
   }
   
@@ -69,6 +68,7 @@ export default function LoginCom(props) {
       <Captcha 
         onChange={inputChange('captcha_val')}
         onRefresh={captcha}
+        value={userInfo.captcha_val}
       />
       <div className={style.tip}>{ tip }</div>
       <Btn onClick={userLogin} text='登录' />

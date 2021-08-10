@@ -52,7 +52,7 @@ type GetArticleDetailForm struct {
 // 文章排序表单
 type MoveAcricleForm struct {
 	ID        uint `json:"id" bindng:"required" label:"ID"`
-	OrderId   uint `json:"order_id" bindng:"required" label:"排序ID"`
+	OrderId   uint `json:"order_id" binding:"required" label:"排序ID"`
 	IsTop     bool `json:"is_top" label:"是否置顶"`
 	Direction bool `json:"direction" label:"移动方向"`
 }

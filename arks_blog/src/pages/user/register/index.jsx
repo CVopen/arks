@@ -65,6 +65,8 @@ export default function RegisterCom(props) {
     register(userInfo).then(res => {
       message.success(res.msg)
       toLogin()
+    }).catch(() => {
+      inputChange('captcha_val')('')
     })
   }
   return (
@@ -85,6 +87,7 @@ export default function RegisterCom(props) {
       <Captcha 
         onChange={inputChange('captcha_val')}
         onRefresh={captcha}
+        value={userInfo.captcha_val}
       />
       <div className={style.tip}>{ tip }</div>
       <Btn onClick={userRegister} text='注册' />

@@ -80,6 +80,8 @@ export default function ForgetCom(props) {
           inputType: 'second_pwd'
         }
       ])
+    }).catch(() => {
+      inputChange('captcha_val')('')
     })
   }
 

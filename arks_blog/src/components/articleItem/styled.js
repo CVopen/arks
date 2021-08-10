@@ -57,6 +57,11 @@ const Container = styled.div`
     font-weight: bold;
     font-size: 20px;
     margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    width: 100%;
     &:hover {
       color: #ff7675;
     }

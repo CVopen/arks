@@ -1,6 +1,6 @@
 import style from './index.module.scss'
 import { useState, useEffect } from 'react'
-import { useLocation, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import Search from './components/Search'
 import bus from '../../utils/bus'
 import NavPc from './components/NavPc'
@@ -22,20 +22,18 @@ function Header(props) {
   const [ color, setColor ] = useState(false)
   const [ isShow, setShow ] = useState(false)
   const [ width, setWidth ] = useState(document.body.offsetWidth > 1400)
-  const { pathname } = useLocation()
   const store = useSelector((store) => store.user.userInfo)
   const defaultInfo = useSelector((store) => store.user.defaultInfo)
-  
   useEffect(() => {
     bus.on('offsetWidth', (flag) => {
       setWidth(flag > 1400)
       setSearch(flag <= 1400 ? false : isSearch)
     })
     bus.on('scrollTop', (top) => {
-      if (pathname !== '/404' && pathname !== '/center') {
+      if (pathnameEnv() !== '/404' && pathnameEnv() !== '/center') {
         setColor(top > 0)
       }
-      if (pathname === '/404' || pathname === '/center') {
+      if (pathnameEnv() === '/404' || pathnameEnv() === '/center') {
         setColor(true)
       }
     })
@@ -44,8 +42,15 @@ function Header(props) {
 
   // 路由跳转
   const toPath = () => {
-    if (pathname === '/center' || isRotate) return
+    if (pathnameEnv() === '/center' || isRotate) return
     props.history.push('/center')
+  }
+
+  const pathnameEnv = () => {
+    if (process.env.NODE_ENV === 'development') {
+      return window.location.pathname
+    }
+    return window.location.pathname.slice(4)
   }
   
   const path = [
@@ -76,13 +81,13 @@ function Header(props) {
           path={path}
           setSearch={setSearch}
           push={props.history.push}
-          pathname={pathname}
+          pathname={pathnameEnv()}
         /> : 
         <NavMoblie 
           isRotate={isRotate}
           path={path}
           push={props.history.push}
-          pathname={pathname}
+          pathname={pathnameEnv()}
           setRotate={setRotate}
         />
       }

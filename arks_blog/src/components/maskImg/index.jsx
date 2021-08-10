@@ -44,7 +44,7 @@ export default function MaskImg(props) {
       <div className={style.maskCom} style={{height: props.height ? '65vh' : window.innerHeight}}>
         {
           props.height ? 
-            <h2 style={{fontSize: width ? '50px' : '.7rem'}}>{props.text}</h2> :
+            <h2 style={{fontSize: width ? '50px' : '.6rem'}}>{props.text}</h2> :
             <>
               <h2>ark</h2>
               <DoubleLeftOutlined onClick={handleClickToBottom} />
