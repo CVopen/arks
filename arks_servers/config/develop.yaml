@@ -6,9 +6,9 @@ server:
 
 # 数据库配置
 db: 
-  host: "127.0.0.1" #主机地址
+  host: "127.0.0.1" #主机地址  正式: 101.132.192.93 测试: 127.0.0.1
   user_name: "root" # 用户名
-  password: "root" # 密码
+  password: "root" # 密码  正式: rootOpen 测试: root
   database: "ark" # 数据库名
   port: "3306" # 端口
   time_zone: "Local" # 时区

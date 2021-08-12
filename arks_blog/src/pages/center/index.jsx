@@ -101,9 +101,8 @@ export default function Center (props) {
   }
 
   const article = () => {
-    if (!historyList.lastMore && historyList.page !== 1) return
+    if (!articleList.lastMore && articleList.page !== 1) return
     getArticleList({ page: articleList.page}).then(res => {
-      console.log(res);
       if (articleList.page === 1) {
         changeArticleList(Object.assign({}, res.data, { page: res.data.page + 1}))
       } else {
@@ -117,7 +116,7 @@ export default function Center (props) {
   }
 
   const tagList = [
-    { key: 1, title: '我的文章', com: <Article list={articleList.data} />},
+    { key: 1, title: '我的文章', com: <Article list={articleList} />},
     { key: 2, title: '历史浏览', com: <History data={historyList} changeList={changeHistoryList} />},
     { key: 3, title: '我的评论', com: ''},
     { key: 4, title: '意见反馈', com: <Opinion list={opinionList} getList={opinion} />},

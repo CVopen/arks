@@ -26,7 +26,7 @@ export default function History(props) {
     <>
       {
         (data && !data.today.length && !data.yesterday.length && !data.earlier.length) ? 
-          <Empty />
+          <Empty tab={2}/>
         :
         <div className={style.history}>
           <div className={style.left}>
@@ -63,9 +63,10 @@ const Item = (props) => {
       props.change(props.item.ID)
     })
   }
+  console.log(formDate(props.item.UpdatedAt, props.flag ? 'hh:mm' : 'YYYY-MM-DD'));
   return (
     <div className={style.item}>
-      <img onClick={toPath()} src={props.item.img} alt="" />
+      <img style={{objectFit: 'contain', width: '110px'}} onClick={toPath()} src={props.item.img} alt="" />
       <div className={style.content}>
         <h1 onClick={toPath()}>{props.item.title}</h1>
         <div className={style.bottom}>

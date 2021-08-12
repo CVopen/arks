@@ -481,7 +481,7 @@ func (ArticleHandler) GetArticleDetailHandlerBlog(ctx *gin.Context) {
 			UserId: uint(id),
 			AId:    form.ID,
 		}
-		_ = history.BindToModel().Create()
+		go history.BindToModel().Create()
 	}
 
 	data := map[string]interface{}{

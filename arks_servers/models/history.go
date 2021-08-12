@@ -18,14 +18,15 @@ type History struct {
 
 // 创建条目
 func (history History) Create() error {
-	err := db.Db.Model(&History{}).Where("user_id = ? and article_id = ?", history.UserId, history.ArticleId).First(&history).Error
+	var h History
+	err := db.Db.Model(&History{}).Where("user_id = ? and article_id = ?", history.UserId, history.ArticleId).First(&h).Error
 	if err != nil {
 		if err.Error() == "record not found" {
 			return db.Db.Create(&history).Error
 		}
 		return err
 	}
-	return db.Db.Updates(&history).Error
+	return db.Db.Updates(&h).Error
 }
 
 // 获取记录
@@ -47,7 +48,7 @@ func (history History) GetHistory(page *utils.Pagination) (data map[string][]His
 	}
 
 	date := time.Now().Add(-time.Hour * 24)
-	query := db.Db.Model(&History{}).Preload("Article").Preload("Article.User").Preload("Article.Category").Where("user_id = ? and created_at < ?", history.UserId, date.Format("2006-01-02"))
+	query := db.Db.Model(&History{}).Preload("Article").Preload("Article.User").Preload("Article.Category").Where("user_id = ? and updated_at < ?", history.UserId, date.Format("2006-01-02"))
 	// 分页
 	total, err = utils.ToPage(page, query, &earlier)
 	if err != nil {
