@@ -31,6 +31,22 @@
       <el-form-item label="封面图">
         <el-input v-model="formData.img" placeholder="请输入图片url" />
       </el-form-item>
+      <el-form-item label="上传内容">
+        <!-- beforeAvatarUpload -->
+        <el-upload
+          ref="upload"
+          class="upload-demo"
+          :on-change="handleFileChange"
+          :on-remove="handleFileRemove"
+          :auto-upload="false"
+          :file-list="fileList"
+          accept=".md"
+          action=""
+        >
+          <el-button size="small" type="primary">选择文件</el-button>
+          <span class="tip">只能上传 md 格式文件，且不超过 2 MB</span>
+        </el-upload>
+      </el-form-item>
       <el-form-item label="内容">
         <div id="addEditor"></div>
       </el-form-item>
@@ -49,7 +65,8 @@ import {
   reactive,
   toRefs,
   onMounted,
-  ref
+  ref,
+  watch
 } from 'vue'
 import { getCategoryList, getTagList, addArcitle, getArticleDetail } from "../../api/index"
 import Vditor from 'vditor'
@@ -83,8 +100,10 @@ export default defineComponent({
           { required: true, message: '请输入文章摘要', trigger: 'blur' }
         ]
       },
-      see: true
+      see: true,
+      fileList: []
     })
+
     const form = ref(null)
     const initEditor = () => {
       data.contentEditor = new Vditor('addEditor', {
@@ -190,12 +209,53 @@ export default defineComponent({
       data.tagList = []
     }
 
+    // 文件变动事件
+    const handleFileChange = (file, fileList) => {
+      data.fileList = fileList.length ? [fileList[fileList.length - 1]] : []
+    }
+    // 文件删除事件
+    const handleFileRemove = (file, fileList) => {
+      data.contentEditor.setValue('')
+      data.fileList = fileList
+    }
+
+    watch(() => data.fileList, (newValue, oldValue) => {
+      if (!newValue.length) return
+      // 校验文件大小
+      if (newValue[0].size > 2 * 1024 * 1024) {
+        handleFileChange('', oldValue)
+        ElMessage.error({
+          message: '文件大小不能超过 2 MB',
+          type: 'error'
+        })
+        return false
+      }
+      
+      // 验证文件类型
+      if (newValue[0].name.substring(newValue[0].name.length - 2) !== 'md') {
+        handleFileChange('', oldValue)
+        ElMessage.error({
+          message: '只能上传markdown文件',
+          type: 'error'
+        })
+        return false
+      }
+
+      var reader = new FileReader();
+      reader.readAsText(newValue[0].raw, 'utf8') // input.files[0]为第一个文件
+      reader.onload = () => {
+        data.contentEditor.setValue(reader.result)
+      }
+    })
+
     return {
       ...toRefs(data),
       createArcitle,
       form,
       changeCategory,
-      reset
+      reset,
+      handleFileChange,
+      handleFileRemove
     }
   },
 })
@@ -210,5 +270,16 @@ export default defineComponent({
 }
 ::v-deep(.el-select__tags input) {
   background-color: transparent !important;
+}
+::v-deep(.el-upload--text) {
+  border: none;
+  width: auto;
+  height: auto;
+  background-color: transparent;
+}
+.tip {
+  color: #fff;
+  display: inline-block;
+  margin-left: 20px;
 }
 </style>

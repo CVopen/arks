@@ -14,3 +14,5 @@ db:
   time_zone: "Local" # 时区
   max_idle_conn: 10 # 最大空闲连接数
   max_open_conn: 10 #最大打开连接数
+
+# https://gitee.com/navegate/png/raw/master/picture/demo.jpg gitee图床

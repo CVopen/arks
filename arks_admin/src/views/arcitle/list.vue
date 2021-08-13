@@ -74,7 +74,7 @@
               :text="scope.row.is_published ? '下架' : '发布'"
               :title="'确定要' + (scope.row.is_published ? '下架' : '发布') + '吗？'"
               :buttonIcon="scope.row.is_published ? 'el-icon-close-notification' : 'el-icon-bell'"
-              @confirm="recycled(scope.row.is_recycled ? false : true, scope.row.ID)"
+              @confirm="publish(scope.row.is_recycled ? false : true, scope.row.ID)"
             />
             <Pop
               v-if="scope.row.is_published"

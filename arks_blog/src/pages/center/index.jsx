@@ -102,7 +102,7 @@ export default function Center (props) {
 
   const article = () => {
     if (!articleList.lastMore && articleList.page !== 1) return
-    getArticleList({ page: articleList.page}).then(res => {
+    getArticleList({ page: articleList.page, state: 1}).then(res => {
       if (articleList.page === 1) {
         changeArticleList(Object.assign({}, res.data, { page: res.data.page + 1}))
       } else {

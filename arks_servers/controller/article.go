@@ -94,7 +94,7 @@ func (ArticleHandler) GetArticle(ctx *gin.Context) {
 	pageForm := forms.GetArticlePageForm{
 		UserId: 0,
 	}
-	fmt.Println(id)
+
 	if id != nil {
 		pageForm.UserId = utils.TypeInterFaceToUint(id)
 	}
